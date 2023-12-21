@@ -70,6 +70,7 @@ class API {
               setUserData({
                 userId: payload.userId,
                 username: payload.username,
+                email: payload.email,
                 firstname: payload.firstname,
                 lastname: payload.lastname,
                 accessToken: accessToken,

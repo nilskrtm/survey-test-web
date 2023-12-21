@@ -6,11 +6,11 @@ import { Provider } from 'react-redux';
 import { persistedStore, store } from './store/store';
 import { GlobalNavigation } from './utils/navigation/GlobalNavigation';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ProtectedRoute from './utils/navigation/ProtectedRoute';
-import NoMatchRoute from './utils/navigation/NoMatchRoute';
+import RedirectRoute from './utils/navigation/RedirectRoute';
 import Logout from './app/authentication/Logout';
 import Login from './app/authentication/Login';
 import Dashboard from './app/home/Dashboard';
+import { protectRoute } from './utils/navigation/navigation.util';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -20,18 +20,11 @@ root.render(
       <BrowserRouter>
         <GlobalNavigation />
         <Routes>
-          <Route path="/" element={<NoMatchRoute redirectPath="/dashboard" />} />
+          <Route path="/" element={<RedirectRoute redirectPath="/dashboard" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute redirectPath="/login">
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NoMatchRoute redirectPath="/dashboard" />} />
+          <Route path="/dashboard" element={protectRoute(<Dashboard />, '/login', false)} />
+          <Route path="*" element={<RedirectRoute redirectPath="/dashboard" />} />
         </Routes>
       </BrowserRouter>
     </PersistGate>

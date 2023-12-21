@@ -34,4 +34,21 @@
 
 @tailwind components;
 
+@layer components {
+  @keyframes loading-authentication-button {
+    0% {
+      @apply bg-purple-800;
+    }
+    50% {
+      @apply bg-purple-500;
+    }
+    100% {
+      @apply bg-purple-800;
+    }
+  }
+  .loading-authentication-button {
+    animation: loading-authentication-button 2s linear infinite;
+  }
+}
+
 @tailwind utilities;

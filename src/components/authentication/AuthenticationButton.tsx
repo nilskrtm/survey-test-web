@@ -16,13 +16,13 @@ const AuthenticationButton: (
   const id = props.id ? props.id : Math.random().toString(36).substring(2, 12);
 
   return (
-    <div className={`px-2 ${props.containerClassName}`}>
+    <div className={`${props.containerClassName}`}>
       <button
         disabled={props.disabled ? props.disabled : false}
         id={id}
         type={props.type}
         onClick={props.onClick}
-        className={`px-3 py-2 form-input rounded-md bg-blue-950 text-sm text-white font-semibold uppercase focus:border-blue-950 focus:border-opacity-30 ${
+        className={`px-3 py-[8px] rounded-md bg-purple-800 text-sm text-white font-semibold uppercase focus:outline-none focus:ring-2 focus:ring-purple-500 ${
           props.className
         } ${props.loading ? ' loading-authentication-button' : ''}`}>
         {props.children}
