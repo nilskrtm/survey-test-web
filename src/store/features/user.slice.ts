@@ -60,6 +60,8 @@ export const selectLoggedIn = (state: RootState) =>
   !!state.user.accessToken && !!state.user.refreshToken;
 export const selectUsername = (state: RootState) => state.user.username;
 export const selectEmail = (state: RootState) => state.user.email;
+export const selectFullName = (state: RootState) =>
+  state.user.firstname + ' ' + state.user.lastname;
 export const selectPermissionLevel = (state: RootState) => state.user.permissionLevel;
 
 export default userSlice.reducer;

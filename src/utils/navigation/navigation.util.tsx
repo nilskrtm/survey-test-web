@@ -1,5 +1,5 @@
 import React from 'react';
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from '../../components/navigation/ProtectedRoute';
 
 const protectRoute: (
   element: React.ReactNode,

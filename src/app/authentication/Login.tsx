@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { selectLoggedIn, setUserData } from '../../store/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
@@ -151,11 +151,11 @@ const Login: () => React.JSX.Element = () => {
             </AuthenticationButton>
           </div>
           <div className="w-full mt-4 text-center">
-            <Link to="/reset-password" className="w-full text-center">
+            <NavLink to="/reset-password" className="w-full text-center">
               <p className="py-1 text-sm font-medium text-gray-600 cursor-pointer focus:underline decoration-gray-600">
                 Passwort vergessen?
               </p>
-            </Link>
+            </NavLink>
           </div>
         </form>
       </div>

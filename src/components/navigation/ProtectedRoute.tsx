@@ -2,6 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import React, { PropsWithChildren } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import { selectLoggedIn, selectPermissionLevel } from '../../store/features/user.slice';
+import { PermissionLevel } from '../../utils/enums/permissionlevel.enum';
 
 type ProtectedRouteProps = {
   redirectPath: string;
@@ -19,7 +20,11 @@ const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.J
     return <Navigate to={props.redirectPath} state={{ from: location }} replace />;
   }
 
-  if ('requiresAdmin' in props && props.requiresAdmin && permissionLevel !== 1) {
+  if (
+    'requiresAdmin' in props &&
+    props.requiresAdmin &&
+    permissionLevel !== PermissionLevel.ADMIN
+  ) {
     return <Navigate to={props.redirectPath} state={{ from: location }} replace />;
   }
 
