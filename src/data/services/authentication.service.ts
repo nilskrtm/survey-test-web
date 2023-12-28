@@ -6,6 +6,7 @@ import {
 } from '../types/authentication.types';
 import { AxiosResponse } from 'axios';
 import { APIResponse } from '../types/common.types';
+import { globalNavigate } from '../../components/navigation/GlobalNavigation';
 
 const login: (
   username: string,
@@ -26,6 +27,10 @@ const login: (
   });
 };
 
+const logout = () => {
+  globalNavigate('/logout');
+};
+
 const resetPassword: (email: string) => Promise<APIResponse<AuthResponseData | undefined>> = (
   email
 ) => {
@@ -43,4 +48,4 @@ const resetPassword: (email: string) => Promise<APIResponse<AuthResponseData | u
   });
 };
 
-export default { login, resetPassword };
+export default { login, logout, resetPassword };

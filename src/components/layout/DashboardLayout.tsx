@@ -3,7 +3,6 @@ import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../store/hooks';
 import { selectFullName, selectPermissionLevel } from '../../store/features/user.slice';
 import { getPermissionLevelName } from '../../utils/enums/permissionlevel.enum';
-import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGears,
@@ -13,23 +12,18 @@ import {
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
 import DashboardNavigationSeparator from './DashboardNavigationSeparator';
+import logout from '../../app/authentication/Logout';
 
 type DashboardLayoutProps = { todo?: string };
 
 const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
   props: PropsWithChildren<DashboardLayoutProps>
 ) => {
-  const navigate = useNavigate();
-
   const fullName = useAppSelector(selectFullName);
   const userGroup = getPermissionLevelName(useAppSelector(selectPermissionLevel));
 
   const [surveyCount] = useState<number | undefined>(undefined);
   const [pictureCount] = useState<number | undefined>(undefined);
-
-  const logout = () => {
-    navigate('/logout');
-  };
 
   return (
     <div className="w-full h-full flex flex-row">
@@ -47,14 +41,14 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
               <DashboardNavigationEntry
                 icon={faSquarePollVertical}
                 metric={surveyCount}
-                metricError={surveyCount === undefined}
+                metricError={!surveyCount}
                 name="Umfragen"
                 path="/surveys"
               />
               <DashboardNavigationEntry
                 icon={faImage}
                 metric={pictureCount}
-                metricError={pictureCount === undefined}
+                metricError={!pictureCount}
                 name="Bilder"
                 path="/answer-pictures"
               />

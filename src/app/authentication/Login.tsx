@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { selectLoggedIn, setUserData } from '../../store/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
