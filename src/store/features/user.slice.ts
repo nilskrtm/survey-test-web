@@ -23,7 +23,7 @@ const initialState: UserState = {
   permissionLevel: 0
 };
 
-export const userSlice: Slice = createSlice({
+export const userSlice: Slice<UserState> = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
@@ -62,6 +62,7 @@ export const selectUsername = (state: RootState) => state.user.username;
 export const selectEmail = (state: RootState) => state.user.email;
 export const selectFullName = (state: RootState) =>
   state.user.firstname + ' ' + state.user.lastname;
+export const selectAccessToken = (state: RootState) => state.user.accessToken;
 export const selectPermissionLevel = (state: RootState) => state.user.permissionLevel;
 
 export default userSlice.reducer;

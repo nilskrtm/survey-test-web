@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { matchPath, NavLink, PathPattern, useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
@@ -10,14 +10,18 @@ type DashboardNavigationEntryProps = {
   metricError?: boolean;
   name: string;
   path: string;
+  matchPathPattern?: PathPattern;
 };
 
 const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.JSX.Element = (
   props: DashboardNavigationEntryProps
 ) => {
   const navigate = useNavigate();
-
-  const [active, setActive] = useState<boolean>(false);
+  const location = useLocation();
+  const active = !!matchPath(
+    props.matchPathPattern ? props.matchPathPattern : props.path,
+    location.pathname
+  );
 
   return (
     <div className="w-full p-[6px] flex flex-row items-center justify-between rounded-md hover:ring-1 hover:ring-purple-800">
@@ -30,13 +34,9 @@ const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.
           }`}
         />
         <NavLink
-          className={({ isActive }) => {
-            setActive(isActive);
-
-            return `grow pl-8 text-lg font-medium ${
-              isActive ? 'text-purple-800' : 'text-gray-800'
-            }`;
-          }}
+          className={`grow pl-8 text-lg font-medium ${
+            active ? 'text-purple-800' : 'text-gray-800'
+          }`}
           to={props.path}>
           {props.name}
         </NavLink>

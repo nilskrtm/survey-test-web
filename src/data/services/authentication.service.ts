@@ -6,7 +6,7 @@ import {
 } from '../types/authentication.types';
 import { AxiosResponse } from 'axios';
 import { APIResponse } from '../types/common.types';
-import { globalNavigate } from '../../components/navigation/GlobalNavigation';
+import { globalNavigate } from '../../components/navigation/GlobalNavigationProvider';
 
 const login: (
   username: string,

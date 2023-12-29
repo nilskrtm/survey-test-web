@@ -1,17 +1,20 @@
-import { persistReducer, persistStore } from 'redux-persist';
+import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
-import userReducer from '../store/features/user.slice';
+import userReducer, { UserState } from '../store/features/user.slice';
 import storage from 'redux-persist/lib/storage';
 
-const persistConfig = {
+const persistConfig: PersistConfig<{ user: UserState }> = {
   key: 'root',
-  storage: storage
+  storage: storage,
+  blacklist: []
 };
 
-const reducers = combineReducers({ user: userReducer });
+const reducers = combineReducers<{ user: typeof userReducer }>({
+  user: userReducer
+});
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer<{ user: UserState }>(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -25,5 +28,5 @@ export const store = configureStore({
 
 export const persistedStore = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof persistedReducer>;
 export type AppDispatch = typeof store.dispatch;

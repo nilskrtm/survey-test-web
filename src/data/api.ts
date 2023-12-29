@@ -9,7 +9,7 @@ import { parseTokenData } from '../utils/authentication/authentication.util';
 import { store } from '../store/store';
 import { clearTokens, setUserData } from '../store/features/user.slice';
 import { APIError, APIResponse } from './types/common.types';
-import { globalNavigate } from '../components/navigation/GlobalNavigation';
+import { globalNavigate } from '../components/navigation/GlobalNavigationProvider';
 
 const baseUrl: string = process.env.REACT_APP_API_ENDPOINT || 'http://127.0.0.1:5000';
 const timeout: number = parseInt(process.env.REACT_APP_API_TIMEOUT || '10000');

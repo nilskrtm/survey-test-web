@@ -4,7 +4,7 @@ import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { persistedStore, store } from './store/store';
-import { GlobalNavigation } from './components/navigation/GlobalNavigation';
+import { GlobalNavigationProvider } from './components/navigation/GlobalNavigationProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RedirectRoute from './components/navigation/RedirectRoute';
 import Logout from './app/authentication/Logout';
@@ -26,16 +26,17 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistedStore}>
       <BrowserRouter>
-        <GlobalNavigation />
-        <Routes>
-          <Route path="/" element={defaultRoute} />
-          <Route path="/imprint" element={imprintRoute} />
-          <Route path="/impressum" element={imprintRoute} />
-          <Route path="/login" element={loginRoute} />
-          <Route path="/logout" element={logoutRoute} />
-          <Route path="/dashboard" element={protectRoute(dashboardRoute, '/login', false)} />
-          <Route path="*" element={defaultRoute} />
-        </Routes>
+        <GlobalNavigationProvider>
+          <Routes>
+            <Route path="/" element={defaultRoute} />
+            <Route path="/imprint" element={imprintRoute} />
+            <Route path="/impressum" element={imprintRoute} />
+            <Route path="/login" element={loginRoute} />
+            <Route path="/logout" element={logoutRoute} />
+            <Route path="/dashboard" element={protectRoute(dashboardRoute, '/login', false)} />
+            <Route path="*" element={defaultRoute} />
+          </Routes>
+        </GlobalNavigationProvider>
       </BrowserRouter>
     </PersistGate>
   </Provider>

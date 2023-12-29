@@ -12,7 +12,8 @@ import {
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
 import DashboardNavigationSeparator from './DashboardNavigationSeparator';
-import logout from '../../app/authentication/Logout';
+import AuthenticationService from '../../data/services/authentication.service';
+import useWebSocket from '../../utils/hooks/use.websocket.hook';
 
 type DashboardLayoutProps = { todo?: string };
 
@@ -24,6 +25,14 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 
   const [surveyCount] = useState<number | undefined>(undefined);
   const [pictureCount] = useState<number | undefined>(undefined);
+
+  useWebSocket((ws) => {
+    ws.send({ type: 88888 });
+  });
+
+  const logout = () => {
+    AuthenticationService.logout();
+  };
 
   return (
     <div className="w-full h-full flex flex-row">
