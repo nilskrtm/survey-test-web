@@ -10,9 +10,9 @@ const Dashboard: () => React.JSX.Element = () => {
 
   useEffect(() => {
     setMetricsLoading(true);
-    setSurveyCount(341);
-    setVotingCount(652);
-    setPictureCount(22);
+    setSurveyCount(0);
+    setVotingCount(0);
+    setPictureCount(0);
   }, []);
 
   return (

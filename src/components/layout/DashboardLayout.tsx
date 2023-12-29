@@ -1,8 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react';
 import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../store/hooks';
-import { selectFullName, selectPermissionLevel } from '../../store/features/user.slice';
-import { getPermissionLevelName } from '../../utils/enums/permissionlevel.enum';
+import { selectFullName } from '../../store/features/user.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChartPie,
@@ -26,7 +25,6 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   props: PropsWithChildren<DashboardLayoutProps>
 ) => {
   const fullName = useAppSelector(selectFullName);
-  const userGroup = getPermissionLevelName(useAppSelector(selectPermissionLevel));
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
