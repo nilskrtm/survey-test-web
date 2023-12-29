@@ -13,6 +13,9 @@ import Dashboard from './app/home/Dashboard';
 import { protectRoute } from './utils/navigation/navigation.util';
 import { layoutRoute } from './utils/layout/layout.util';
 import Imprint from './app/legal/Imprint';
+import Surveys from './app/surveys/Surveys';
+import AnswerPictures from './app/answer.pictures/AnswerPictures';
+import Settings from './app/settings/Settings';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -21,6 +24,9 @@ const imprintRoute = <Imprint />;
 const loginRoute = <Login />;
 const logoutRoute = <Logout />;
 const dashboardRoute = layoutRoute(<Dashboard />);
+const surveysRoute = layoutRoute(<Surveys />);
+const answerPicturesRoute = layoutRoute(<AnswerPictures />);
+const settingsRoute = layoutRoute(<Settings />);
 
 root.render(
   <Provider store={store}>
@@ -33,7 +39,10 @@ root.render(
             <Route path="/impressum" element={imprintRoute} />
             <Route path="/login" element={loginRoute} />
             <Route path="/logout" element={logoutRoute} />
-            <Route path="/dashboard" element={protectRoute(dashboardRoute, '/login', false)} />
+            <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
+            <Route path="/surveys" element={protectRoute(surveysRoute, false)} />
+            <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
+            <Route path="/settings" element={protectRoute(settingsRoute, false)} />
             <Route path="*" element={defaultRoute} />
           </Routes>
         </GlobalNavigationProvider>
