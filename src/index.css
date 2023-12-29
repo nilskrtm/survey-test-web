@@ -30,6 +30,24 @@
     @apply text-2xl;
     @apply font-semibold;
   }
+
+  /* Works on Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(75 85 99) rgb(249 250 251);
+  }
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+  *::-webkit-scrollbar-track {
+    background: rgb(249 250 251);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(75 85 99);
+    border-radius: 20px;
+    border: 3px solid rgb(249 250 251);
+  }
 }
 
 @tailwind components;

@@ -1,13 +1,10 @@
-import { matchPath, NavLink, PathPattern, useLocation, useNavigate } from 'react-router-dom';
+import { matchPath, NavLink, PathPattern, useLocation } from 'react-router-dom';
 import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 type DashboardNavigationEntryProps = {
   icon: IconProp;
-  metric?: number;
-  metricError?: boolean;
   name: string;
   path: string;
   matchPathPattern?: PathPattern;
@@ -16,7 +13,6 @@ type DashboardNavigationEntryProps = {
 const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.JSX.Element = (
   props: DashboardNavigationEntryProps
 ) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const active = !!matchPath(
     props.matchPathPattern ? props.matchPathPattern : props.path,
@@ -24,38 +20,23 @@ const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.
   );
 
   return (
-    <div className="w-full p-[6px] flex flex-row items-center justify-between rounded-md hover:ring-1 hover:ring-purple-700">
-      <div className="relative pl-3 flex grow">
-        <FontAwesomeIcon
-          icon={props.icon}
-          size="lg"
-          className={`absolute top-1 pointer-events-none ${
-            active ? 'text-purple-700' : 'text-gray-800'
-          }`}
-        />
-        <NavLink
-          className={`grow pl-8 text-lg font-medium ${
-            active ? 'text-purple-700' : 'text-gray-800'
-          }`}
-          to={props.path}>
-          {props.name}
-        </NavLink>
-      </div>
-      {props.metric && !props.metricError && (
-        <div className="cursor-pointer" onClick={() => navigate(props.path)}>
-          <p className={`text-lg font-normal ${active ? 'text-purple-700' : 'text-gray-800'}`}>
-            {props.metric}
-          </p>
-        </div>
-      )}
-      {props.metricError && (
-        <FontAwesomeIcon
-          icon={faExclamation}
-          size="sm"
-          className="text-red-500 cursor-pointer pointer-events-none"
-        />
-      )}
-    </div>
+    <NavLink
+      className={`relative w-full py-3 px-6 flex grow flex-row items-center justify-start rounded-lg text-gray-600 hover:text-purple-700 ${
+        active ? 'cursor-default' : ''
+      }`}
+      to={props.path}>
+      <FontAwesomeIcon
+        icon={props.icon}
+        size="lg"
+        className={`pointer-events-none text-inherit ${active ? '!text-purple-700' : ''}`}
+      />
+      <span
+        className={`absolute left-[74px] text-lg font-medium ${
+          active ? '!text-black' : '!text-gray-600'
+        }`}>
+        {props.name}
+      </span>
+    </NavLink>
   );
 };
 
