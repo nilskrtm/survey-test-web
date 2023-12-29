@@ -37,13 +37,13 @@
 @layer components {
   @keyframes loading-authentication-button {
     0% {
-      @apply bg-purple-800;
+      @apply bg-purple-700;
     }
     50% {
-      @apply bg-purple-500;
+      @apply bg-purple-400;
     }
     100% {
-      @apply bg-purple-800;
+      @apply bg-purple-700;
     }
   }
   .loading-authentication-button {

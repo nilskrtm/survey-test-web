@@ -44,10 +44,7 @@ const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Elemen
 
   return (
     <div className="flex flex-col">
-      <label
-        htmlFor={id}
-        className="py-2 font-semibold"
-        onClick={(event) => event.preventDefault()}>
+      <label htmlFor={id} className="py-2 font-medium" onClick={(event) => event.preventDefault()}>
         {props.label}
       </label>
       {props.icon ? (
@@ -60,7 +57,7 @@ const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Elemen
             onChange={props.onChange}
             placeholder={props.placeholder}
             value={props.value}
-            className="w-full h-11 pr-12 rounded-md focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+            className="w-full h-11 pr-12 rounded-md font-normal focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
           />
           <FontAwesomeIcon
             icon={props.icon}
@@ -77,7 +74,7 @@ const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Elemen
           onChange={props.onChange}
           placeholder={props.placeholder}
           value={props.value}
-          className="w-full h-11 rounded-md focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+          className="w-full h-11 rounded-md font-normal focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
         />
       )}
       <p className="p-1 pt-2 text-sm text-red-500 font-medium">{props.validationMessage}</p>

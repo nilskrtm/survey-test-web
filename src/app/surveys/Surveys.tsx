@@ -16,7 +16,8 @@ const Surveys: () => React.JSX.Element = () => {
   }, []);
 
   return (
-    <div className="w-full container">
+    <div className="w-full h-[500px] p-4 rounded-lg bg-white border border-gray-200">
+      <p>Umfragen</p>
       <p>{JSON.stringify(surveys)}</p>
     </div>
   );

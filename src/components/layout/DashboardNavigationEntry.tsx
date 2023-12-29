@@ -24,18 +24,18 @@ const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.
   );
 
   return (
-    <div className="w-full p-[6px] flex flex-row items-center justify-between rounded-md hover:ring-1 hover:ring-purple-800">
+    <div className="w-full p-[6px] flex flex-row items-center justify-between rounded-md hover:ring-1 hover:ring-purple-700">
       <div className="relative pl-3 flex grow">
         <FontAwesomeIcon
           icon={props.icon}
           size="lg"
           className={`absolute top-1 pointer-events-none ${
-            active ? 'text-purple-800' : 'text-gray-800'
+            active ? 'text-purple-700' : 'text-gray-800'
           }`}
         />
         <NavLink
           className={`grow pl-8 text-lg font-medium ${
-            active ? 'text-purple-800' : 'text-gray-800'
+            active ? 'text-purple-700' : 'text-gray-800'
           }`}
           to={props.path}>
           {props.name}
@@ -43,7 +43,7 @@ const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.
       </div>
       {props.metric && !props.metricError && (
         <div className="cursor-pointer" onClick={() => navigate(props.path)}>
-          <p className={`text-lg font-normal ${active ? 'text-purple-800' : 'text-gray-800'}`}>
+          <p className={`text-lg font-normal ${active ? 'text-purple-700' : 'text-gray-800'}`}>
             {props.metric}
           </p>
         </div>

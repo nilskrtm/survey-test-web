@@ -19,11 +19,11 @@ const useWebSocket = (callback: (webSocketClient: WebSocketClient, error: boolea
 
         if (times > 5000) {
           clearInterval(interval);
-          callback(globalWebSocketClient as WebSocketClient, false);
+          callback(null as unknown as WebSocketClient, true);
         } else {
           if (globalWebSocketClient) {
             clearInterval(interval);
-            callback(globalWebSocketClient as WebSocketClient, true);
+            callback(globalWebSocketClient as WebSocketClient, false);
           }
         }
       }, 100);
