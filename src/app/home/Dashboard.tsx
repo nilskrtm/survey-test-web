@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
 import { faChartPie, faClipboard, faImage } from '@fortawesome/free-solid-svg-icons';
+import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
 
 const Dashboard: () => React.JSX.Element = () => {
+  useDashboardTitle('Übersicht');
+
   const [metricsLoading, setMetricsLoading] = useState<boolean>(false);
   const [surveyCount, setSurveyCount] = useState<number>(0);
   const [votingCount, setVotingCount] = useState<number>(0);

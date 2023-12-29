@@ -19,7 +19,7 @@ const DashboardMetricBox: (props: DashboardMetricBoxProps) => React.JSX.Element 
 ) => {
   return (
     <div
-      className={`w-full flex flex-row rounded-lg bg-white border border-gray-200 py-10 px-10 ${props.className}`}>
+      className={`w-full flex flex-row rounded-lg bg-white border border-gray-200 py-10 px-10 select-none ${props.className}`}>
       <div className="w-1/3 flex items-center justify-center">
         <div className={`rounded-full p-5 ${props.iconBackgroundColor}`}>
           <FontAwesomeIcon

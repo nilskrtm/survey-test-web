@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react';
 import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../store/hooks';
+import { selectDashboardTitle } from '../../store/features/passthrough.slice';
 import { selectFullName } from '../../store/features/user.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -24,6 +25,7 @@ type DashboardLayoutProps = { todo?: string };
 const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
   props: PropsWithChildren<DashboardLayoutProps>
 ) => {
+  const dashboardTitle = useAppSelector(selectDashboardTitle);
   const fullName = useAppSelector(selectFullName);
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -49,7 +51,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
           <p className="text-3xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
         </div>
         <div className="flex grow py-4 px-8 flex-row items-center justify-between">
-          <p className="text-3xl text-black font-semibold">Übersicht</p>
+          <p className="text-3xl text-black font-semibold">{dashboardTitle}</p>
           <div className="relative">
             <button
               className={`flex items-center justify-between px-4 py-2 text-gray-600 font-medium hover:text-black ${
