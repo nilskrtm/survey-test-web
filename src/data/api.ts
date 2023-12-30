@@ -103,7 +103,7 @@ class API {
     return apiResponse;
   }
 
-  public createErrorResponse(error: unknown) {
+  public createErrorResponse<T>(error: unknown) {
     const apiError: APIError = {
       status: undefined,
       errorMessage: 'Ein unbekannter Fehler ist aufgetreten.',
@@ -150,10 +150,10 @@ class API {
       }
     }
 
-    const apiResponse: APIResponse<undefined> = {
+    const apiResponse: APIResponse<T> = {
       success: false,
       status: apiError.status || -1,
-      data: undefined,
+      data: undefined as unknown as T,
       error: apiError
     };
 
@@ -168,118 +168,106 @@ class API {
     return store.getState().user.refreshToken;
   }
 
-  public request<T>(config: AxiosRequestConfig): Promise<APIResponse<T | undefined>> {
+  public request<T>(config: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .request<T, AxiosResponse<T>>(config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public get<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T | undefined>> {
+  public get<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .get<T, AxiosResponse<T>>(url, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public options<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T | undefined>> {
+  public options<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .options<T, AxiosResponse<T>>(url, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public delete<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T | undefined>> {
+  public delete<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .delete<T, AxiosResponse<T>>(url, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public head<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T | undefined>> {
+  public head<T>(url: string, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .head<T, AxiosResponse<T>>(url, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public post<T, B>(
-    url: string,
-    data?: B,
-    config?: AxiosRequestConfig
-  ): Promise<APIResponse<T | undefined>> {
+  public post<T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .post<T, AxiosResponse<T>, B>(url, data, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public put<T, B>(
-    url: string,
-    data?: B,
-    config?: AxiosRequestConfig
-  ): Promise<APIResponse<T | undefined>> {
+  public put<T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .put<T, AxiosResponse<T>, B>(url, data, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }
 
-  public patch<T, B>(
-    url: string,
-    data?: B,
-    config?: AxiosRequestConfig
-  ): Promise<APIResponse<T | undefined>> {
+  public patch<T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<APIResponse<T>> {
     return new Promise((resolve) => {
       this.client
         .patch<T, AxiosResponse<T>, B>(url, data, config)
         .then((response) => {
-          resolve(this.createSuccessResponse(response));
+          resolve(this.createSuccessResponse<T>(response));
         })
         .catch((error) => {
-          resolve(this.createErrorResponse(error));
+          resolve(this.createErrorResponse<T>(error));
         });
     });
   }

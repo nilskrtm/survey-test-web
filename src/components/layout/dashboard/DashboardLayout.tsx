@@ -116,12 +116,8 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             />
           </NavLink>
         </nav>
-        <main className="h-full w-full flex flex-col">
-          <div className="w-full h-full overflow-y-scroll px-6 bg-gray-100">
-            <div className="h-8" />
-            {props.children}
-            <div className="h-8" />
-          </div>
+        <main className="w-full h-full flex flex-col p-6 bg-gray-100 overflow-y-scroll">
+          <div className="w-full flex-1">{props.children}</div>
         </main>
       </div>
     </div>

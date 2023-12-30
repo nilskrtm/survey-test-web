@@ -1,7 +1,7 @@
 type APIResponse<T> = {
   success: boolean;
   status: number;
-  data?: T;
+  data: T;
   error?: APIError;
 };
 
@@ -12,11 +12,11 @@ type APIError = {
   fieldErrors: { [field: string]: string };
 };
 
-type Paging = {
+type APIPaging = {
   perPage: number;
   page: number;
   lastPage: number;
   count: number;
 };
 
-export type { APIResponse, APIError, Paging };
+export type { APIResponse, APIError, APIPaging };

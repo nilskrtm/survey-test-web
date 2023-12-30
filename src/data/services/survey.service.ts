@@ -1,9 +1,11 @@
 import { Survey } from '../types/survey.types';
-import { Paging } from '../types/common.types';
+import { APIPaging } from '../types/common.types';
 import API from '../api';
 
-const getSurveys = () => {
-  return API.get<{ surveys: Array<Survey>; paging: Paging }>('/surveys');
+const getSurveys = (page: number, perPage: number) => {
+  return API.get<{ surveys: Array<Survey>; paging: APIPaging }>(
+    '/surveys?page=' + page + '&perPage=' + perPage
+  );
 };
 
 const getSurvey = (id: string) => {
