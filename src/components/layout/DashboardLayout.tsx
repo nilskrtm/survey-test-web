@@ -102,6 +102,8 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
           </div>
           <NavLink
             className="flex flex-col items-center justify-center space-y-5 rounded-lg p-6 mb-10 bg-violet-200 border border-gray-300 group"
+            target="_blank"
+            rel="noopener noreferrer"
             to="/cdn/gbu-smartdata.apk">
             <span className="text-lg text-gray-700 font-semibold group-hover:text-black">
               App herunterladen
