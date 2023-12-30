@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react';
+import React, { createRef, PropsWithChildren, useRef, useState } from 'react';
 import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../store/hooks';
 import { selectDashboardTitle } from '../../store/features/passthrough.slice';
@@ -19,6 +19,7 @@ import AuthenticationService from '../../data/services/authentication.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
 import { faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { NavLink } from 'react-router-dom';
+import useClickOutside from '../../utils/hooks/use.click.outside';
 
 type DashboardLayoutProps = { todo?: string };
 
@@ -29,16 +30,23 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   const fullName = useAppSelector(selectFullName);
 
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = createRef<HTMLDivElement>();
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  useClickOutside(dropdownRef, () => {
+    if (dropdownOpen) {
+      toggleDropdown();
+    }
+  });
 
   useWebSocket((ws, error) => {
     if (!error) {
       ws.send({ type: 88888 });
     }
   });
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
 
   const logout = () => {
     AuthenticationService.logout();
@@ -52,7 +60,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
         </div>
         <div className="flex grow py-4 px-8 flex-row items-center justify-between">
           <p className="text-3xl text-black font-semibold">{dashboardTitle}</p>
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               className={`flex items-center justify-between px-4 py-2 text-gray-600 font-medium hover:text-black ${
                 dropdownOpen
