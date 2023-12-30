@@ -1,8 +1,8 @@
 import React, { createRef, PropsWithChildren, useRef, useState } from 'react';
 import DashboardNavigationEntry from './DashboardNavigationEntry';
-import { useAppSelector } from '../../store/hooks';
-import { selectDashboardTitle } from '../../store/features/passthrough.slice';
-import { selectFullName } from '../../store/features/user.slice';
+import { useAppSelector } from '../../../store/hooks';
+import { selectDashboardTitle } from '../../../store/features/passthrough.slice';
+import { selectFullName } from '../../../store/features/user.slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChartPie,
@@ -15,11 +15,11 @@ import {
   faRightFromBracket,
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
-import AuthenticationService from '../../data/services/authentication.service';
-import useWebSocket from '../../utils/hooks/use.websocket.hook';
+import AuthenticationService from '../../../data/services/authentication.service';
+import useWebSocket from '../../../utils/hooks/use.websocket.hook';
 import { faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { NavLink } from 'react-router-dom';
-import useClickOutside from '../../utils/hooks/use.click.outside';
+import useClickOutside from '../../../utils/hooks/use.click.outside';
 
 type DashboardLayoutProps = { todo?: string };
 
