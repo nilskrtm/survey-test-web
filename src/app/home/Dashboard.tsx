@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
 import { faChartPie, faClipboard, faImage } from '@fortawesome/free-solid-svg-icons';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
+import useWebSocket from '../../utils/hooks/use.websocket.hook';
 
 const Dashboard: () => React.JSX.Element = () => {
   useDashboardTitle('Übersicht');
@@ -17,6 +18,12 @@ const Dashboard: () => React.JSX.Element = () => {
     setVotingCount(0);
     setPictureCount(0);
   }, []);
+
+  useWebSocket((ws, error) => {
+    if (!error) {
+      ws.send({ type: 88888 });
+    }
+  });
 
   return (
     <div className="w-full grid grid-cols-4 gap-12">

@@ -1,4 +1,4 @@
-import React, { createRef, PropsWithChildren, useRef, useState } from 'react';
+import React, { createRef, PropsWithChildren, useState } from 'react';
 import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../../store/hooks';
 import { selectDashboardTitle } from '../../../store/features/passthrough.slice';
@@ -16,7 +16,6 @@ import {
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
 import AuthenticationService from '../../../data/services/authentication.service';
-import useWebSocket from '../../../utils/hooks/use.websocket.hook';
 import { faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { NavLink } from 'react-router-dom';
 import useClickOutside from '../../../utils/hooks/use.click.outside';
@@ -39,12 +38,6 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   useClickOutside(dropdownRef, () => {
     if (dropdownOpen) {
       toggleDropdown();
-    }
-  });
-
-  useWebSocket((ws, error) => {
-    if (!error) {
-      ws.send({ type: 88888 });
     }
   });
 
