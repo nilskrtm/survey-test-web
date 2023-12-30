@@ -16,6 +16,7 @@ import Imprint from './app/legal/Imprint';
 import Surveys from './app/surveys/Surveys';
 import AnswerPictures from './app/answer.pictures/AnswerPictures';
 import Settings from './app/settings/Settings';
+import Votings from './app/votings/Votings';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -25,6 +26,7 @@ const loginRoute = <Login />;
 const logoutRoute = <Logout />;
 const dashboardRoute = layoutRoute(<Dashboard />);
 const surveysRoute = layoutRoute(<Surveys />);
+const votingsRoute = layoutRoute(<Votings />);
 const answerPicturesRoute = layoutRoute(<AnswerPictures />);
 const settingsRoute = layoutRoute(<Settings />);
 
@@ -41,6 +43,7 @@ root.render(
             <Route path="/logout" element={logoutRoute} />
             <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
             <Route path="/surveys" element={protectRoute(surveysRoute, false)} />
+            <Route path="/votings" element={protectRoute(votingsRoute, false)} />
             <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
             <Route path="/settings" element={protectRoute(settingsRoute, false)} />
             <Route path="*" element={defaultRoute} />
