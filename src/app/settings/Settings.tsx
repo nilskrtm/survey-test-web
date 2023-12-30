@@ -5,8 +5,10 @@ const Settings: () => React.JSX.Element = () => {
   useDashboardTitle('Einstellungen');
 
   return (
-    <div className="w-full h-[500px] p-4 rounded-lg bg-white border border-gray-200">
-      <p>Einstellungen</p>
+    <div className="w-full grid grid-cols-1 gap-12">
+      <div className="w-full flex flex-row items-center justify-between rounded-lg bg-white border border-gray-200 py-10 px-10">
+        <p>Einstellungen</p>
+      </div>
     </div>
   );
 };
