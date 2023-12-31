@@ -13,7 +13,7 @@ const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.J
   props: PropsWithChildren<ProtectedRouteProps>
 ) => {
   const isLoggedIn = useAppSelector(selectLoggedIn);
-  const permissionLevel = useAppSelector(selectPermissionLevel);
+  const permissionLevel: PermissionLevel = useAppSelector(selectPermissionLevel);
   const location = useLocation();
 
   if (!isLoggedIn) {

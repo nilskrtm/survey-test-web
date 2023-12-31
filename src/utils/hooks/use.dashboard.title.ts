@@ -11,7 +11,7 @@ const useDashboardTitle: (title: string) => (newTitle: string) => void = (title:
 
   useEffect(() => {
     setDashboardTitleInternal(title);
-  });
+  }, []);
 
   return setDashboardTitleInternal;
 };

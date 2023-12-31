@@ -23,6 +23,7 @@ interface SurveyQueryParams extends QuerySearchParams {
 
 const Surveys: () => React.JSX.Element = () => {
   useDashboardTitle('Meine Umfragen');
+
   const [queryParams, setQueryParams] = useQueryParams({ page: 1, search: '' });
 
   const [searchText, setSearchText] = useState<string>('');
@@ -68,7 +69,7 @@ const Surveys: () => React.JSX.Element = () => {
           <input
             className="w-full h-11 font-normal text-lg text-black placeholder-shown:text-gray-600 pl-14 pr-6 border-b-[1.5px] border-gray-600 focus:outline-none peer"
             placeholder="Suchen..."
-            value={searchText}
+            value={searchText || ''}
             onChange={(event) => setSearchText((event.target as HTMLInputElement).value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
@@ -108,7 +109,7 @@ const Surveys: () => React.JSX.Element = () => {
             return (
               <NavLink
                 className="w-full h-40 rounded-lg bg-white border border-gray-200 hover:ring-1 hover:ring-purple-500"
-                key={survey._id}
+                key={'survey-card-' + survey._id}
                 to={'/surveys/' + survey._id}>
                 <div className="w-full flex flex-col items-start justify-center py-6 px-10">
                   <span className="w-full font-semibold text-xl text-black">{survey.name}</span>
