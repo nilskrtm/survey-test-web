@@ -33,7 +33,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props: PagingBo
   return (
     <div className="w-full flex flex-row justify-center items-center rounded-lg bg-white border border-gray-200 py-4 px-10 select-none">
       <button
-        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700"
+        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700 disabled:cursor-not-allowed"
         title="Erste Seite"
         onClick={clickFirstPage}
         disabled={props.pagination.page === 1}>
@@ -45,7 +45,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props: PagingBo
         />
       </button>
       <button
-        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700"
+        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700 disabled:cursor-not-allowed"
         title="Vorherige Seite"
         onClick={clickPreviousPage}
         disabled={props.pagination.page === 1}>
@@ -60,7 +60,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props: PagingBo
         Seite {props.pagination.page} von {props.pagination.lastPage}
       </p>
       <button
-        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700"
+        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700 disabled:cursor-not-allowed"
         title="Nächste Seite"
         onClick={clickNextPage}
         disabled={props.pagination.page === props.pagination.lastPage}>
@@ -72,7 +72,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props: PagingBo
         />
       </button>
       <button
-        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700"
+        className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700 disabled:cursor-not-allowed"
         title="Letzte Seite"
         onClick={clickLastPage}
         disabled={props.pagination.page === props.pagination.lastPage}>

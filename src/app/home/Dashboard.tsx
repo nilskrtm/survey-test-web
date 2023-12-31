@@ -1,23 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
-import { faChartPie, faClipboard, faImage } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChartPie,
+  faClipboard,
+  faImage,
+  faSquarePollVertical
+} from '@fortawesome/free-solid-svg-icons';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
+import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';
+import { DashboardMetrics } from '../../data/types/dashboard.types';
+import DashboardService from '../../data/services/dashboard.service';
 
 const Dashboard: () => React.JSX.Element = () => {
   useDashboardTitle('Übersicht');
 
-  const [metricsLoading, setMetricsLoading] = useState<boolean>(false);
-  const [surveyCount, setSurveyCount] = useState<number>(0);
-  const [votingCount, setVotingCount] = useState<number>(0);
-  const [pictureCount, setPictureCount] = useState<number>(0);
+  const metricsLoader = useLoading();
+  const [metrics, setMetrics] = useState<DashboardMetrics>({
+    surveyCount: 0,
+    votingCount: 0,
+    pictureCount: 0
+  });
 
   useEffect(() => {
-    setMetricsLoading(true);
-    setSurveyCount(0);
-    setVotingCount(0);
-    setPictureCount(0);
+    loadMetrics();
   }, []);
+
+  const loadMetrics = () => {
+    metricsLoader.set(LoadingOption.LOADING);
+
+    DashboardService.getMetrics().then((response) => {
+      if (response.success) {
+        setMetrics(response.data.metrics);
+        metricsLoader.set(LoadingOption.RESET);
+      } else {
+        metricsLoader.set(LoadingOption.ERROR);
+      }
+    });
+  };
 
   useWebSocket((ws, error) => {
     if (!error) {
@@ -26,23 +46,23 @@ const Dashboard: () => React.JSX.Element = () => {
   });
 
   return (
-    <div className="w-full grid grid-cols-4 gap-12">
+    <div className="w-full grid grid-cols-4 gap-12 p-6 overflow-y-scroll">
       <DashboardMetricBox
         className=""
         icon={faClipboard}
         iconColor="text-purple-700"
         iconBackgroundColor="bg-purple-200"
-        loading={metricsLoading}
-        metric={surveyCount}
+        loading={metricsLoader.loading}
+        metric={metricsLoader.error ? '?' : metrics.surveyCount}
         text="Umfragen gesamt"
       />
       <DashboardMetricBox
         className=""
-        icon={faChartPie}
+        icon={faSquarePollVertical}
         iconColor="text-cyan-700"
         iconBackgroundColor="bg-cyan-100"
-        loading={metricsLoading}
-        metric={votingCount}
+        loading={metricsLoader.loading}
+        metric={metricsLoader.error ? '?' : metrics.votingCount}
         text="Abstimmungen gesammelt"
       />
       <DashboardMetricBox
@@ -50,8 +70,8 @@ const Dashboard: () => React.JSX.Element = () => {
         icon={faImage}
         iconColor="text-orange-700"
         iconBackgroundColor="bg-orange-200"
-        loading={metricsLoading}
-        metric={pictureCount}
+        loading={metricsLoader.loading}
+        metric={metricsLoader.error ? '?' : metrics.pictureCount}
         text="Bilder für Anworten"
       />
     </div>

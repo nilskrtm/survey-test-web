@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavigateOptions, URLSearchParamsInit, useSearchParams } from 'react-router-dom';
 
-type QuerySearchParams = { [key: string]: string };
+export type QuerySearchParams = { [key: string]: string | number };
 
 type QuerySearchParamsInit = QuerySearchParams;
 
@@ -19,7 +19,7 @@ const useQueryParams: (
     initialSearchParams = new URLSearchParams();
 
     for (const key in defaultInit) {
-      initialSearchParams.append(key, defaultInit[key]);
+      initialSearchParams.append(key, defaultInit[key] as string);
     }
   }
 
@@ -53,7 +53,7 @@ const useQueryParams: (
       const newSearchParams: URLSearchParams = new URLSearchParams();
 
       for (const key in queryParamsDict) {
-        newSearchParams.append(key, queryParamsDict[key]);
+        newSearchParams.append(key, queryParamsDict[key] as string);
       }
 
       if (navigateOpts) {

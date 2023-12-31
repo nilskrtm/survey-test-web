@@ -80,7 +80,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
         </div>
       </header>
       <div className="w-full h-[calc(100%-74px)] flex flex-row">
-        <nav className="w-72 h-full flex flex-col shrink items-center justify-between bg-gray-50 select-none">
+        <nav className="w-72 h-full flex flex-col items-center justify-between bg-gray-50 select-none">
           <div className="w-full p-5 pt-8 flex flex-col items-center justify-center">
             <button
               type="button"
@@ -116,9 +116,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             />
           </NavLink>
         </nav>
-        <main className="w-full h-full flex flex-col p-6 bg-gray-100 overflow-y-scroll">
-          <div className="w-full flex-1">{props.children}</div>
-        </main>
+        <main className="w-full h-full block bg-gray-100">{props.children}</main>
       </div>
     </div>
   );
