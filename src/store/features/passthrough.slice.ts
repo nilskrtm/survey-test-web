@@ -13,6 +13,7 @@ export const passthroughSlice: Slice<PassthroughState> = createSlice({
   name: 'passthrough',
   initialState: initialState,
   reducers: {
+    // no reset needed, state is not persisted
     setDashboardTitle: (state, action: PayloadAction<PassthroughState>) => {
       state.dashboardTitle = action.payload.dashboardTitle;
     }
