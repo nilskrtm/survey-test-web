@@ -2,6 +2,7 @@ import { useAppSelector } from '../../store/hooks';
 import { selectAccessToken } from '../../store/features/user.slice';
 import WebSocketClient from '../websocket/WebSocketClient';
 import WebSocketFactory from '../websocket/WebSocketFactory';
+import { useEffect } from 'react';
 
 export let creating = false;
 export let globalWebSocketClient: WebSocketClient | null = null;
@@ -9,38 +10,40 @@ export let globalWebSocketClient: WebSocketClient | null = null;
 const useWebSocket = (callback: (webSocketClient: WebSocketClient, error: boolean) => void) => {
   const accessToken = useAppSelector(selectAccessToken);
 
-  if (globalWebSocketClient) {
-    callback(globalWebSocketClient as WebSocketClient, false);
-  } else {
-    if (creating) {
-      let times = 0;
-      const interval = setInterval(() => {
-        times = times + 100;
-
-        if (times > 5000) {
-          clearInterval(interval);
-          callback(null as unknown as WebSocketClient, true);
-        } else {
-          if (globalWebSocketClient) {
-            clearInterval(interval);
-            callback(globalWebSocketClient as WebSocketClient, false);
-          }
-        }
-      }, 100);
+  useEffect(() => {
+    if (globalWebSocketClient) {
+      callback(globalWebSocketClient as WebSocketClient, false);
     } else {
-      creating = true;
+      if (creating) {
+        let times = 0;
+        const interval = setInterval(() => {
+          times = times + 100;
 
-      new WebSocketFactory()
-        .create(accessToken)
-        .then((webSocket) => {
-          globalWebSocketClient = new WebSocketClient(webSocket);
-          creating = false;
+          if (times > 5000) {
+            clearInterval(interval);
+            callback(null as unknown as WebSocketClient, true);
+          } else {
+            if (globalWebSocketClient) {
+              clearInterval(interval);
+              callback(globalWebSocketClient as WebSocketClient, false);
+            }
+          }
+        }, 100);
+      } else {
+        creating = true;
 
-          callback(globalWebSocketClient, false);
-        })
-        .catch(() => callback(null as unknown as WebSocketClient, true));
+        new WebSocketFactory()
+          .create(accessToken)
+          .then((webSocket) => {
+            globalWebSocketClient = new WebSocketClient(webSocket);
+            creating = false;
+
+            callback(globalWebSocketClient, false);
+          })
+          .catch(() => callback(null as unknown as WebSocketClient, true));
+      }
     }
-  }
+  }, []);
 
   return null;
 };
