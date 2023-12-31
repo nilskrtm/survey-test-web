@@ -5,7 +5,12 @@ import userReducer, { UserState } from '../store/features/user.slice';
 import passthroughReducer, { PassthroughState } from '../store/features/passthrough.slice';
 import storage from 'redux-persist/lib/storage';
 
-const persistConfig: PersistConfig<{ user: UserState; passthrough: PassthroughState }> = {
+type RawState = {
+  user: UserState;
+  passthrough: PassthroughState;
+};
+
+const persistConfig: PersistConfig<RawState> = {
   key: 'root',
   storage: storage,
   blacklist: ['passthrough']
@@ -19,10 +24,7 @@ const reducers = combineReducers<{
   passthrough: passthroughReducer
 });
 
-const persistedReducer = persistReducer<{ user: UserState; passthrough: PassthroughState }>(
-  persistConfig,
-  reducers
-);
+const persistedReducer = persistReducer<RawState>(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
