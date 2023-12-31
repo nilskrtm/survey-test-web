@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
-import {
-  faChartPie,
-  faClipboard,
-  faImage,
-  faSquarePollVertical
-} from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faImage, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
 import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';

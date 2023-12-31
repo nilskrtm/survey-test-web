@@ -9,3 +9,5 @@ const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (
 ) => {
   return <div></div>;
 };
+
+export default Modal;
