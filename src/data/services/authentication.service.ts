@@ -13,10 +13,12 @@ const login: (
   password: string
 ) => Promise<APIResponse<AuthResponseData | undefined>> = (username, password) => {
   return new Promise((resolve) => {
+    const encodedPassword: string = btoa(password);
+
     defaultClient
       .post<AuthResponseData, AxiosResponse<AuthResponseData>, AuthRequestData>('/auth', {
         username: username,
-        password: password
+        password: encodedPassword
       })
       .then((response) => {
         resolve(API.createSuccessResponse(response));
