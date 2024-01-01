@@ -4,7 +4,8 @@ import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { persistedStore, store } from './store/store';
-import { GlobalNavigationProvider } from './components/navigation/GlobalNavigationProvider';
+import GlobalNavigationProvider from './components/navigation/GlobalNavigationProvider';
+import LiveUserDataProvider from './components/user/LiveUserDataProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RedirectRoute from './components/navigation/RedirectRoute';
 import Logout from './app/authentication/Logout';
@@ -35,19 +36,21 @@ root.render(
     <PersistGate loading={null} persistor={persistedStore}>
       <BrowserRouter>
         <GlobalNavigationProvider>
-          <Routes>
-            <Route path="/" element={defaultRoute} />
-            <Route path="/imprint" element={imprintRoute} />
-            <Route path="/impressum" element={imprintRoute} />
-            <Route path="/login" element={loginRoute} />
-            <Route path="/logout" element={logoutRoute} />
-            <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
-            <Route path="/surveys" element={protectRoute(surveysRoute, false)} />
-            <Route path="/votings" element={protectRoute(votingsRoute, false)} />
-            <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
-            <Route path="/settings" element={protectRoute(settingsRoute, false)} />
-            <Route path="*" element={defaultRoute} />
-          </Routes>
+          <LiveUserDataProvider>
+            <Routes>
+              <Route path="/" element={defaultRoute} />
+              <Route path="/imprint" element={imprintRoute} />
+              <Route path="/impressum" element={imprintRoute} />
+              <Route path="/login" element={loginRoute} />
+              <Route path="/logout" element={logoutRoute} />
+              <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
+              <Route path="/surveys" element={protectRoute(surveysRoute, false)} />
+              <Route path="/votings" element={protectRoute(votingsRoute, false)} />
+              <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
+              <Route path="/settings" element={protectRoute(settingsRoute, false)} />
+              <Route path="*" element={defaultRoute} />
+            </Routes>
+          </LiveUserDataProvider>
         </GlobalNavigationProvider>
       </BrowserRouter>
     </PersistGate>
