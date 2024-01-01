@@ -7,7 +7,7 @@ import axios, {
 } from 'axios';
 import { parseTokenData } from '../utils/authentication/authentication.util';
 import { store } from '../store/store';
-import { setUserData } from '../store/features/user.slice';
+import { resetUserData, setUserData } from '../store/features/user.slice';
 import { clearTokens, setAuthenticationData } from '../store/features/authentication.slice';
 import { APIError, APIResponse } from './types/common.types';
 import { globalNavigate } from '../components/navigation/GlobalNavigationProvider';
@@ -89,6 +89,7 @@ class API {
             return this.client(originalRequest);
           } catch (error) {
             store.dispatch(clearTokens({}));
+            store.dispatch(resetUserData({}));
             globalNavigate('/');
           }
         }

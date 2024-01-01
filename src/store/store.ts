@@ -15,6 +15,7 @@ type RawState = {
 const persistConfig: PersistConfig<RawState> = {
   key: 'root',
   storage: storage,
+  whitelist: ['authentication', 'user'],
   blacklist: ['passthrough']
 };
 
