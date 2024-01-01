@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
 import { faClipboard, faImage, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
-import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';
+import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
@@ -11,7 +11,7 @@ import { SubscriptionType } from '../../utils/interfaces/websocket.data.interfac
 const Dashboard: () => React.JSX.Element = () => {
   useDashboardTitle('Übersicht');
 
-  const metricsLoader = useLoading();
+  const metricsLoader = useLoader();
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     surveyCount: 0,
     votingCount: 0,

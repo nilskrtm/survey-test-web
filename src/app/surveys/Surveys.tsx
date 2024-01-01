@@ -4,7 +4,7 @@ import usePagination from '../../utils/hooks/use.pagination.hook';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
 import PagingBox from '../../components/paging/PagingBox';
 import SurveyService from '../../data/services/survey.service';
-import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';
+import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
 import useQueryParams, { QuerySearchParams } from '../../utils/hooks/use.query.params';
 import { BounceLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +28,7 @@ const Surveys: () => React.JSX.Element = () => {
 
   const [searchText, setSearchText] = useState<string>('');
 
-  const loader = useLoading();
+  const loader = useLoader();
   const pagination = usePagination(10);
   const [surveys, setSurveys] = useState<Array<Survey>>([]);
 

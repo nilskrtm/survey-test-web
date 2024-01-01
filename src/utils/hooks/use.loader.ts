@@ -3,25 +3,31 @@ import { useState } from 'react';
 export enum LoadingOption {
   RESET = 0,
   LOADING = 1,
-  ERROR = 2
+  LOADING_SILENT = 2,
+  ERROR = 3
 }
 
 type LoadingState = {
   loading: boolean;
+  loadingSilent: boolean;
   error: boolean;
   set: (state: LoadingOption) => void;
 };
 
-const useLoading: () => LoadingState = () => {
-  const [loadingState, setLoadingState] = useState<{ loading: boolean; error: boolean }>({
+type LoadingStateInternal = Pick<LoadingState, 'loading' | 'loadingSilent' | 'error'>;
+
+const useLoader: () => LoadingState = () => {
+  const [loadingState, setLoadingState] = useState<LoadingStateInternal>({
     loading: false,
+    loadingSilent: false,
     error: false
   });
 
   const setLoadingStateInternal = (option: LoadingOption) => {
     if (option === LoadingOption.RESET) {
-      const merge: Partial<LoadingState> = {
+      const merge: LoadingStateInternal = {
         loading: false,
+        loadingSilent: false,
         error: false
       };
 
@@ -30,8 +36,20 @@ const useLoading: () => LoadingState = () => {
         ...merge
       }));
     } else if (option === LoadingOption.LOADING) {
-      const merge: Partial<LoadingState> = {
+      const merge: LoadingStateInternal = {
         loading: true,
+        loadingSilent: false,
+        error: false
+      };
+
+      setLoadingState((state) => ({
+        ...state,
+        ...merge
+      }));
+    } else if (option === LoadingOption.LOADING_SILENT) {
+      const merge: LoadingStateInternal = {
+        loading: true,
+        loadingSilent: true,
         error: false
       };
 
@@ -40,8 +58,9 @@ const useLoading: () => LoadingState = () => {
         ...merge
       }));
     } else if (option === LoadingOption.ERROR) {
-      const merge: Partial<LoadingState> = {
+      const merge: LoadingStateInternal = {
         loading: false,
+        loadingSilent: false,
         error: true
       };
 
@@ -58,4 +77,4 @@ const useLoading: () => LoadingState = () => {
   };
 };
 
-export default useLoading;
+export default useLoader;
