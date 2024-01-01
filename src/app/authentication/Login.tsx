@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { selectLoggedIn, setUserData } from '../../store/features/user.slice';
+import { selectLoggedIn, setAuthenticationData } from '../../store/features/authentication.slice';
+import { setUserData } from '../../store/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
 import { faKey, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -43,15 +44,19 @@ const Login: () => React.JSX.Element = () => {
           const { payload } = parseTokenData(accessToken);
 
           dispatch(
-            setUserData({
+            setAuthenticationData({
               userId: payload.userId,
-              username: payload.username,
-              email: payload.email,
-              firstname: payload.firstname,
-              lastname: payload.lastname,
               accessToken: accessToken,
               refreshToken: refreshToken,
               permissionLevel: payload.permissionLevel
+            })
+          );
+          dispatch(
+            setUserData({
+              username: payload.username,
+              email: payload.email,
+              firstname: payload.firstname,
+              lastname: payload.lastname
             })
           );
 

@@ -1,11 +1,13 @@
 import { PersistConfig, persistReducer, persistStore, Persistor } from 'redux-persist';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
+import authenticationReducer, { AuthenticationState } from './features/authentication.slice';
 import userReducer, { UserState } from '../store/features/user.slice';
 import passthroughReducer, { PassthroughState } from '../store/features/passthrough.slice';
 import storage from 'redux-persist/lib/storage';
 
 type RawState = {
+  authentication: AuthenticationState;
   user: UserState;
   passthrough: PassthroughState;
 };
@@ -17,9 +19,11 @@ const persistConfig: PersistConfig<RawState> = {
 };
 
 const reducers = combineReducers<{
+  authentication: typeof authenticationReducer;
   user: typeof userReducer;
   passthrough: typeof passthroughReducer;
 }>({
+  authentication: authenticationReducer,
   user: userReducer,
   passthrough: passthroughReducer
 });

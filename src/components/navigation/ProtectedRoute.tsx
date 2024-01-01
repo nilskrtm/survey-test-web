@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import React, { PropsWithChildren } from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { selectLoggedIn, selectPermissionLevel } from '../../store/features/user.slice';
+import { selectLoggedIn, selectPermissionLevel } from '../../store/features/authentication.slice';
 import { PermissionLevel } from '../../utils/enums/permissionlevel.enum';
 
 type ProtectedRouteProps = {

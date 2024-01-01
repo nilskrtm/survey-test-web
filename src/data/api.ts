@@ -7,7 +7,8 @@ import axios, {
 } from 'axios';
 import { parseTokenData } from '../utils/authentication/authentication.util';
 import { store } from '../store/store';
-import { clearTokens, setUserData } from '../store/features/user.slice';
+import { setUserData } from '../store/features/user.slice';
+import { clearTokens, setAuthenticationData } from '../store/features/authentication.slice';
 import { APIError, APIResponse } from './types/common.types';
 import { globalNavigate } from '../components/navigation/GlobalNavigationProvider';
 
@@ -67,15 +68,19 @@ class API {
             const payload = parseTokenData(response.data.accessToken).payload;
 
             store.dispatch(
-              setUserData({
+              setAuthenticationData({
                 userId: payload.userId,
-                username: payload.username,
-                email: payload.email,
-                firstname: payload.firstname,
-                lastname: payload.lastname,
                 accessToken: accessToken,
                 refreshToken: refreshToken,
                 permissionLevel: payload.permissionLevel
+              })
+            );
+            store.dispatch(
+              setUserData({
+                username: payload.username,
+                email: payload.email,
+                firstname: payload.firstname,
+                lastname: payload.lastname
               })
             );
 
@@ -161,11 +166,11 @@ class API {
   }
 
   private getAccessToken(): string {
-    return store.getState().user.accessToken;
+    return store.getState().authentication.accessToken;
   }
 
   private getRefreshToken(): string {
-    return store.getState().user.refreshToken;
+    return store.getState().authentication.refreshToken;
   }
 
   public request<T>(config: AxiosRequestConfig): Promise<APIResponse<T>> {

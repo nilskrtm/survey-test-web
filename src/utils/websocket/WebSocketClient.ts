@@ -114,7 +114,7 @@ class WebSocketClient {
   }
 
   private getWebSocketUrl() {
-    return 'ws://' + baseUrl + '?accessToken=' + store.getState().user.accessToken;
+    return 'ws://' + baseUrl + '?accessToken=' + store.getState().authentication.accessToken;
   }
 }
 
