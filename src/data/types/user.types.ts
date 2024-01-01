@@ -4,6 +4,7 @@ type User = {
   email: string;
   firstname: string;
   lastname: string;
+  permissionLevel: string;
 };
 
 export type { User };

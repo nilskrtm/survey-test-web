@@ -34,11 +34,14 @@ export const authenticationSlice: Slice<AuthenticationState> = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.permissionLevel = action.payload.permissionLevel;
+    },
+    setPermissionLevel: (state, action: PayloadAction<AuthenticationState>) => {
+      state.permissionLevel = action.payload.permissionLevel;
     }
   }
 });
 
-export const { resetAuthenticationData, clearTokens, setAuthenticationData } =
+export const { resetAuthenticationData, clearTokens, setAuthenticationData, setPermissionLevel } =
   authenticationSlice.actions;
 
 export const selectLoggedIn = (state: RootState) =>
