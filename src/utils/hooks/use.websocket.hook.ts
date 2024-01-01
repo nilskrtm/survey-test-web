@@ -12,7 +12,9 @@ const useWebSocket = (
       globalWebSocketClient = new WebSocketClient();
     }
 
-    new WebSocketClientWrapper(globalWebSocketClient, callback);
+    const webSocketClientWrapper = new WebSocketClientWrapper(globalWebSocketClient, callback);
+
+    return () => webSocketClientWrapper.subscriptions().unsubscribeAll();
   }, []);
 };
 
