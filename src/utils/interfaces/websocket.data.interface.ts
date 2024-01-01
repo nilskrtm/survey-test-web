@@ -1,7 +1,16 @@
 export enum WebSocketDataType {
-  TEST = 0
+  SUBSCRIPTION = 'SUBSCRIPTION'
 }
 
-export interface WebSocketData {
+export enum SubscriptionType {
+  DASHBOARD_METRICS = 'DASHBOARD_METRICS'
+}
+
+export interface SubscriptionData {
+  subscriptionType: SubscriptionType;
+}
+
+export interface WebSocketData<T = any> {
   type: WebSocketDataType;
+  data: T;
 }

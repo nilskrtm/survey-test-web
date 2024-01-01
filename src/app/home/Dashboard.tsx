@@ -6,7 +6,11 @@ import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
-import { WebSocketDataType } from '../../utils/interfaces/websocket.data.interface';
+import {
+  SubscriptionData,
+  SubscriptionType,
+  WebSocketDataType
+} from '../../utils/interfaces/websocket.data.interface';
 
 const Dashboard: () => React.JSX.Element = () => {
   useDashboardTitle('Übersicht');
@@ -36,7 +40,10 @@ const Dashboard: () => React.JSX.Element = () => {
   };
 
   useWebSocket((wrapper) => {
-    wrapper.sendRaw({ type: WebSocketDataType.TEST });
+    wrapper.sendRaw({
+      type: WebSocketDataType.SUBSCRIPTION,
+      data: { subscriptionType: SubscriptionType.DASHBOARD_METRICS } as SubscriptionData
+    });
 
     return () => console.log('test');
   });

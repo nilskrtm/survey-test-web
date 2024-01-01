@@ -21,13 +21,12 @@ class WebSocketClientWrapper {
   }
 
   private setup() {
-    this.webSocketClient.onConnect(() => {
-      const returnFunction = this.hookCallback(this);
+    if (this.webSocketClient.isConnected()) {
+      this.callHook();
+    }
 
-      if (returnFunction && typeof returnFunction === 'function') {
-        this.hookCleanup = returnFunction;
-        this.callCleanup = true;
-      }
+    this.webSocketClient.onConnect(() => {
+      this.callHook();
     });
 
     this.webSocketClient.onClose(() => {
@@ -42,7 +41,16 @@ class WebSocketClientWrapper {
     });
   }
 
-  public sendRaw(data: WebSocketData) {
+  private callHook() {
+    const returnFunction = this.hookCallback(this);
+
+    if (returnFunction && typeof returnFunction === 'function') {
+      this.hookCleanup = returnFunction;
+      this.callCleanup = true;
+    }
+  }
+
+  public sendRaw<T = any>(data: WebSocketData<T>) {
     this.webSocketClient.sendMessage(JSON.stringify(data));
   }
 }
