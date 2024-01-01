@@ -2,6 +2,7 @@ import { WebSocketData } from '../interfaces/websocket.data.interface';
 import { store } from '../../store/store';
 
 const baseUrl: string = process.env.REACT_APP_WS_ENDPOINT || '127.0.0.1:12345';
+const reconnectTimeout: number = parseInt(process.env.REACT_APP_WS_RECONNECT_TIMEOUT || '3000');
 
 class WebSocketClient {
   private webSocket: WebSocket | null = null;
@@ -52,7 +53,7 @@ class WebSocketClient {
     setTimeout(() => {
       this.reconnecting = false;
       this.connect();
-    }, 1000);
+    }, reconnectTimeout);
   }
 
   private internalOnConnect(event: Event) {

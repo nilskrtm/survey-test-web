@@ -36,6 +36,10 @@ class WebSocketClientWrapper {
         this.callCleanup = false;
       }
     });
+
+    this.webSocketClient.onMessage((data) => {
+      console.log(data);
+    });
   }
 
   public sendRaw(data: WebSocketData) {
