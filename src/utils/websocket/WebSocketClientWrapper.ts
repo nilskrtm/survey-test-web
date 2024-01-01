@@ -1,9 +1,12 @@
 import newWebSocketClient from './WebSocketClient';
 import WebSocketClient from './WebSocketClient';
 import { WebSocketData } from '../interfaces/websocket.data.interface';
+import SubscriptionManager from './subscriptions/SubscriptionManager';
 
 class WebSocketClientWrapper {
   private readonly webSocketClient: WebSocketClient;
+  private readonly subscripitonManager: SubscriptionManager;
+
   private readonly hookCallback: (
     webSocketClientWrapper: WebSocketClientWrapper
   ) => void | (() => void);
@@ -15,6 +18,7 @@ class WebSocketClientWrapper {
     hookCallback: (webSocketClientWrapper: WebSocketClientWrapper) => void
   ) {
     this.webSocketClient = webSocketClient;
+    this.subscripitonManager = new SubscriptionManager(this);
     this.hookCallback = hookCallback;
 
     this.setup();
@@ -30,14 +34,12 @@ class WebSocketClientWrapper {
     });
 
     this.webSocketClient.onClose(() => {
+      this.subscripitonManager.unsubscribeAll();
+
       if (this.callCleanup && this.hookCleanup) {
         this.hookCleanup();
         this.callCleanup = false;
       }
-    });
-
-    this.webSocketClient.onMessage((data) => {
-      console.log(data);
     });
   }
 
@@ -50,8 +52,20 @@ class WebSocketClientWrapper {
     }
   }
 
-  public sendRaw<T = any>(data: WebSocketData<T>) {
+  public getClient() {
+    return this.webSocketClient;
+  }
+
+  public listen() {
+    // use in useWebSocket to listen to incoming data, should be filtered before to only let through the messages that should (valid WebSocketData, no subscription data, etc.)
+  }
+
+  public send<T = any>(data: WebSocketData<T>) {
     this.webSocketClient.sendMessage(JSON.stringify(data));
+  }
+
+  public subscriptions() {
+    return this.subscripitonManager;
   }
 }
 
