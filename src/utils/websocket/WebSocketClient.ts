@@ -1,7 +1,7 @@
 import { WebSocketData } from '../interfaces/websocket.data.interface';
 import { store } from '../../store/store';
 
-const baseUrl: string = process.env.REACT_APP_WS_ENDPOINT || '127.0.0.1:12345';
+const baseUrl: string = process.env.REACT_APP_WS_ENDPOINT || '127.0.0.1:5000';
 const reconnectTimeout: number = parseInt(process.env.REACT_APP_WS_RECONNECT_TIMEOUT || '3000');
 
 class WebSocketClient {
