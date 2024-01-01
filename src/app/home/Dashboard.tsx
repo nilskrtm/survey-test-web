@@ -37,7 +37,7 @@ const Dashboard: () => React.JSX.Element = () => {
 
   useWebSocket((socket) => {
     socket.subscriptions().subscribe(SubscriptionType.DASHBOARD_METRICS, () => {
-      console.log('Dashboard Update');
+      loadMetrics();
     });
   });
 
