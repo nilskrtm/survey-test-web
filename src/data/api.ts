@@ -64,7 +64,7 @@ class API {
             const response = await defaultClient.post('/auth/refresh-token', {
               refreshToken: refreshToken
             });
-            const { accessToken } = response.data;
+            const { accessToken, user } = response.data;
             const payload = parseTokenData(response.data.accessToken).payload;
 
             store.dispatch(
@@ -77,10 +77,10 @@ class API {
             );
             store.dispatch(
               setUserData({
-                username: payload.username,
-                email: payload.email,
-                firstname: payload.firstname,
-                lastname: payload.lastname
+                username: user.username,
+                email: user.email,
+                firstname: user.firstname,
+                lastname: user.lastname
               })
             );
 

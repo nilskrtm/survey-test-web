@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectLoggedIn } from '../../store/features/authentication.slice';
+import { clearTokens, selectLoggedIn } from '../../store/features/authentication.slice';
 import { resetUserData } from '../../store/features/user.slice';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ const Logout: () => React.JSX.Element = () => {
   }, []);
 
   const doLogout = () => {
+    dispatch(clearTokens({}));
     dispatch(resetUserData({}));
     navigate('/login');
   };

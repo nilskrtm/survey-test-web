@@ -40,7 +40,7 @@ const Login: () => React.JSX.Element = () => {
     AuthenticationService.login(username, password)
       .then((response) => {
         if (response.success) {
-          const { accessToken, refreshToken } = response.data as AuthResponseData;
+          const { accessToken, refreshToken, user } = response.data as AuthResponseData;
           const { payload } = parseTokenData(accessToken);
 
           dispatch(
@@ -53,10 +53,10 @@ const Login: () => React.JSX.Element = () => {
           );
           dispatch(
             setUserData({
-              username: payload.username,
-              email: payload.email,
-              firstname: payload.firstname,
-              lastname: payload.lastname
+              username: user.username,
+              email: user.email,
+              firstname: user.firstname,
+              lastname: user.lastname
             })
           );
 

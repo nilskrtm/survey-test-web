@@ -1,3 +1,5 @@
+import { User } from './user.types';
+
 type AuthRequestData = {
   username: string;
   password: string;
@@ -6,6 +8,7 @@ type AuthRequestData = {
 type AuthResponseData = {
   accessToken: string;
   refreshToken: string;
+  user: Partial<User>;
 };
 
 type PasswordResetRequestData = {
