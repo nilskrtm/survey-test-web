@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
 import { faClipboard, faImage, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
-import useWebSocket from '../../utils/hooks/use.websocket.hook';
 import useLoading, { LoadingOption } from '../../utils/hooks/use.loading';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
+import useWebSocket from '../../utils/hooks/use.websocket.hook';
+import { WebSocketDataType } from '../../utils/interfaces/websocket.data.interface';
 
 const Dashboard: () => React.JSX.Element = () => {
   useDashboardTitle('Übersicht');
@@ -34,10 +35,10 @@ const Dashboard: () => React.JSX.Element = () => {
     });
   };
 
-  useWebSocket((ws, error) => {
-    if (!error) {
-      ws.send({ type: 88888 });
-    }
+  useWebSocket((wrapper) => {
+    wrapper.sendRaw({ type: WebSocketDataType.TEST });
+
+    return () => console.log('test');
   });
 
   return (
