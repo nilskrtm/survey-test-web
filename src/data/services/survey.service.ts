@@ -9,11 +9,11 @@ const getSurveys = (page: number, perPage: number) => {
 };
 
 const getSurvey = (id: string) => {
-  return API.get<Survey>('/surveys/' + id);
+  return API.get<{ survey: Survey }>('/surveys/' + id);
 };
 
 const createSurvey = (name: string) => {
-  return API.post<Survey, { name: string }>('/surveys', { name: name });
+  return API.post<{ surveyId: string }, { name: string }>('/surveys', { name: name });
 };
 
 export default { getSurveys, getSurvey, createSurvey };

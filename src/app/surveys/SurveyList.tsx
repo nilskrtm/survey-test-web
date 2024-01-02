@@ -16,12 +16,12 @@ import {
 import { NavLink } from 'react-router-dom';
 import { parseQuerySearchParams } from '../../utils/query/query.params.util';
 
-interface SurveyQueryParams extends QuerySearchParams {
+interface SurveyListQueryParams extends QuerySearchParams {
   page: number;
   search: string;
 }
 
-const Surveys: () => React.JSX.Element = () => {
+const SurveyList: () => React.JSX.Element = () => {
   useDashboardTitle('Meine Umfragen');
 
   const [queryParams, setQueryParams] = useQueryParams({ page: 1, search: '' });
@@ -33,7 +33,7 @@ const Surveys: () => React.JSX.Element = () => {
   const [surveys, setSurveys] = useState<Array<Survey>>([]);
 
   useEffect(() => {
-    const { page, search } = parseQuerySearchParams<SurveyQueryParams>(queryParams);
+    const { page, search } = parseQuerySearchParams<SurveyListQueryParams>(queryParams);
 
     setSearchText(search);
     loadSurveys(page);
@@ -53,7 +53,7 @@ const Surveys: () => React.JSX.Element = () => {
     });
   };
 
-  const updateQuery: (param: keyof SurveyQueryParams, value: string | number) => void = (
+  const updateQuery: (param: keyof SurveyListQueryParams, value: string | number) => void = (
     param,
     value
   ) => {
@@ -129,4 +129,4 @@ const Surveys: () => React.JSX.Element = () => {
   );
 };
 
-export default Surveys;
+export default SurveyList;

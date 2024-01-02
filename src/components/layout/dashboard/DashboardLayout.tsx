@@ -3,7 +3,10 @@ import DashboardNavigationEntry from './DashboardNavigationEntry';
 import { useAppSelector } from '../../../store/hooks';
 import { selectDashboardTitle } from '../../../store/features/passthrough.slice';
 import { selectFullName } from '../../../store/features/user.slice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AuthenticationService from '../../../data/services/authentication.service';
+import { faAndroid } from '@fortawesome/free-brands-svg-icons';
+import { NavLink } from 'react-router-dom';
+import useClickOutside from '../../../utils/hooks/use.click.outside';
 import {
   faChartPie,
   faChevronDown,
@@ -15,10 +18,7 @@ import {
   faRightFromBracket,
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
-import AuthenticationService from '../../../data/services/authentication.service';
-import { faAndroid } from '@fortawesome/free-brands-svg-icons';
-import { NavLink } from 'react-router-dom';
-import useClickOutside from '../../../utils/hooks/use.click.outside';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type DashboardLayoutProps = { todo?: string };
 
@@ -91,7 +91,12 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </button>
             <div className="w-full mt-8 flex flex-col items-center justify-center space-y-3">
               <DashboardNavigationEntry icon={faChartPie} name="Übersicht" path="/dashboard" />
-              <DashboardNavigationEntry icon={faClipboard} name="Umfragen" path="/surveys" />
+              <DashboardNavigationEntry
+                icon={faClipboard}
+                name="Umfragen"
+                path="/surveys"
+                matchPathPattern={['/surveys', '/surveys/:surveyId']}
+              />
               <DashboardNavigationEntry
                 icon={faSquarePollVertical}
                 name="Abstimmungen"

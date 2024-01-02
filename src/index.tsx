@@ -14,7 +14,8 @@ import Dashboard from './app/home/Dashboard';
 import { protectRoute } from './utils/navigation/navigation.util';
 import { layoutRoute } from './utils/layout/layout.util';
 import Imprint from './app/legal/Imprint';
-import Surveys from './app/surveys/Surveys';
+import SurveyList from './app/surveys/SurveyList';
+import SurveyOverview from './app/surveys/SurveyOverview';
 import AnswerPictures from './app/answer.pictures/AnswerPictures';
 import Settings from './app/settings/Settings';
 import Votings from './app/votings/Votings';
@@ -26,7 +27,8 @@ const imprintRoute = <Imprint />;
 const loginRoute = <Login />;
 const logoutRoute = <Logout />;
 const dashboardRoute = layoutRoute(<Dashboard />);
-const surveysRoute = layoutRoute(<Surveys />);
+const surveyListRoute = layoutRoute(<SurveyList />);
+const surveyOverviewRoute = layoutRoute(<SurveyOverview />);
 const votingsRoute = layoutRoute(<Votings />);
 const answerPicturesRoute = layoutRoute(<AnswerPictures />);
 const settingsRoute = layoutRoute(<Settings />);
@@ -44,7 +46,8 @@ root.render(
               <Route path="/login" element={loginRoute} />
               <Route path="/logout" element={logoutRoute} />
               <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
-              <Route path="/surveys" element={protectRoute(surveysRoute, false)} />
+              <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
+              <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
               <Route path="/votings" element={protectRoute(votingsRoute, false)} />
               <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
               <Route path="/settings" element={protectRoute(settingsRoute, false)} />

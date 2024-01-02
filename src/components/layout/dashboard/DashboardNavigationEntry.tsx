@@ -1,4 +1,4 @@
-import { matchPath, NavLink, PathPattern, useLocation } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,17 +7,21 @@ type DashboardNavigationEntryProps = {
   icon: IconProp;
   name: string;
   path: string;
-  matchPathPattern?: PathPattern;
+  matchPathPattern?: string[];
 };
 
 const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.JSX.Element = (
   props: DashboardNavigationEntryProps
 ) => {
   const location = useLocation();
-  const active = !!matchPath(
-    props.matchPathPattern ? props.matchPathPattern : props.path,
-    location.pathname
-  );
+  const matchPatterns = Array.from(props.matchPathPattern || []);
+
+  if (!matchPatterns.includes(props.path)) {
+    matchPatterns.push(props.path);
+  }
+
+  const active =
+    matchPatterns.filter((pattern) => !!matchPath(pattern, location.pathname)).length > 0;
 
   return (
     <NavLink
