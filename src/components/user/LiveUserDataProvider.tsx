@@ -6,9 +6,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { setPermissionLevel } from '../../store/features/authentication.slice';
 import { setUserData } from '../../store/features/user.slice';
 
-const LiveUserDataProvider: (props: PropsWithChildren) => React.JSX.Element = (
-  props: PropsWithChildren
-) => {
+const LiveUserDataProvider: (props: PropsWithChildren) => React.JSX.Element = (props) => {
   const dispatch = useAppDispatch();
 
   useWebSocket((socket) => {

@@ -11,9 +11,7 @@ type DashboardMetricBoxProps = React.JSX.IntrinsicElements['div'] & {
   text: string;
 };
 
-const DashboardMetricBox: (props: DashboardMetricBoxProps) => React.JSX.Element = (
-  props: DashboardMetricBoxProps
-) => {
+const DashboardMetricBox: (props: DashboardMetricBoxProps) => React.JSX.Element = (props) => {
   return (
     <div
       className={`w-full flex flex-row rounded-lg bg-white border border-gray-200 py-10 px-10 select-none ${props.className}`}>

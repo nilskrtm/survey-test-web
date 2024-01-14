@@ -4,9 +4,7 @@ type ModalProps = {
   size: 'small' | 'large';
 };
 
-const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (
-  props: PropsWithChildren<ModalProps>
-) => {
+const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (props) => {
   return <div></div>;
 };
 

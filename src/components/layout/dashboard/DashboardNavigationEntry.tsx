@@ -11,7 +11,7 @@ type DashboardNavigationEntryProps = {
 };
 
 const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.JSX.Element = (
-  props: DashboardNavigationEntryProps
+  props
 ) => {
   const location = useLocation();
   const matchPatterns = Array.from(props.matchPathPattern || []);

@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 type DashboardLayoutProps = { todo?: string };
 
 const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
-  props: PropsWithChildren<DashboardLayoutProps>
+  props
 ) => {
   const dashboardTitle = useAppSelector(selectDashboardTitle);
   const fullName = useAppSelector(selectFullName);

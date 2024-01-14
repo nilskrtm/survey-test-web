@@ -37,9 +37,7 @@ type AuthenticationInputProps = {
   value?: string;
 };
 
-const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Element = (
-  props: AuthenticationInputProps
-) => {
+const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Element = (props) => {
   const id = props.id ? props.id : Math.random().toString(36).substring(2, 12);
 
   return (

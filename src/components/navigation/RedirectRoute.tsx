@@ -5,9 +5,7 @@ type RedirectRouteProps = {
   redirectPath: string;
 };
 
-const RedirectRoute: (props: RedirectRouteProps) => React.JSX.Element = (
-  props: RedirectRouteProps
-) => {
+const RedirectRoute: (props: RedirectRouteProps) => React.JSX.Element = (props) => {
   const location = useLocation();
 
   return <Navigate to={props.redirectPath} state={{ from: location }} replace />;

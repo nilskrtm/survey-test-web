@@ -12,7 +12,7 @@ type AuthenticationButtonProps = {
 
 const AuthenticationButton: (
   props: PropsWithChildren<AuthenticationButtonProps>
-) => React.JSX.Element = (props: PropsWithChildren<AuthenticationButtonProps>) => {
+) => React.JSX.Element = (props) => {
   const id = props.id ? props.id : Math.random().toString(36).substring(2, 12);
 
   return (

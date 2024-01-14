@@ -10,7 +10,7 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.JSX.Element = (
-  props: PropsWithChildren<ProtectedRouteProps>
+  props
 ) => {
   const isLoggedIn = useAppSelector(selectLoggedIn);
   const permissionLevel: PermissionLevel = useAppSelector(selectPermissionLevel);

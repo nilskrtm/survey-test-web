@@ -13,7 +13,7 @@ type PagingBoxProps = {
   openPage: (number: number) => void;
 };
 
-const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props: PagingBoxProps) => {
+const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props) => {
   const clickFirstPage: () => void = () => {
     props.openPage(1);
   };
