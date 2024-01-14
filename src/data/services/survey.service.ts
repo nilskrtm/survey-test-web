@@ -12,8 +12,15 @@ const getSurvey = (id: string) => {
   return API.get<{ survey: Survey }>('/surveys/' + id);
 };
 
-const createSurvey = (name: string) => {
-  return API.post<{ surveyId: string }, { name: string }>('/surveys', { name: name });
+const createSurvey = (initialValues?: Partial<Survey>) => {
+  return API.post<{ surveyId: string }, Partial<Survey>>(
+    '/surveys',
+    initialValues ? initialValues : {}
+  );
 };
 
-export default { getSurveys, getSurvey, createSurvey };
+const updateSurvey = (id: string, values: Partial<Survey>) => {
+  return API.patch<{ surveyId: string }, Partial<Survey>>('/surveys/' + id, values);
+};
+
+export default { getSurveys, getSurvey, createSurvey, updateSurvey };

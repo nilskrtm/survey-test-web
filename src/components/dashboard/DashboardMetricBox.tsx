@@ -2,10 +2,7 @@ import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-type DashboardMetricBoxProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
-> & {
+type DashboardMetricBoxProps = React.JSX.IntrinsicElements['div'] & {
   icon: IconProp;
   iconColor: string;
   iconBackgroundColor: string;
