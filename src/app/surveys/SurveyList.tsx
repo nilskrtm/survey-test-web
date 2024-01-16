@@ -18,7 +18,7 @@ import { parseQuerySearchParams } from '../../utils/query/query.params.util';
 
 interface SurveyListQueryParams extends QuerySearchParams {
   page: number;
-  search: string;
+  keyword: string;
 }
 
 const SurveyList: () => React.JSX.Element = () => {
@@ -33,24 +33,26 @@ const SurveyList: () => React.JSX.Element = () => {
   const [surveys, setSurveys] = useState<Array<Survey>>([]);
 
   useEffect(() => {
-    const { page, search } = parseQuerySearchParams<SurveyListQueryParams>(queryParams);
+    const { page, keyword } = parseQuerySearchParams<SurveyListQueryParams>(queryParams);
 
-    setSearchText(search);
-    loadSurveys(page);
+    setSearchText(keyword);
+    loadSurveys(page, keyword);
   }, [queryParams]);
 
-  const loadSurveys = (requestedPage: number) => {
+  const loadSurveys = (requestedPage: number, search: string) => {
     loader.set(LoadingOption.LOADING);
 
-    SurveyService.getSurveys(requestedPage, pagination.perPage).then((response) => {
-      if (response.success) {
-        setSurveys(response.data.surveys);
-        pagination.update(response.data.paging, response.data.surveys.length);
-        loader.set(LoadingOption.RESET);
-      } else {
-        loader.set(LoadingOption.ERROR);
+    SurveyService.getSurveys(requestedPage, pagination.perPage, { keyword: search }).then(
+      (response) => {
+        if (response.success) {
+          setSurveys(response.data.surveys);
+          pagination.update(response.data.paging, response.data.surveys.length);
+          loader.set(LoadingOption.RESET);
+        } else {
+          loader.set(LoadingOption.ERROR);
+        }
       }
-    });
+    );
   };
 
   const updateQuery: (param: keyof SurveyListQueryParams, value: string | number) => void = (
@@ -73,10 +75,10 @@ const SurveyList: () => React.JSX.Element = () => {
             onChange={(event) => setSearchText((event.target as HTMLInputElement).value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
-                updateQuery('search', searchText);
+                updateQuery('keyword', searchText);
               }
             }}
-            onBlur={() => updateQuery('search', searchText)}
+            onBlur={() => updateQuery('keyword', searchText)}
           />
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
