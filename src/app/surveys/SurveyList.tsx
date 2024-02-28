@@ -106,7 +106,7 @@ const SurveyList: () => React.JSX.Element = () => {
         </div>
       )}
       {!loader.loading && !loader.error && surveys.length > 0 && (
-        <div className="w-full flex-auto grid grid-cols-2 gap-x-12 gap-y-4">
+        <div className="w-full flex-auto grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
           {surveys.map((survey: Survey) => {
             return (
               <NavLink

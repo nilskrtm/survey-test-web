@@ -31,7 +31,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props) => {
   };
 
   return (
-    <div className="w-full flex flex-row justify-center items-center rounded-lg bg-white border border-gray-200 py-4 px-10 select-none">
+    <div className="w-full flex flex-row justify-center items-center rounded-lg bg-white border border-gray-200 p-4 select-none">
       <button
         className="flex flex-row items-center justify-center p-2 text-gray-700 enabled:hover:!text-purple-700 disabled:cursor-not-allowed"
         title="Erste Seite"
@@ -56,7 +56,7 @@ const PagingBox: (props: PagingBoxProps) => React.JSX.Element = (props) => {
           className="text-2xl text-inherit"
         />
       </button>
-      <p className="text-lg text-black font-medium px-6">
+      <p className="text-lg text-black font-medium px-4">
         Seite {props.pagination.page} von {props.pagination.lastPage}
       </p>
       <button
