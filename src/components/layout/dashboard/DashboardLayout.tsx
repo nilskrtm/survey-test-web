@@ -64,7 +64,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
     <>
       {/* mobile version */}
       <div className="w-full h-full flex lg:hidden flex-col bg-white">
-        <div className="sticky z-10 top-0 h-[56px] flex flex-col">
+        <div className="sticky z-10 top-0 h-[56px] flex flex-col select-none">
           <div className="w-full h-full flex flex-row justify-between items-center px-6">
             <p className="text-xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
             <button
@@ -78,38 +78,49 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </button>
           </div>
           {mobileDropdownOpen && (
-            <div className="absolute top-[56px] w-full flex flex-col justify-center items-center px-6 bg-white border-t border-b border-gray-300">
-              <DashboardNavigationEntry
-                icon={faChartPie}
-                name="Übersicht"
-                path="/dashboard"
-                type={DashboardNavigationEntryType.MOBILE}
-              />
-              <DashboardNavigationEntry
-                icon={faClipboard}
-                matchPathPattern={['/surveys', '/surveys/:surveyId']}
-                name="Umfragen"
-                path="/surveys"
-                type={DashboardNavigationEntryType.MOBILE}
-              />
-              <DashboardNavigationEntry
-                icon={faSquarePollVertical}
-                name="Abstimmungen"
-                path="/votings"
-                type={DashboardNavigationEntryType.MOBILE}
-              />
-              <DashboardNavigationEntry
-                icon={faImage}
-                name="Bilder"
-                path="/answer-pictures"
-                type={DashboardNavigationEntryType.MOBILE}
-              />
-              <DashboardNavigationEntry
-                icon={faGears}
-                name="Einstellungen"
-                path="/settings"
-                type={DashboardNavigationEntryType.MOBILE}
-              />
+            <div className="absolute top-[56px] w-full flex flex-col justify-center items-center bg-white border-t border-b border-gray-300">
+              <div className="w-full flex flex-col justify-center items-center px-6 py-1">
+                <DashboardNavigationEntry
+                  icon={faChartPie}
+                  name="Übersicht"
+                  path="/dashboard"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+                <DashboardNavigationEntry
+                  icon={faClipboard}
+                  matchPathPattern={['/surveys', '/surveys/:surveyId']}
+                  name="Umfragen"
+                  path="/surveys"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+                <DashboardNavigationEntry
+                  icon={faSquarePollVertical}
+                  name="Abstimmungen"
+                  path="/votings"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+                <DashboardNavigationEntry
+                  icon={faImage}
+                  name="Bilder"
+                  path="/answer-pictures"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+                <DashboardNavigationEntry
+                  icon={faGears}
+                  name="Einstellungen"
+                  path="/settings"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+              </div>
+              <div className="w-full flex flex-row items-center justify-between px-6 py-2 border-t border-gray-300">
+                <span className="text-gray-600">{fullName}</span>
+                <button
+                  className="grow flex items-center justify-end px-4 py-2 text-gray-600 font-medium hover:text-purple-700 group"
+                  onClick={logout}>
+                  <span className="!text-gray-600 group-hover:!text-black">Abmelden</span>
+                  <FontAwesomeIcon icon={faRightFromBracket} size="sm" className="ml-3" />
+                </button>
+              </div>
             </div>
           )}
         </div>
