@@ -113,9 +113,9 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between px-6 py-2 border-t border-gray-300">
-                <span className="text-gray-600">{fullName}</span>
+                <span className="text-gray-600 font-normal">{fullName}</span>
                 <button
-                  className="grow flex items-center justify-end px-4 py-2 text-gray-600 font-medium hover:text-purple-700 group"
+                  className="grow flex items-center justify-end px-4 py-2 text-gray-600 font-normal hover:text-purple-700 group"
                   onClick={logout}>
                   <span className="!text-gray-600 group-hover:!text-black">Abmelden</span>
                   <FontAwesomeIcon icon={faRightFromBracket} size="sm" className="ml-3" />
