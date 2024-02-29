@@ -20,6 +20,7 @@ import {
   faSquarePollVertical
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
 
 type DashboardLayoutProps = { todo?: string };
 
@@ -34,6 +35,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(true);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
   const profileDropdownRef = createRef<HTMLDivElement>();
+  const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!profileDropdownOpen);
@@ -57,7 +59,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   };
 
   const createSurvey = () => {
-    alert('TODO: create survey');
+    createSurveyModalRef.current?.open();
   };
 
   return (
@@ -225,6 +227,9 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
           <main className="w-full h-[calc(100%-60px)] block bg-gray-100">{props.children}</main>
         </div>
       </div>
+
+      {/* create survey modal */}
+      <CreateSurveyModal ref={createSurveyModalRef} />
     </>
   );
 };
