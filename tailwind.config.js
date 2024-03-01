@@ -36,6 +36,24 @@ module.exports = {
           '@screen 2xl': {
             maxWidth: '1140px'
           }
+        },
+        '.modal': {
+          maxWidth: '300px',
+          '@screen sm': {
+            maxWidth: '300px'
+          },
+          '@screen md': {
+            maxWidth: '500px'
+          },
+          '@screen lg': {
+            maxWidth: '800px'
+          },
+          '@screen xl': {
+            maxWidth: '1140px'
+          },
+          '@screen 2xl': {
+            maxWidth: '1140px'
+          }
         }
       });
     }

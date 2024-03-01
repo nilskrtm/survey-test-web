@@ -13,4 +13,12 @@ type Survey = {
   questions: [];
 };
 
-export type { Survey };
+type CreateSurveyValues = Partial<Pick<Survey, 'description' | 'greeting' | 'name'>>;
+
+type FinalizeSurveyValues = Partial<Pick<Survey, 'archived'>>;
+
+type UpdateSurveyValues =
+  | FinalizeSurveyValues
+  | Partial<Pick<Survey, 'description' | 'endDate' | 'greeting' | 'name' | 'startDate'>>;
+
+export type { Survey, CreateSurveyValues, UpdateSurveyValues };
