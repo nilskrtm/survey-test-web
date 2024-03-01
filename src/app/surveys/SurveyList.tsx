@@ -72,7 +72,7 @@ const SurveyList: () => React.JSX.Element = () => {
             className="w-full h-11 font-normal text-lg text-black placeholder-shown:text-gray-600 pl-14 pr-6 border-b-[1.5px] border-gray-600 focus:outline-none peer"
             placeholder="Suchen..."
             value={searchText || ''}
-            onChange={(event) => setSearchText((event.target as HTMLInputElement).value)}
+            onChange={(event) => setSearchText(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
                 updateQuery('keyword', searchText);

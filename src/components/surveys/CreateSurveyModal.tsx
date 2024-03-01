@@ -83,7 +83,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
             id={id}
             onChange={(event) => {
               setErrorMessage('');
-              setSurveyName((event.target as HTMLInputElement).value);
+              setSurveyName(event.target.value);
             }}
             placeholder="Name"
             value={surveyName}
