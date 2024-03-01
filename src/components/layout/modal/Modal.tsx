@@ -22,7 +22,7 @@ const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (prop
   return (
     <>
       {!!props.visible && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 z-50 h-full w-full flex items-center justify-center bg-slate-200/50">
+        <div className="absolute top-0 left-0 right-0 bottom-0 z-50 h-full w-full flex items-center justify-center bg-slate-200/50 select-none">
           <div
             className="modal w-full rounded-lg border border-gray-300 bg-white"
             ref={backgroundOverlayRef}>
@@ -40,7 +40,7 @@ const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (prop
               </button>
             </div>
             <hr className="border-none h-0.5 bg-gray-300" />
-            <div className="w-full px-4 py-3">{props.children}</div>
+            <div className="w-full px-4 py-3 select-text">{props.children}</div>
           </div>
         </div>
       )}

@@ -97,7 +97,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </button>
           </div>
           {mobileDropdownOpen && (
-            <div className="absolute top-[56px] w-full flex flex-col justify-center items-center bg-white border-t border-b border-gray-300">
+            <div className="absolute top-[56px] w-full flex flex-col justify-center items-center bg-white border-t-2 border-b-2 border-gray-300">
               <div className="w-full flex flex-col justify-center items-center px-6 py-1">
                 <DashboardNavigationEntry
                   icon={faChartPie}
@@ -131,7 +131,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   type={DashboardNavigationEntryType.MOBILE}
                 />
               </div>
-              <div className="w-full flex flex-row items-center justify-between px-6 py-2 border-t border-gray-300">
+              <div className="w-full flex flex-row items-center justify-between px-6 py-2 border-t-2 border-gray-300">
                 <span className="text-gray-600 font-normal">{fullName}</span>
                 <button
                   className="grow flex items-center justify-end px-4 py-2 text-gray-600 font-normal hover:text-purple-700 group"

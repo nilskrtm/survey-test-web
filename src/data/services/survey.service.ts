@@ -13,7 +13,7 @@ const getSurvey = (id: string) => {
 };
 
 const createSurvey = (initialValues?: CreateSurveyValues) => {
-  return API.post<{ surveyId: string }, typeof initialValues>(
+  return API.post<{ id: string }, typeof initialValues>(
     '/surveys',
     initialValues ? initialValues : {}
   );
