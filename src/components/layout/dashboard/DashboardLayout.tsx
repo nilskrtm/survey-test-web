@@ -37,13 +37,19 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
+  const mobileNavigationRef = createRef<HTMLDivElement>();
   const desktopNavigationRef = createRef<HTMLDivElement>();
   const profileDropdownRef = createRef<HTMLDivElement>();
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
+  useVisible(mobileNavigationRef, (visible) => {
+    if (visible && profileDropdownOpen) {
+      toggleProfileDropdown();
+    }
+  });
+
   useVisible(desktopNavigationRef, (visible) => {
     if (visible && mobileDropdownOpen) {
-      console.log('toggling');
       toggleMobileDropdown();
     }
   });
@@ -76,7 +82,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   return (
     <>
       {/* mobile version */}
-      <div className="w-full h-full flex lg:hidden flex-col bg-white">
+      <div className="w-full h-full flex lg:hidden flex-col bg-white" ref={mobileNavigationRef}>
         <div className="sticky z-10 top-0 h-[56px] flex flex-col select-none">
           <div className="w-full h-full flex flex-row justify-between items-center px-6">
             <p className="text-xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
