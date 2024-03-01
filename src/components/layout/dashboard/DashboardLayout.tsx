@@ -21,8 +21,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
+import useVisible from '../../../utils/hooks/use.visible.hook';
 
-type DashboardLayoutProps = { todo?: string };
+type DashboardLayoutProps = {
+  //
+};
 
 const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
   props
@@ -32,10 +35,18 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 
   const location = useLocation();
 
-  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(true);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
+  const desktopNavigationRef = createRef<HTMLDivElement>();
   const profileDropdownRef = createRef<HTMLDivElement>();
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
+
+  useVisible(desktopNavigationRef, (visible) => {
+    if (visible && mobileDropdownOpen) {
+      console.log('toggling');
+      toggleMobileDropdown();
+    }
+  });
 
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!profileDropdownOpen);
@@ -132,7 +143,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
       </div>
 
       {/* desktop version */}
-      <div className="w-full h-full lg:flex hidden flex-row bg-white">
+      <div className="w-full h-full lg:flex hidden flex-row bg-white" ref={desktopNavigationRef}>
         <div className="h-full w-[250px] select-none">
           <header className="h-[60px] w-full flex items-center justify-center">
             <p className="text-3xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>

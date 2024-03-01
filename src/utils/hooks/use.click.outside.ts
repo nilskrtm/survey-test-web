@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 
-const useClickOutside: (ref: React.RefObject<HTMLElement>, callback: () => void) => void = (
-  ref: React.RefObject<HTMLElement>,
+const useClickOutside: (ref: RefObject<HTMLElement>, callback: () => void) => void = (
+  ref: RefObject<HTMLElement>,
   callback: () => void
 ) => {
   useEffect(() => {
