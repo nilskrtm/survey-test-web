@@ -42,6 +42,14 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   const profileDropdownRef = createRef<HTMLDivElement>();
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
+  const toggleProfileDropdown = () => {
+    setProfileDropdownOpen(!profileDropdownOpen);
+  };
+
+  const toggleMobileDropdown = () => {
+    setMobileDropdownOpen(!mobileDropdownOpen);
+  };
+
   useVisible(mobileNavigationRef, (visible) => {
     if (visible && profileDropdownOpen) {
       toggleProfileDropdown();
@@ -53,14 +61,6 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
       toggleMobileDropdown();
     }
   });
-
-  const toggleProfileDropdown = () => {
-    setProfileDropdownOpen(!profileDropdownOpen);
-  };
-
-  const toggleMobileDropdown = () => {
-    setMobileDropdownOpen(!mobileDropdownOpen);
-  };
 
   useClickOutside(profileDropdownRef, () => {
     if (profileDropdownOpen) toggleProfileDropdown();
