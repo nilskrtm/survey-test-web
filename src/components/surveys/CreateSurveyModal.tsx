@@ -85,6 +85,11 @@ const CreateSurveyModal: ForwardRefRenderFunction<
               setErrorMessage('');
               setSurveyName(event.target.value);
             }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                createSurvey();
+              }
+            }}
             placeholder="Name"
             value={surveyName}
           />
