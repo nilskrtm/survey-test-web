@@ -6,7 +6,7 @@ import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
 import SurveyService from '../../data/services/survey.service';
 import ContentEditable from 'react-contenteditable';
 
-interface SurveyOverviewPathParams extends Record<string, string | undefined> {
+interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
 }
 

@@ -6,7 +6,6 @@ import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
-import { SurveyCreatedWSPayload } from '../../utils/websocket/interfaces/survey.created.ws.payload';
 import { SubscriptionType } from '../../utils/interfaces/websocket.data.interface';
 
 const Dashboard: () => React.JSX.Element = () => {
@@ -38,11 +37,6 @@ const Dashboard: () => React.JSX.Element = () => {
 
   useWebSocket((socket) => {
     socket.subscriptions().subscribe(SubscriptionType.DASHBOARD_METRICS, () => loadMetrics());
-    socket
-      .subscriptions()
-      .subscribe(SubscriptionType.SURVEY_CREATED, (payload: SurveyCreatedWSPayload) => {
-        alert(payload._id);
-      });
   });
 
   return (
