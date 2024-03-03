@@ -6,6 +6,7 @@ import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';
+import { SurveyCreatedWSPayload } from '../../utils/websocket/interfaces/survey.created.ws.payload';
 import { SubscriptionType } from '../../utils/interfaces/websocket.data.interface';
 
 const Dashboard: () => React.JSX.Element = () => {
@@ -37,10 +38,15 @@ const Dashboard: () => React.JSX.Element = () => {
 
   useWebSocket((socket) => {
     socket.subscriptions().subscribe(SubscriptionType.DASHBOARD_METRICS, () => loadMetrics());
+    socket
+      .subscriptions()
+      .subscribe(SubscriptionType.SURVEY_CREATED, (payload: SurveyCreatedWSPayload) => {
+        alert(payload._id);
+      });
   });
 
   return (
-    <div className="w-full grid grid-cols-4 gap-12 p-6">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 xl:gap-6 p-6">
       <DashboardMetricBox
         className=""
         icon={faClipboard}
@@ -57,7 +63,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-cyan-100"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.votingCount}
-        text="Abstimmungen gesammelt"
+        text="Abstimmungen"
       />
       <DashboardMetricBox
         className=""

@@ -5,7 +5,7 @@ import SubscriptionManager from './subscriptions/SubscriptionManager';
 
 class WebSocketClientWrapper {
   private readonly webSocketClient: WebSocketClient;
-  private readonly subscripitonManager: SubscriptionManager;
+  private readonly subscriptionManager: SubscriptionManager;
 
   private readonly hookCallback: (
     webSocketClientWrapper: WebSocketClientWrapper
@@ -18,7 +18,7 @@ class WebSocketClientWrapper {
     hookCallback: (webSocketClientWrapper: WebSocketClientWrapper) => void
   ) {
     this.webSocketClient = webSocketClient;
-    this.subscripitonManager = new SubscriptionManager(this);
+    this.subscriptionManager = new SubscriptionManager(this);
     this.hookCallback = hookCallback;
 
     this.setup();
@@ -34,7 +34,7 @@ class WebSocketClientWrapper {
     });
 
     this.webSocketClient.onClose(() => {
-      this.subscripitonManager.unsubscribeAll();
+      this.subscriptionManager.unsubscribeAll();
 
       if (this.callCleanup && this.hookCleanup) {
         this.hookCleanup();
@@ -65,7 +65,7 @@ class WebSocketClientWrapper {
   }
 
   public subscriptions() {
-    return this.subscripitonManager;
+    return this.subscriptionManager;
   }
 }
 

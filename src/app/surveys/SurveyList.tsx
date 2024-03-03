@@ -9,12 +9,15 @@ import useQueryParams, { QuerySearchParams } from '../../utils/hooks/use.query.p
 import { BounceLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faCirclePlus,
+  faClockRotateLeft,
   faExclamation,
   faFaceFrownOpen,
   faMagnifyingGlass
 } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
 import { parseQuerySearchParams } from '../../utils/query/query.params.util';
+import moment from 'moment';
 
 interface SurveyListQueryParams extends QuerySearchParams {
   page: number;
@@ -59,15 +62,17 @@ const SurveyList: () => React.JSX.Element = () => {
     param,
     value
   ) => {
-    setQueryParams((prev) => {
-      return { ...prev, [param]: value };
-    });
+    if (value != undefined) {
+      setQueryParams((prev) => {
+        return { ...prev, [param]: value };
+      });
+    }
   };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between space-y-8 p-6 overflow-y-scroll">
       <div className="w-full flex flex-row items-center justify-between rounded-lg bg-white border border-gray-200 py-4 px-10">
-        <div className="relative w-1/3 flex flex-row items-center justify-start">
+        <div className="relative w-full flex flex-row items-center justify-start">
           <input
             className="w-full h-11 font-normal text-lg text-black placeholder-shown:text-gray-600 pl-14 pr-6 border-b-[1.5px] border-gray-600 focus:outline-none peer"
             placeholder="Suchen..."
@@ -83,7 +88,7 @@ const SurveyList: () => React.JSX.Element = () => {
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
             size="1x"
-            className="absolute left-5 text-xl text-gray-600 peer-focus:text-purple-800"
+            className="absolute left-4 text-xl text-gray-600 peer-focus:text-purple-800"
           />
         </div>
       </div>
@@ -106,21 +111,54 @@ const SurveyList: () => React.JSX.Element = () => {
         </div>
       )}
       {!loader.loading && !loader.error && surveys.length > 0 && (
-        <div className="w-full flex-auto grid auto-rows-min grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+        <div className="w-full flex-auto grid auto-rows-min grid-cols-1 md:grid-cols-2 gap-4 xl:gap-6 gap-y-4">
           {surveys.map((survey: Survey) => {
+            const editedDateString = moment(survey.edited).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
+            const createdDateString =
+              moment(survey.created).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
+
             return (
               <NavLink
-                className="w-full h-40 rounded-lg bg-white border border-gray-200 hover:ring-1 hover:ring-purple-500"
+                className="w-full rounded-lg bg-white border border-gray-200 hover:ring-1 hover:ring-purple-500"
                 key={'survey-card-' + survey._id}
                 to={'/surveys/' + survey._id}>
-                <div className="w-full flex flex-col items-start justify-center py-6 px-10">
-                  <span className="w-full font-semibold text-xl text-black">{survey.name}</span>
+                <div className="w-full flex flex-col items-start justify-center py-6 px-6">
+                  <span
+                    className="w-full font-semibold text-xl text-black whitespace-nowrap truncate"
+                    title={survey.name}>
+                    {survey.name}
+                  </span>
                   <span className="w-full font-semibold text-md text-gray-600">
                     {survey.description}
                   </span>
                 </div>
                 <hr className="w-full h-[1px] bg-gray-200" />
-                <div className="w-full py-6 px-10"></div>
+                <div className="w-full flex flex-row items-center justify-center gap-2 py-2 px-8">
+                  <div
+                    className="w-1/2 flex flex-row items-center justify-center gap-1"
+                    title="Zuletzt bearbeitet am">
+                    <FontAwesomeIcon
+                      icon={faClockRotateLeft}
+                      size="1x"
+                      className="text-base text-gray-700"
+                    />
+                    <span className="whitespace-nowrap truncate" title={editedDateString}>
+                      {editedDateString}
+                    </span>
+                  </div>
+                  <div
+                    className="w-1/2 flex flex-row items-center justify-center gap-1"
+                    title="Erstellt am">
+                    <FontAwesomeIcon
+                      icon={faCirclePlus}
+                      size="1x"
+                      className="text-base text-gray-700"
+                    />
+                    <span className="whitespace-nowrap truncate" title={createdDateString}>
+                      {createdDateString}
+                    </span>
+                  </div>
+                </div>
               </NavLink>
             );
           })}

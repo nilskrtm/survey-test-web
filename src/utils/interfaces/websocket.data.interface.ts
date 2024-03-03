@@ -1,6 +1,7 @@
 export enum SubscriptionType {
   USER_DATA = 'USER_DATA',
-  DASHBOARD_METRICS = 'DASHBOARD_METRICS'
+  DASHBOARD_METRICS = 'DASHBOARD_METRICS',
+  SURVEY_CREATED = 'SURVEY_CREATED'
 }
 
 export interface SubscriptionData<D = any> {
