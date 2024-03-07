@@ -1,5 +1,5 @@
 import React from 'react';
-import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
+import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
 
 const Settings: () => React.JSX.Element = () => {
   useDashboardTitle('Einstellungen');

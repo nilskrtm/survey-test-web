@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Survey } from '../../data/types/survey.types';
 import usePagination from '../../utils/hooks/use.pagination.hook';
-import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
+import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
 import PagingBox from '../../components/paging/PagingBox';
 import SurveyService from '../../data/services/survey.service';
-import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
-import useQueryParams, { QuerySearchParams } from '../../utils/hooks/use.query.params';
+import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
+import useQueryParams, { QuerySearchParams } from '../../utils/hooks/use.query.params.hook';
 import { BounceLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {

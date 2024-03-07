@@ -1,4 +1,4 @@
-import { QuerySearchParams } from '../hooks/use.query.params';
+import { QuerySearchParams } from '../hooks/use.query.params.hook';
 
 type ParsedQuerySearchParams<V> = { [P in keyof V]: V[P] };
 

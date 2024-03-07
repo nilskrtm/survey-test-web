@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import DashboardMetricBox from '../../components/dashboard/DashboardMetricBox';
 import { faClipboard, faImage, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
-import useDashboardTitle from '../../utils/hooks/use.dashboard.title';
-import useLoader, { LoadingOption } from '../../utils/hooks/use.loader';
+import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
+import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
 import { DashboardMetrics } from '../../data/types/dashboard.types';
 import DashboardService from '../../data/services/dashboard.service';
 import useWebSocket from '../../utils/hooks/use.websocket.hook';

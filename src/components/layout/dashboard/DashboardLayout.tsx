@@ -6,7 +6,7 @@ import { selectFullName } from '../../../store/features/user.slice';
 import AuthenticationService from '../../../data/services/authentication.service';
 import { faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { NavLink, useLocation } from 'react-router-dom';
-import useClickOutside from '../../../utils/hooks/use.click.outside';
+import useClickOutside from '../../../utils/hooks/use.click.outside.hook';
 import {
   faBars,
   faChartPie,

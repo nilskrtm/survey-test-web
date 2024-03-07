@@ -37,24 +37,23 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistedStore}>
       <BrowserRouter>
-        <GlobalNavigationProvider>
-          <LiveUserDataProvider>
-            <Routes>
-              <Route path="/" element={defaultRoute} />
-              <Route path="/imprint" element={imprintRoute} />
-              <Route path="/impressum" element={imprintRoute} />
-              <Route path="/login" element={loginRoute} />
-              <Route path="/logout" element={logoutRoute} />
-              <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
-              <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
-              <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
-              <Route path="/votings" element={protectRoute(votingsRoute, false)} />
-              <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
-              <Route path="/settings" element={protectRoute(settingsRoute, false)} />
-              <Route path="*" element={defaultRoute} />
-            </Routes>
-          </LiveUserDataProvider>
-        </GlobalNavigationProvider>
+        <GlobalNavigationProvider />
+        <LiveUserDataProvider />
+
+        <Routes>
+          <Route path="/" element={defaultRoute} />
+          <Route path="/imprint" element={imprintRoute} />
+          <Route path="/impressum" element={imprintRoute} />
+          <Route path="/login" element={loginRoute} />
+          <Route path="/logout" element={logoutRoute} />
+          <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
+          <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
+          <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
+          <Route path="/votings" element={protectRoute(votingsRoute, false)} />
+          <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
+          <Route path="/settings" element={protectRoute(settingsRoute, false)} />
+          <Route path="*" element={defaultRoute} />
+        </Routes>
       </BrowserRouter>
     </PersistGate>
   </Provider>

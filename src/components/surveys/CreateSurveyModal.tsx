@@ -27,7 +27,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
   useImperativeHandle<CreateSurveyModalRefAttributes, CreateSurveyModalRefAttributes>(
     ref,
     () => ({
-      open() {
+      open: () => {
         if (!visible) {
           setVisible(true);
         }

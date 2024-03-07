@@ -1,5 +1,5 @@
 import React, { createRef, PropsWithChildren } from 'react';
-import useClickOutside from '../../../utils/hooks/use.click.outside';
+import useClickOutside from '../../../utils/hooks/use.click.outside.hook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
