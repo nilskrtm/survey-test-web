@@ -1,5 +1,5 @@
 import { PersistConfig, persistReducer, persistStore, Persistor } from 'redux-persist';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
 import authenticationReducer, { AuthenticationState } from './features/authentication.slice';
 import userReducer, { UserState } from '../store/features/user.slice';
@@ -45,3 +45,4 @@ export const persistedStore: Persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof persistedReducer>;
 export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>;

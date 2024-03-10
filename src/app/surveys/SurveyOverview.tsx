@@ -7,6 +7,7 @@ import SurveyService from '../../data/services/survey.service';
 import ContentEditable from '../../components/layout/editable.content/ContentEditable';
 import { BarLoader } from 'react-spinners';
 import { APIError } from '../../data/types/common.types';
+import useToasts from '../../utils/hooks/use.toasts.hook';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -27,6 +28,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
 
   const surveyNameRef = createRef<HTMLTextAreaElement>();
   const surveyDescriptionRef = createRef<HTMLTextAreaElement>();
+
+  const toaster = useToasts();
 
   useEffect(() => {
     loadSurvey();
@@ -78,9 +81,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
           const error = response.error as APIError;
 
           if (error.hasFieldErrors) {
-            // TODO: send Error-Message - error?.errorMessage
+            toaster.sendToast('error', error.errorMessage);
           } else {
-            // TODO: send Error-Message- ein unbekannter Fehler ist aufgetreten
+            toaster.sendToast(
+              'error',
+              'Ein unbekannter Fehler ist beim Bearbeiten der Umfrage aufgetreten.'
+            );
           }
         }
       })

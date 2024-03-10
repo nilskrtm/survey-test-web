@@ -19,6 +19,7 @@ import SurveyOverview from './app/surveys/SurveyOverview';
 import AnswerPictures from './app/answer.pictures/AnswerPictures';
 import Settings from './app/settings/Settings';
 import Votings from './app/votings/Votings';
+import ToastProvider from './components/layout/toasts/ToastProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -39,6 +40,7 @@ root.render(
       <BrowserRouter>
         <GlobalNavigationProvider />
         <LiveUserDataProvider />
+        <ToastProvider />
 
         <Routes>
           <Route path="/" element={defaultRoute} />
