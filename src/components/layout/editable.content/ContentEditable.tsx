@@ -83,7 +83,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
               }
 
               if (onChangeRef.current) {
-                return onChangeRef.current(...args);
+                onChangeRef.current(...args);
               }
             }
           : (...args) => {
@@ -98,7 +98,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
         onInput
           ? (...args) => {
               if (onInputRef.current) {
-                return onInputRef.current(...args);
+                onInputRef.current(...args);
               }
             }
           : undefined
@@ -107,7 +107,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
         onBlur
           ? (...args) => {
               if (onBlurRef.current) {
-                return onBlurRef.current(...args);
+                onBlurRef.current(...args);
               }
             }
           : undefined
@@ -116,7 +116,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
         onKeyPress
           ? (...args) => {
               if (onKeyPressRef.current) {
-                return onKeyPressRef.current(...args);
+                onKeyPressRef.current(...args);
               }
             }
           : undefined
@@ -131,7 +131,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
               }
 
               if (onPasteRef.current) {
-                return onPasteRef.current(...args);
+                onPasteRef.current(...args);
               }
             }
           : (...args) => {
@@ -154,7 +154,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
               }
 
               if (onKeyDownRef.current) {
-                return onKeyDownRef.current(...args);
+                onKeyDownRef.current(...args);
               }
             }
           : (...args) => {

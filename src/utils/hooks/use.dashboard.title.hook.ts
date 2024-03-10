@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../../store/hooks';
 import { setDashboardTitle } from '../../store/features/passthrough.slice';
 
-const useDashboardTitle: (title: string) => (newTitle: string) => void = (title) => {
+type SetDashboardTitleFunction = (newTitle: string) => void;
+
+const useDashboardTitle: (title: string) => SetDashboardTitleFunction = (title) => {
   const dispatch = useAppDispatch();
 
   const setDashboardTitleInternal: (newTitle: string) => void = (newTitle) => {

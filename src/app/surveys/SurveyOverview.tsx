@@ -119,6 +119,11 @@ const SurveyOverview: () => React.JSX.Element = () => {
             onChange={(event) => {
               updateSurveyInternal({ name: event.target.value });
             }}
+            onClick={() => {
+              if (surveyNameRef.current != document.activeElement) {
+                surveyNameRef.current?.focus();
+              }
+            }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
                 event.preventDefault();
@@ -148,6 +153,11 @@ const SurveyOverview: () => React.JSX.Element = () => {
             }}
             onChange={(event) => {
               updateSurveyInternal({ description: event.target.value });
+            }}
+            onClick={() => {
+              if (surveyDescriptionRef.current != document.activeElement) {
+                surveyDescriptionRef.current?.focus();
+              }
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
