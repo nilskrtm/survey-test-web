@@ -29,6 +29,8 @@ const CreateSurveyModal: ForwardRefRenderFunction<
     () => ({
       open: () => {
         if (!visible) {
+          setSurveyName('');
+          setErrorMessage('');
           setVisible(true);
         }
       }
@@ -38,6 +40,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
 
   const onClose = () => {
     setSurveyName('');
+    setErrorMessage('');
 
     if (visible) {
       setVisible(false);
