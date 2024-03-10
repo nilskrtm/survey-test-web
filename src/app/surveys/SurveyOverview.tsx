@@ -14,8 +14,7 @@ interface SurveyOverviewPathParams extends Record<string, string> {
 }
 
 const SurveyOverview: () => React.JSX.Element = () => {
-  useDashboardTitle('Meine Umfrage');
-
+  const setDashboardTitle = useDashboardTitle('Meine Umfrage');
   const navigate = useNavigate();
 
   const { surveyId } = useParams<SurveyOverviewPathParams>();
@@ -34,6 +33,14 @@ const SurveyOverview: () => React.JSX.Element = () => {
   useEffect(() => {
     loadSurvey();
   }, [surveyId]);
+
+  useEffect(() => {
+    if (survey?.name) {
+      setDashboardTitle('Meine Umfrage: ' + survey.name);
+    } else {
+      setDashboardTitle('Meine Umfrage');
+    }
+  }, [survey]);
 
   const loadSurvey = () => {
     if (!surveyId) return;
