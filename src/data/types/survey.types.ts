@@ -1,3 +1,5 @@
+import { Question } from './question.types';
+
 type Survey = {
   _id: string;
   name: string;
@@ -10,12 +12,12 @@ type Survey = {
   edited: string;
   draft: boolean;
   archived: boolean;
-  questions: [];
+  questions: Question[];
 };
 
 type CreateSurveyValues = Partial<Pick<Survey, 'description' | 'greeting' | 'name'>>;
 
-type FinalizeSurveyValues = Partial<Pick<Survey, 'archived'>>;
+type FinalizeSurveyValues = Partial<Pick<Survey, 'draft'>>;
 
 type UpdateSurveyValues =
   | FinalizeSurveyValues

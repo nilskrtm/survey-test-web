@@ -55,6 +55,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
         setErrorMessage('');
         setSurveyName('');
         setVisible(false);
+
         navigate('/surveys/' + surveyId);
       } else {
         const error = response.error as APIError;
@@ -72,7 +73,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
 
   return (
     <Modal closeable={true} onRequestClose={onClose} title="Umfrage erstellen" visible={visible}>
-      <div className="w-full flex flex-col select-none">
+      <div className="w-full flex flex-col">
         <div className="w-full flex flex-col">
           <label
             htmlFor={id}
