@@ -11,6 +11,7 @@ import useToasts from '../../utils/hooks/use.toasts.hook';
 import FinalizeSurveyModal, {
   FinalizeSurveyModalRefAttributes
 } from '../../components/surveys/FinalizeSurveyModal';
+import ReactDateTimePicker from 'react-datetime-picker';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -120,6 +121,21 @@ const SurveyOverview: () => React.JSX.Element = () => {
     }
   };
 
+  const finalizedSurvey: (success: boolean, finalizedSurvey?: Survey) => void = (
+    success,
+    finalizedSurvey
+  ) => {
+    if (success && finalizedSurvey) {
+      setSurvey(finalizedSurvey);
+      setUpdatedSurvey(finalizedSurvey);
+    } else {
+      setUpdatedSurvey(survey as Survey);
+    }
+
+    setUpdating(false);
+    setUpdatingValues([]);
+  };
+
   return (
     <>
       <div className="w-full grid grid-cols-1 gap-4 xl:gap-6 p-6">
@@ -129,7 +145,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
               className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
                 updating && updatingValues.includes('name') ? '!py-0' : ''
               }`}
-              disabled={loader.loading || updating}
+              disabled={loader.loading || !survey?.draft || updating}
               html={updatedSurvey.name || ''}
               onBlur={(event) => {
                 updateSurvey({ name: event.target.innerHTML });
@@ -165,7 +181,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
               className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-base text-gray-800 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
                 updating && updatingValues.includes('description') ? '!py-0' : ''
               }`}
-              disabled={loader.loading || updating}
+              disabled={loader.loading || !survey?.draft || updating}
               html={updatedSurvey.description || ''}
               onBlur={(event) => {
                 updateSurvey({ description: event.target.innerHTML });
@@ -198,11 +214,58 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
         </div>
         <div className="w-full flex flex-col lg:flex-row rounded-lg bg-white border border-gray-200 p-6">
-          <div className="w-full lg:w-1/2 flex flex-row items-center justify-start gap-2">
-            <span className="text-lg font-semibold whitespace-nowrap truncate">Start am</span>
+          <div className="w-full lg:w-1/2 flex flex-row items-center justify-start">
+            <span className="text-lg font-semibold whitespace-nowrap truncate mr-2">Start am:</span>
+            <ReactDateTimePicker
+              className="text-lg font-normal"
+              onChange={(value) => {
+                if (value != null) {
+                  updateSurveyInternal({ startDate: value.toISOString() });
+                }
+              }}
+              onBlur={() => {
+                updateSurvey({ startDate: updatedSurvey.startDate });
+              }}
+              disabled={loader.loading || !survey?.draft || updating}
+              disableClock={true}
+              disableCalendar={true}
+              clearIcon={null}
+              format="dd.MM.yy HH:mm"
+              value={updatedSurvey.startDate}
+              minDate={new Date()}
+              maxDate={new Date(updatedSurvey.endDate)}
+              showLeadingZeros={true}
+              required={true}
+            />
+            <span className="text-lg font-normal whitespace-nowrap truncate p-[1px] h-[calc(100%-2px)]">
+              Uhr // {survey?.startDate}
+            </span>
           </div>
-          <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start gap-2">
-            <span className="text-lg font-semibold whitespace-nowrap truncate">Ende am</span>
+          <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
+            <span className="text-lg font-semibold whitespace-nowrap truncate mr-2">Ende am:</span>
+            <ReactDateTimePicker
+              className="text-lg font-normal"
+              onChange={(value) => {
+                if (value != null) {
+                  updateSurveyInternal({ endDate: value.toISOString() });
+                }
+              }}
+              onBlur={() => {
+                updateSurvey({ endDate: updatedSurvey.endDate });
+              }}
+              disabled={loader.loading || !survey?.draft || updating}
+              disableClock={true}
+              disableCalendar={true}
+              clearIcon={null}
+              format="dd.MM.yy HH:mm"
+              value={updatedSurvey.endDate}
+              minDate={new Date(updatedSurvey.startDate)}
+              showLeadingZeros={true}
+              required={true}
+            />
+            <span className="text-lg font-normal whitespace-nowrap truncate p-[1px] h-[calc(100%-2px)]">
+              Uhr
+            </span>
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
@@ -211,7 +274,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
             className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-base text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
               updating && updatingValues.includes('greeting') ? '!py-0' : ''
             }`}
-            disabled={loader.loading || updating}
+            disabled={loader.loading || !survey?.draft || updating}
             html={updatedSurvey.greeting || ''}
             onBlur={(event) => {
               updateSurvey({ greeting: event.target.innerHTML });
@@ -265,17 +328,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
         <FinalizeSurveyModal
           survey={survey}
           ref={finalizeSurveyModalRef}
-          onFinalized={(success, finalizedSurvey) => {
-            if (success && finalizedSurvey) {
-              setSurvey(finalizedSurvey);
-              setUpdatedSurvey(finalizedSurvey);
-            } else {
-              setUpdatedSurvey(survey);
-            }
-
-            setUpdating(false);
-            setUpdatingValues([]);
-          }}
+          onFinalized={finalizedSurvey}
         />
       )}
     </>
