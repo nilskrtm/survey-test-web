@@ -5,7 +5,7 @@ import { Survey } from '../../data/types/survey.types';
 import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
 import SurveyService from '../../data/services/survey.service';
 import ContentEditable from '../../components/layout/editable.content/ContentEditable';
-import { BarLoader } from 'react-spinners';
+import { BarLoader, BounceLoader } from 'react-spinners';
 import { APIError } from '../../data/types/common.types';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import FinalizeSurveyModal, {
@@ -15,6 +15,8 @@ import moment from 'moment/moment';
 import DateTimePicker from '../../components/layout/time/DateTimePicker';
 import useGroupClickOutside from '../../utils/hooks/use.group.click.outside.hook';
 import { dummySurvey } from '../../utils/surveys/surveys.util';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -170,10 +172,22 @@ const SurveyOverview: () => React.JSX.Element = () => {
     }
   );
 
-  if (loader.loading) {
-    // TODO: loading screen
-
-    return <div>Loading</div>;
+  if (loader.loading || loader.error) {
+    if (loader.loading) {
+      return (
+        <div className="w-full h-full flex flex-col items-center justify-center space-y-6">
+          <BounceLoader color="rgb(126 34 206)" size={70} />
+          <p className="text-medium font-medium text-gray-700">Laden der Umfrage</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="w-full h-full flex flex-col items-center justify-center space-y-6">
+          <FontAwesomeIcon icon={faExclamation} size="1x" className="text-4xl text-red-500" />
+          <p className="text-medium font-medium text-gray-700">Laden der Umfrage fehlgeschlagen</p>
+        </div>
+      );
+    }
   }
 
   return (

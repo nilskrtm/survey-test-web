@@ -93,19 +93,19 @@ const SurveyList: () => React.JSX.Element = () => {
         </div>
       </div>
       {loader.loading && (
-        <div className="flex flex-col items-center justify-center space-y-6 rounded-lg p-2">
+        <div className="flex flex-col items-center justify-center space-y-6">
           <BounceLoader color="rgb(126 34 206)" size={70} />
           <p className="text-medium font-medium text-gray-700">Abruf der Umfragen</p>
         </div>
       )}
       {loader.error && (
-        <div className="flex flex-col items-center justify-center space-y-6 p-2">
+        <div className="flex flex-col items-center justify-center space-y-6">
           <FontAwesomeIcon icon={faExclamation} size="1x" className="text-4xl text-red-500" />
           <p className="text-medium font-medium text-gray-700">Abruf der Umfragen fehlgeschlagen</p>
         </div>
       )}
       {!loader.loading && !loader.error && surveys.length === 0 && (
-        <div className="flex flex-col items-center justify-center space-y-6 p-2">
+        <div className="flex flex-col items-center justify-center space-y-6">
           <FontAwesomeIcon icon={faFaceFrownOpen} size="1x" className="text-4xl text-gray-700" />
           <p className="text-medium font-medium text-gray-700">Keine Umfragen vorhanden</p>
         </div>
