@@ -283,6 +283,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   onChange={(date) => updateSurveyInternal({ startDate: date.toISOString() })}
                 />
               )}
+              <BarLoader
+                color="rgb(126 34 206)"
+                cssOverride={{ width: '100%' }}
+                height={1}
+                loading={updating && updatingValues.includes('startDate')}
+              />
             </div>
           </div>
           <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
@@ -320,6 +326,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   onChange={(date) => updateSurveyInternal({ endDate: date.toISOString() })}
                 />
               )}
+              <BarLoader
+                color="rgb(126 34 206)"
+                cssOverride={{ width: '100%' }}
+                height={1}
+                loading={updating && updatingValues.includes('endDate')}
+              />
             </div>
           </div>
         </div>
