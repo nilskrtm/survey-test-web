@@ -14,6 +14,7 @@ import FinalizeSurveyModal, {
 import moment from 'moment/moment';
 import DateTimePicker from '../../components/layout/time/DateTimePicker';
 import useGroupClickOutside from '../../utils/hooks/use.group.click.outside.hook';
+import { dummySurvey } from '../../utils/surveys/surveys.util';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -31,7 +32,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
 
   const [updating, setUpdating] = useState(false);
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
-  const [updatedSurvey, setUpdatedSurvey] = useState<Survey>({} as Survey);
+  const [updatedSurvey, setUpdatedSurvey] = useState<Survey>(dummySurvey);
 
   const surveyNameRef = createRef<HTMLSpanElement>();
   const surveyDescriptionRef = createRef<HTMLSpanElement>();
@@ -89,7 +90,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
   };
 
   const updateSurvey: (values: Partial<Survey>) => void = (values) => {
-    if (!survey) return;
+    if (!survey || !survey.draft) return;
 
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
@@ -149,6 +150,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
     if (success && finalizedSurvey) {
       setSurvey(finalizedSurvey);
       setUpdatedSurvey(finalizedSurvey);
+
+      toaster.sendToast('success', 'Die Umfrage wurde erfolgreich finalisiert.');
     } else {
       setUpdatedSurvey(survey as Survey);
     }
@@ -167,13 +170,19 @@ const SurveyOverview: () => React.JSX.Element = () => {
     }
   );
 
+  if (loader.loading) {
+    // TODO: loading screen
+
+    return <div>Loading</div>;
+  }
+
   return (
     <>
       <div className="w-full grid grid-cols-1 gap-4 xl:gap-6 p-6">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
+              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
                 updating && updatingValues.includes('name') ? '!py-0' : ''
               }`}
               disabled={loader.loading || !survey?.draft || updating}
@@ -209,7 +218,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-base text-gray-800 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-base text-gray-800 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
                 updating && updatingValues.includes('description') ? '!py-0' : ''
               }`}
               disabled={loader.loading || !survey?.draft || updating}
@@ -338,7 +347,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-lg font-semibold whitespace-nowrap truncate">Begrüßung</span>
           <ContentEditable
-            className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none hover:ring-gray-200 hover:ring-1 text-base text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+            className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-base text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
               updating && updatingValues.includes('greeting') ? '!py-0' : ''
             }`}
             disabled={loader.loading || !survey?.draft || updating}
@@ -368,6 +377,15 @@ const SurveyOverview: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-lg font-semibold whitespace-nowrap truncate">Fragen</span>
+          <div className="w-full flex flex-col items-center justify-center gap-2">
+            {updatedSurvey.questions.map((question, index) => {
+              return (
+                <div key={'question_' + index} className="w-full">
+                  <span>{question.question}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-lg font-semibold whitespace-nowrap truncate">Finalisierung</span>

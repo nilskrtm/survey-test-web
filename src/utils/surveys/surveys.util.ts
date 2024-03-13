@@ -1,6 +1,23 @@
 import { Survey } from '../../data/types/survey.types';
 import { AnswerPicture } from '../../data/types/answer.picture.types';
 
+export const dummySurvey: () => Survey = () => {
+  return {
+    _id: 'dummy',
+    name: '',
+    description: '',
+    greeting: '',
+    startDate: '',
+    endDate: '',
+    owner: '',
+    created: '',
+    edited: '',
+    draft: false,
+    archived: false,
+    questions: []
+  };
+};
+
 export const isSurveyFinalizeable: (survey: Survey) => boolean = (survey) => {
   const surveyStartDate = new Date(survey.startDate).getTime();
   const surveyEndDate = new Date(survey.endDate).getTime();

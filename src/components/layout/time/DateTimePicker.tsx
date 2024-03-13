@@ -379,7 +379,6 @@ const DateTimePicker: ForwardRefRenderFunction<HTMLDivElement, DateTimePickerPro
     // maybe need to correct month, because current selected month may be not in min-max range after changing year
 
     if (monthDisabled(newListenValues.month - 1, newListenValues)) {
-      console.log('disabled');
       if (props.minDate && props.maxDate) {
         if (props.minDate.getFullYear() == newListenValues.year) {
           if (newListenValues.month - 1 < props.minDate.getMonth()) {
