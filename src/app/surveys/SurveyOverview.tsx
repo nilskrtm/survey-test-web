@@ -11,7 +11,9 @@ import useToasts from '../../utils/hooks/use.toasts.hook';
 import FinalizeSurveyModal, {
   FinalizeSurveyModalRefAttributes
 } from '../../components/surveys/FinalizeSurveyModal';
-import ReactDateTimePicker from 'react-datetime-picker';
+import moment from 'moment/moment';
+import DateTimePicker from '../../components/layout/time/DateTimePicker';
+import useGroupClickOutside from '../../utils/hooks/use.group.click.outside.hook';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -34,6 +36,14 @@ const SurveyOverview: () => React.JSX.Element = () => {
   const surveyNameRef = createRef<HTMLSpanElement>();
   const surveyDescriptionRef = createRef<HTMLSpanElement>();
   const surveyGreetingRef = createRef<HTMLSpanElement>();
+  const surveyStartDateRef = createRef<HTMLSpanElement>();
+  const surveyEndDateRef = createRef<HTMLSpanElement>();
+  const surveyStartDatePickerRef = createRef<HTMLDivElement>();
+  const surveyEndDatePickerRef = createRef<HTMLDivElement>();
+
+  const [editingSurveyDate, setEditingSurveyDateInternal] = useState<
+    'startDate' | 'endDate' | undefined
+  >(undefined);
 
   const toaster = useToasts();
 
@@ -95,6 +105,11 @@ const SurveyOverview: () => React.JSX.Element = () => {
           const error = response.error as APIError;
 
           if (error.hasFieldErrors) {
+            /* TODO: specify error messages
+            const errorMessages: string[] = [];
+
+            toaster.sendToast('error', errorMessages);
+             */
             toaster.sendToast('error', error.errorMessage);
           } else {
             toaster.sendToast(
@@ -108,6 +123,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
         setUpdating(false);
         setUpdatingValues([]);
       });
+  };
+
+  const setEditingSurveyDate: (date: 'startDate' | 'endDate' | undefined) => void = (date) => {
+    setEditingSurveyDateInternal(date);
+
+    // TODO: maybe something more?
   };
 
   const finalizeSurvey: () => void = () => {
@@ -135,6 +156,16 @@ const SurveyOverview: () => React.JSX.Element = () => {
     setUpdating(false);
     setUpdatingValues([]);
   };
+
+  useGroupClickOutside(
+    [surveyStartDateRef, surveyEndDateRef, surveyStartDatePickerRef, surveyEndDatePickerRef],
+    () => {
+      if (editingSurveyDate !== undefined) {
+        setEditingSurveyDateInternal(undefined);
+        updateSurvey({ startDate: updatedSurvey.startDate, endDate: updatedSurvey.endDate });
+      }
+    }
+  );
 
   return (
     <>
@@ -215,57 +246,81 @@ const SurveyOverview: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col lg:flex-row rounded-lg bg-white border border-gray-200 p-6">
           <div className="w-full lg:w-1/2 flex flex-row items-center justify-start">
-            <span className="text-lg font-semibold whitespace-nowrap truncate mr-2">Start am:</span>
-            <ReactDateTimePicker
-              className="text-lg font-normal"
-              onChange={(value) => {
-                if (value != null) {
-                  updateSurveyInternal({ startDate: value.toISOString() });
-                }
-              }}
-              onBlur={() => {
-                updateSurvey({ startDate: updatedSurvey.startDate });
-              }}
-              disabled={loader.loading || !survey?.draft || updating}
-              disableClock={true}
-              disableCalendar={true}
-              clearIcon={null}
-              format="dd.MM.yy HH:mm"
-              value={updatedSurvey.startDate}
-              minDate={new Date()}
-              maxDate={new Date(updatedSurvey.endDate)}
-              showLeadingZeros={true}
-              required={true}
-            />
-            <span className="text-lg font-normal whitespace-nowrap truncate p-[1px] h-[calc(100%-2px)]">
-              Uhr // {survey?.startDate}
+            <span className="text-lg font-semibold whitespace-nowrap truncate">
+              Start am:&nbsp;
             </span>
+            <div className="relative flex flex-col">
+              <span
+                onClick={() => {
+                  if (!loader.loading && survey?.draft && !updating) {
+                    if (editingSurveyDate !== 'startDate') {
+                      setEditingSurveyDate('startDate');
+                    }
+                  }
+                }}
+                ref={surveyStartDateRef}
+                className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
+                  editingSurveyDate === 'startDate' ? '!ring-2 !ring-black' : ''
+                } ${
+                  !loader.loading && survey?.draft && !updating
+                    ? 'hover:ring-gray-200 hover:ring-1'
+                    : ''
+                } ${
+                  updatedSurvey.draft &&
+                  new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
+                    ? '!text-red-500'
+                    : ''
+                }`}>
+                {moment(survey?.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+              </span>
+              {editingSurveyDate === 'startDate' && (
+                <DateTimePicker
+                  className="absolute z-10 top-8"
+                  ref={surveyStartDatePickerRef}
+                  value={new Date(updatedSurvey.startDate)}
+                  minDate={new Date()}
+                  maxDate={new Date(updatedSurvey.endDate)}
+                  onChange={(date) => updateSurveyInternal({ startDate: date.toISOString() })}
+                />
+              )}
+            </div>
           </div>
           <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
-            <span className="text-lg font-semibold whitespace-nowrap truncate mr-2">Ende am:</span>
-            <ReactDateTimePicker
-              className="text-lg font-normal"
-              onChange={(value) => {
-                if (value != null) {
-                  updateSurveyInternal({ endDate: value.toISOString() });
-                }
-              }}
-              onBlur={() => {
-                updateSurvey({ endDate: updatedSurvey.endDate });
-              }}
-              disabled={loader.loading || !survey?.draft || updating}
-              disableClock={true}
-              disableCalendar={true}
-              clearIcon={null}
-              format="dd.MM.yy HH:mm"
-              value={updatedSurvey.endDate}
-              minDate={new Date(updatedSurvey.startDate)}
-              showLeadingZeros={true}
-              required={true}
-            />
-            <span className="text-lg font-normal whitespace-nowrap truncate p-[1px] h-[calc(100%-2px)]">
-              Uhr
-            </span>
+            <span className="text-lg font-semibold whitespace-nowrap truncate">Ende am:&nbsp;</span>
+            <div className="relative flex flex-col">
+              <span
+                onClick={() => {
+                  if (!loader.loading && survey?.draft && !updating) {
+                    if (editingSurveyDate !== 'endDate') {
+                      setEditingSurveyDate('endDate');
+                    }
+                  }
+                }}
+                ref={surveyEndDateRef}
+                className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
+                  editingSurveyDate === 'endDate' ? '!ring-2 !ring-black' : ''
+                } ${
+                  !loader.loading && survey?.draft && !updating
+                    ? 'hover:ring-gray-200 hover:ring-1'
+                    : ''
+                } ${
+                  updatedSurvey.draft &&
+                  new Date(updatedSurvey.endDate).getTime() < new Date().getTime()
+                    ? '!text-red-500'
+                    : ''
+                }`}>
+                {moment(survey?.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+              </span>
+              {editingSurveyDate === 'endDate' && (
+                <DateTimePicker
+                  className="absolute z-10 top-8"
+                  ref={surveyEndDatePickerRef}
+                  value={new Date(updatedSurvey.endDate)}
+                  minDate={new Date(updatedSurvey.startDate)}
+                  onChange={(date) => updateSurveyInternal({ endDate: date.toISOString() })}
+                />
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">

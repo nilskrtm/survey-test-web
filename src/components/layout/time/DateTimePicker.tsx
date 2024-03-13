@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, ForwardRefRenderFunction, useEffect, useState } from 'react';
 
 const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 const monthNames = [
@@ -16,7 +16,7 @@ const monthNames = [
   'Dezember'
 ];
 
-type DateTimePickerProps = {
+type DateTimePickerProps = Pick<React.JSX.IntrinsicElements['div'], 'className'> & {
   value: Date;
   minDate?: Date;
   maxDate?: Date;
@@ -44,7 +44,10 @@ type DayCalculation = {
   dayRows: CalculatedDay[][];
 };
 
-const DateTimePicker: (props: DateTimePickerProps) => React.JSX.Element = (props) => {
+const DateTimePicker: ForwardRefRenderFunction<HTMLDivElement, DateTimePickerProps> = (
+  props,
+  ref
+) => {
   const [listenValues, setListenValues] = useState<ListenValues>({
     month: 0,
     year: 0,
@@ -667,158 +670,160 @@ const DateTimePicker: (props: DateTimePickerProps) => React.JSX.Element = (props
   };
 
   return (
-    <div className="w-max-w flex flex-col justify-center items-center rounded-lg overflow-hidden ring-1 ring-gray-200 bg-white no-select">
-      <div className="w-full flex flex-row justify-between items-center border-b-2">
-        <div className="flex-grow">
-          <select
-            className="w-full border-0 focus:ring-0 font-semibold p-1"
-            onChange={(event) => {
-              const month = parseInt(event.target.value);
+    <div className={`max-w-min ${props.className !== undefined ? props.className : ''}`} ref={ref}>
+      <div className="w-full flex flex-col justify-center items-center rounded-lg overflow-hidden ring-1 ring-gray-200 bg-white no-select">
+        <div className="w-full flex flex-row justify-between items-center border-b-2">
+          <div className="flex-grow">
+            <select
+              className="w-full border-0 focus:ring-0 font-semibold p-1"
+              onChange={(event) => {
+                const month = parseInt(event.target.value);
 
-              changeMonth(month);
-            }}
-            value={listenValues.month}>
-            {monthNames.map((month, index) => {
-              return (
-                <option
-                  key={month + '_month_' + index}
-                  value={index + 1}
-                  disabled={monthDisabled(index)}>
-                  {month}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div className="flex-grow">
-          <select
-            className="w-full border-0 focus:ring-0 font-semibold p-1"
-            onChange={(event) => {
-              const year = parseInt(event.target.value);
-
-              changeYear(year);
-            }}
-            value={listenValues.year}>
-            {Array.from(Array(21).keys()).map((year, index) => {
-              return (
-                <option
-                  key={year + '_year_' + index}
-                  value={year + props.value.getFullYear() - 1 - 10}
-                  disabled={yearDisabled(year + props.value.getFullYear() - 1 - 10)}>
-                  {year + props.value.getFullYear() - 1 - 10}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-      </div>
-      <div className="w-full border-b-2">
-        <table className="w-full" cellSpacing="0">
-          <thead>
-            <tr>
-              {dayNames.map((dayName, index) => {
+                changeMonth(month);
+              }}
+              value={listenValues.month}>
+              {monthNames.map((month, index) => {
                 return (
-                  <td key={dayName + '_dayname_' + index} className="border-b">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <span className="text-sm font-semibold">{dayName}</span>
-                    </div>
-                  </td>
+                  <option
+                    key={month + '_month_' + index}
+                    value={index + 1}
+                    disabled={monthDisabled(index)}>
+                    {month}
+                  </option>
                 );
               })}
-            </tr>
-          </thead>
-          <tbody>
-            {dayCalculation.dayRows.map((row, rowIndex) => {
-              return (
-                <tr key={row + '_dayrow_' + rowIndex} className="">
-                  {dayCalculation.dayRows[rowIndex].map((day, index) => {
-                    if (!day.isDay) {
-                      return (
-                        <td key={day.day + '_unknown_' + index}>
-                          <div className="w-8 h-8 flex items-center justify-center rounded-lg"></div>
-                        </td>
-                      );
-                    } else {
-                      return (
-                        <td key={day.day + '_unknown_' + index}>
-                          <button
-                            onClick={() => {
-                              const dayNumber = day.day;
+            </select>
+          </div>
+          <div className="flex-grow">
+            <select
+              className="w-full border-0 focus:ring-0 font-semibold p-1"
+              onChange={(event) => {
+                const year = parseInt(event.target.value);
 
-                              changeDay(dayNumber);
-                            }}
-                            className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-                              day.disabled ? 'cursor-default' : ''
-                            } ${
-                              listenValues.year == props.value.getFullYear() &&
-                              listenValues.month == props.value.getMonth() + 1 &&
-                              day.day == props.value.getDate()
-                                ? 'bg-purple-700 text-white'
-                                : !day.disabled
-                                  ? 'hover:ring-1 hover:ring-purple-500'
-                                  : ''
-                            }`}
-                            disabled={day.disabled}>
-                            {day.disabled && <span className="text-base">{day.day}</span>}
-                            {!day.disabled && (
-                              <span className="text-base font-semibold">{day.day}</span>
-                            )}
-                          </button>
-                        </td>
-                      );
-                    }
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div className="w-full flex flex-row justify-between items-center">
-        <div className="flex-grow">
-          <select
-            className="w-full border-0 focus:ring-0 font-semibold text-center p-1"
-            onChange={(event) => {
-              const hour = parseInt(event.target.value);
-
-              changeHour(hour);
-            }}
-            value={listenValues.hour}>
-            {Array.from(Array(24).keys()).map((hour, index) => {
-              return (
-                <option key={hour + '_hour_' + index} value={hour} disabled={hourDisabled(hour)}>
-                  {('' + hour).length == 2 ? '' + hour : '0' + hour}
-                </option>
-              );
-            })}
-          </select>
+                changeYear(year);
+              }}
+              value={listenValues.year}>
+              {Array.from(Array(21).keys()).map((year, index) => {
+                return (
+                  <option
+                    key={year + '_year_' + index}
+                    value={year + props.value.getFullYear() - 1 - 10}
+                    disabled={yearDisabled(year + props.value.getFullYear() - 1 - 10)}>
+                    {year + props.value.getFullYear() - 1 - 10}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-        <p className="px-2 font-semibold">:</p>
-        <div className="flex-grow">
-          <select
-            className="w-full border-0 focus:ring-0 font-semibold text-center p-1"
-            onChange={(event) => {
-              const minute = parseInt(event.target.value);
+        <div className="w-full border-b-2">
+          <table className="w-full" cellSpacing="0">
+            <thead>
+              <tr>
+                {dayNames.map((dayName, index) => {
+                  return (
+                    <td key={dayName + '_dayname_' + index} className="border-b">
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <span className="text-sm font-semibold">{dayName}</span>
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {dayCalculation.dayRows.map((row, rowIndex) => {
+                return (
+                  <tr key={row + '_dayrow_' + rowIndex} className="">
+                    {dayCalculation.dayRows[rowIndex].map((day, index) => {
+                      if (!day.isDay) {
+                        return (
+                          <td key={day.day + '_unknown_' + index}>
+                            <div className="w-8 h-8 flex items-center justify-center rounded-lg"></div>
+                          </td>
+                        );
+                      } else {
+                        return (
+                          <td key={day.day + '_unknown_' + index}>
+                            <button
+                              onClick={() => {
+                                const dayNumber = day.day;
 
-              changeMinute(minute);
-            }}
-            value={listenValues.minute}>
-            {Array.from(Array(60).keys()).map((minute, index) => {
-              return (
-                <option
-                  key={minute + '_minute_' + index}
-                  value={minute}
-                  disabled={minuteDisabled(minute)}>
-                  {('' + minute).length == 2 ? '' + minute : '0' + minute}
-                </option>
-              );
-            })}
-          </select>
+                                changeDay(dayNumber);
+                              }}
+                              className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+                                day.disabled ? 'cursor-default' : ''
+                              } ${
+                                listenValues.year == props.value.getFullYear() &&
+                                listenValues.month == props.value.getMonth() + 1 &&
+                                day.day == props.value.getDate()
+                                  ? 'bg-purple-700 text-white'
+                                  : !day.disabled
+                                    ? 'hover:ring-1 hover:ring-purple-500'
+                                    : ''
+                              }`}
+                              disabled={day.disabled}>
+                              {day.disabled && <span className="text-base">{day.day}</span>}
+                              {!day.disabled && (
+                                <span className="text-base font-semibold">{day.day}</span>
+                              )}
+                            </button>
+                          </td>
+                        );
+                      }
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-        <p className="px-2 text-base font-semibold">Uhr</p>
+        <div className="w-full flex flex-row justify-between items-center">
+          <div className="flex-grow">
+            <select
+              className="w-full border-0 focus:ring-0 font-semibold text-center p-1"
+              onChange={(event) => {
+                const hour = parseInt(event.target.value);
+
+                changeHour(hour);
+              }}
+              value={listenValues.hour}>
+              {Array.from(Array(24).keys()).map((hour, index) => {
+                return (
+                  <option key={hour + '_hour_' + index} value={hour} disabled={hourDisabled(hour)}>
+                    {('' + hour).length == 2 ? '' + hour : '0' + hour}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <p className="px-2 font-semibold">:</p>
+          <div className="flex-grow">
+            <select
+              className="w-full border-0 focus:ring-0 font-semibold text-center p-1"
+              onChange={(event) => {
+                const minute = parseInt(event.target.value);
+
+                changeMinute(minute);
+              }}
+              value={listenValues.minute}>
+              {Array.from(Array(60).keys()).map((minute, index) => {
+                return (
+                  <option
+                    key={minute + '_minute_' + index}
+                    value={minute}
+                    disabled={minuteDisabled(minute)}>
+                    {('' + minute).length == 2 ? '' + minute : '0' + minute}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <p className="px-2 text-base font-semibold">Uhr</p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default DateTimePicker;
+export default forwardRef<HTMLDivElement, DateTimePickerProps>(DateTimePicker);

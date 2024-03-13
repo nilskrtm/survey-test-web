@@ -4,7 +4,7 @@ import { removeToast, selectToasts } from '../../../store/features/passthrough.s
 
 export type Toast = {
   id: string;
-  message: string;
+  message: string | string[];
   timeout: number;
   type: 'info' | 'warning' | 'error' | 'success';
 };
@@ -81,7 +81,19 @@ const ToastBox: (props: ToastBoxProps) => React.JSX.Element = (props) => {
       <span className={`text-base uppercase font-semibold ${getFontColor(props.toast.type)}`}>
         {getTitle(props.toast.type)}
       </span>
-      <span className={`text-base ${getFontColor(props.toast.type)}`}>{props.toast.message}</span>
+      {!Array.isArray(props.toast.message) ? (
+        <span className={`text-base ${getFontColor(props.toast.type)}`}>{props.toast.message}</span>
+      ) : (
+        props.toast.message.map((message, index) => {
+          return (
+            <span
+              key={'toast_message_' + index}
+              className={`text-base ${getFontColor(props.toast.type)}`}>
+              {message}
+            </span>
+          );
+        })
+      )}
     </div>
   );
 };

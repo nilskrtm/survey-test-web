@@ -5,7 +5,7 @@ import { Toast } from '../../components/layout/toasts/ToastProvider';
 type Toaster = {
   sendToast: (
     type: 'info' | 'warning' | 'error' | 'success',
-    message: string,
+    message: string | string[],
     timeout?: number
   ) => void;
 };
@@ -15,7 +15,7 @@ const useToasts: () => Toaster = () => {
 
   const sendToast: (
     type: 'info' | 'warning' | 'error' | 'success',
-    message: string,
+    message: string | string[],
     timeout?: number
   ) => void = (type, message, timeout) => {
     const id = Math.random().toString(36).substring(2, 12);

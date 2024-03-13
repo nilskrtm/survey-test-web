@@ -83,7 +83,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
     <>
       {/* mobile version */}
       <div className="w-full h-full flex lg:hidden flex-col bg-white" ref={mobileNavigationRef}>
-        <div className="sticky z-10 top-0 h-[56px] flex flex-col select-none">
+        <div className="sticky z-20 top-0 h-[56px] flex flex-col select-none">
           <div className="w-full h-full flex flex-row justify-between items-center px-6">
             <p className="text-xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
             <button
