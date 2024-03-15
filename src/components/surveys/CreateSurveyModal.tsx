@@ -22,6 +22,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
 
   const [visible, setVisible] = useState<boolean>(false);
   const [surveyName, setSurveyName] = useState<string>('');
+  const [creating, setCreating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useImperativeHandle<CreateSurveyModalRefAttributes, CreateSurveyModalRefAttributes>(
@@ -30,6 +31,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
       open: () => {
         if (!visible) {
           setSurveyName('');
+          setCreating(false);
           setErrorMessage('');
           setVisible(true);
         }
@@ -39,40 +41,52 @@ const CreateSurveyModal: ForwardRefRenderFunction<
   );
 
   const onClose = () => {
-    setSurveyName('');
-    setErrorMessage('');
-
     if (visible) {
+      setSurveyName('');
+      setCreating(false);
+      setErrorMessage('');
       setVisible(false);
     }
   };
 
   const createSurvey = () => {
-    SurveyService.createSurvey({ name: surveyName }).then((response) => {
-      if (response.success) {
-        const surveyId = response.data.id;
+    setCreating(true);
+    setErrorMessage('');
 
-        setErrorMessage('');
-        setSurveyName('');
-        setVisible(false);
+    SurveyService.createSurvey({ name: surveyName })
+      .then((response) => {
+        if (response.success) {
+          const surveyId = response.data.id;
 
-        navigate('/surveys/' + surveyId);
-      } else {
-        const error = response.error as APIError;
+          setCreating(false);
+          setErrorMessage('');
+          setSurveyName('');
+          setVisible(false);
 
-        if (!error.hasFieldErrors) {
-          setErrorMessage(error?.errorMessage);
+          navigate('/surveys/' + surveyId);
         } else {
-          if ('name' in error.fieldErrors) {
-            setErrorMessage(error.fieldErrors.name);
+          const error = response.error as APIError;
+
+          if (!error.hasFieldErrors) {
+            setErrorMessage(error?.errorMessage);
+          } else {
+            if ('name' in error.fieldErrors) {
+              setErrorMessage(error.fieldErrors.name);
+            }
           }
         }
-      }
-    });
+      })
+      .finally(() => {
+        setCreating(false);
+      });
   };
 
   return (
-    <Modal closeable={true} onRequestClose={onClose} title="Umfrage erstellen" visible={visible}>
+    <Modal
+      closeable={!creating}
+      onRequestClose={onClose}
+      title="Umfrage erstellen"
+      visible={visible}>
       <div className="w-full flex flex-col">
         <div className="w-full flex flex-col">
           <label
@@ -84,6 +98,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
           <input
             autoFocus={true}
             className="form-input rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+            disabled={creating}
             id={id}
             onChange={(event) => {
               setErrorMessage('');

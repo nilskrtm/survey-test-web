@@ -17,6 +17,9 @@ import useGroupClickOutside from '../../utils/hooks/use.group.click.outside.hook
 import { dummySurvey } from '../../utils/surveys/surveys.util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { Question, QuestionOrdering } from '../../data/types/question.types';
+import QuestionService from '../../data/services/question.service';
+import QuestionList from '../../components/questions/QuestionList';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -43,6 +46,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
   const surveyEndDateRef = createRef<HTMLSpanElement>();
   const surveyStartDatePickerRef = createRef<HTMLDivElement>();
   const surveyEndDatePickerRef = createRef<HTMLDivElement>();
+  const surveyQuestionsRef = createRef<HTMLDivElement>();
 
   const [editingSurveyDate, setEditingSurveyDateInternal] = useState<
     'startDate' | 'endDate' | undefined
@@ -134,6 +138,52 @@ const SurveyOverview: () => React.JSX.Element = () => {
     // TODO: maybe something more?
   };
 
+  const reorderSurveyQuestions: () => void = () => {
+    if (console) return;
+    if (!survey || !survey.draft) return;
+
+    const questions: Question[] = updatedSurvey.questions;
+    const ordering: QuestionOrdering = {};
+
+    questions.forEach((question) => {
+      ordering[question._id] = question.order;
+    });
+
+    setUpdating(true);
+    setUpdatingValues(['questions']);
+
+    QuestionService.reorderQuestions(survey._id, ordering)
+      .then((response) => {
+        if (response.success) {
+          setSurvey({ ...survey, questions: questions });
+          setUpdatedSurvey({ ...survey, questions: questions });
+        } else {
+          setUpdatedSurvey(survey);
+
+          const error = response.error as APIError;
+
+          if (error.hasFieldErrors) {
+            /* TODO: specify error messages
+            const errorMessages: string[] = [];
+
+            toaster.sendToast('error', errorMessages);
+             */
+            console.log(error.fieldErrors);
+            toaster.sendToast('error', error.errorMessage);
+          } else {
+            toaster.sendToast(
+              'error',
+              'Ein unbekannter Fehler ist beim Sortieren der Fragen aufgetreten.'
+            );
+          }
+        }
+      })
+      .finally(() => {
+        setUpdating(false);
+        setUpdatingValues([]);
+      });
+  };
+
   const finalizeSurvey: () => void = () => {
     if (!survey || !survey.draft) return;
 
@@ -192,15 +242,17 @@ const SurveyOverview: () => React.JSX.Element = () => {
 
   return (
     <>
-      <div className="w-full grid grid-cols-1 gap-4 xl:gap-6 p-6">
+      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 xl:gap-6 p-6 overflow-y-scroll">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
-                updating && updatingValues.includes('name') ? '!py-0' : ''
-              }`}
-              disabled={loader.loading || !survey?.draft || updating}
-              html={updatedSurvey.name || ''}
+              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
+                !loader.loading && updatedSurvey.draft && !updating
+                  ? 'hover:ring-gray-200 hover:ring-1'
+                  : ''
+              } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
+              disabled={loader.loading || updatedSurvey.draft || updating}
+              html={updatedSurvey.name}
               onBlur={(event) => {
                 updateSurvey({ name: event.target.innerHTML });
               }}
@@ -232,11 +284,13 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-base text-gray-800 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
-                updating && updatingValues.includes('description') ? '!py-0' : ''
-              }`}
-              disabled={loader.loading || !survey?.draft || updating}
-              html={updatedSurvey.description || ''}
+              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-base text-gray-600 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                !loader.loading && updatedSurvey.draft && !updating
+                  ? 'hover:ring-gray-200 hover:ring-1'
+                  : ''
+              } ${updating && updatingValues.includes('description') ? '!py-0' : ''}`}
+              disabled={loader.loading || !updatedSurvey.draft || updating}
+              html={updatedSurvey.description}
               onBlur={(event) => {
                 updateSurvey({ description: event.target.innerHTML });
               }}
@@ -267,105 +321,108 @@ const SurveyOverview: () => React.JSX.Element = () => {
             />
           </div>
         </div>
-        <div className="w-full flex flex-col lg:flex-row rounded-lg bg-white border border-gray-200 p-6">
-          <div className="w-full lg:w-1/2 flex flex-row items-center justify-start">
-            <span className="text-lg font-semibold whitespace-nowrap truncate">
-              Start am:&nbsp;
-            </span>
-            <div className="relative flex flex-col">
-              <span
-                onClick={() => {
-                  if (!loader.loading && survey?.draft && !updating) {
-                    if (editingSurveyDate !== 'startDate') {
-                      setEditingSurveyDate('startDate');
+        <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Zeitraum</span>
+          <div className="w-full flex flex-col lg:flex-row">
+            <div className="w-full lg:w-1/2 flex flex-row items-center justify-start">
+              <span className="text-lg font-semibold whitespace-nowrap truncate">Start:&nbsp;</span>
+              <div className="relative flex flex-col">
+                <span
+                  onClick={() => {
+                    if (!loader.loading && updatedSurvey.draft && !updating) {
+                      if (editingSurveyDate !== 'startDate') {
+                        setEditingSurveyDate('startDate');
+                      }
                     }
-                  }
-                }}
-                ref={surveyStartDateRef}
-                className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
-                  editingSurveyDate === 'startDate' ? '!ring-2 !ring-black' : ''
-                } ${
-                  !loader.loading && survey?.draft && !updating
-                    ? 'hover:ring-gray-200 hover:ring-1'
-                    : ''
-                } ${
-                  updatedSurvey.draft &&
-                  new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
-                    ? '!text-red-500'
-                    : ''
-                }`}>
-                {moment(survey?.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
-              </span>
-              {editingSurveyDate === 'startDate' && (
-                <DateTimePicker
-                  className="absolute z-10 top-8"
-                  ref={surveyStartDatePickerRef}
-                  value={new Date(updatedSurvey.startDate)}
-                  minDate={new Date()}
-                  maxDate={new Date(updatedSurvey.endDate)}
-                  onChange={(date) => updateSurveyInternal({ startDate: date.toISOString() })}
+                  }}
+                  ref={surveyStartDateRef}
+                  className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
+                    editingSurveyDate === 'startDate' ? '!ring-2 !ring-black' : ''
+                  } ${
+                    !loader.loading && updatedSurvey.draft && !updating
+                      ? 'hover:ring-gray-200 hover:ring-1'
+                      : ''
+                  } ${
+                    updatedSurvey.draft &&
+                    new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
+                      ? '!text-red-500'
+                      : ''
+                  }`}>
+                  {moment(updatedSurvey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+                </span>
+                {editingSurveyDate === 'startDate' && (
+                  <DateTimePicker
+                    className="absolute z-10 top-8"
+                    ref={surveyStartDatePickerRef}
+                    value={new Date(updatedSurvey.startDate)}
+                    minDate={new Date()}
+                    maxDate={new Date(updatedSurvey.endDate)}
+                    onChange={(date) => updateSurveyInternal({ startDate: date.toISOString() })}
+                  />
+                )}
+                <BarLoader
+                  color="rgb(126 34 206)"
+                  cssOverride={{ width: '100%' }}
+                  height={1}
+                  loading={updating && updatingValues.includes('startDate')}
                 />
-              )}
-              <BarLoader
-                color="rgb(126 34 206)"
-                cssOverride={{ width: '100%' }}
-                height={1}
-                loading={updating && updatingValues.includes('startDate')}
-              />
+              </div>
             </div>
-          </div>
-          <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
-            <span className="text-lg font-semibold whitespace-nowrap truncate">Ende am:&nbsp;</span>
-            <div className="relative flex flex-col">
-              <span
-                onClick={() => {
-                  if (!loader.loading && survey?.draft && !updating) {
-                    if (editingSurveyDate !== 'endDate') {
-                      setEditingSurveyDate('endDate');
+            <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
+              <span className="text-lg font-semibold whitespace-nowrap truncate">Ende:&nbsp;</span>
+              <div className="relative flex flex-col">
+                <span
+                  onClick={() => {
+                    if (!loader.loading && updatedSurvey.draft && !updating) {
+                      if (editingSurveyDate !== 'endDate') {
+                        setEditingSurveyDate('endDate');
+                      }
                     }
-                  }
-                }}
-                ref={surveyEndDateRef}
-                className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
-                  editingSurveyDate === 'endDate' ? '!ring-2 !ring-black' : ''
-                } ${
-                  !loader.loading && survey?.draft && !updating
-                    ? 'hover:ring-gray-200 hover:ring-1'
-                    : ''
-                } ${
-                  updatedSurvey.draft &&
-                  new Date(updatedSurvey.endDate).getTime() < new Date().getTime()
-                    ? '!text-red-500'
-                    : ''
-                }`}>
-                {moment(survey?.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
-              </span>
-              {editingSurveyDate === 'endDate' && (
-                <DateTimePicker
-                  className="absolute z-10 top-8"
-                  ref={surveyEndDatePickerRef}
-                  value={new Date(updatedSurvey.endDate)}
-                  minDate={new Date(updatedSurvey.startDate)}
-                  onChange={(date) => updateSurveyInternal({ endDate: date.toISOString() })}
+                  }}
+                  ref={surveyEndDateRef}
+                  className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
+                    editingSurveyDate === 'endDate' ? '!ring-2 !ring-black' : ''
+                  } ${
+                    !loader.loading && updatedSurvey.draft && !updating
+                      ? 'hover:ring-gray-200 hover:ring-1'
+                      : ''
+                  } ${
+                    updatedSurvey.draft &&
+                    new Date(updatedSurvey.endDate).getTime() < new Date().getTime()
+                      ? '!text-red-500'
+                      : ''
+                  }`}>
+                  {moment(updatedSurvey.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+                </span>
+                {editingSurveyDate === 'endDate' && (
+                  <DateTimePicker
+                    className="absolute z-10 top-8"
+                    ref={surveyEndDatePickerRef}
+                    value={new Date(updatedSurvey.endDate)}
+                    minDate={new Date(updatedSurvey.startDate)}
+                    onChange={(date) => updateSurveyInternal({ endDate: date.toISOString() })}
+                  />
+                )}
+                <BarLoader
+                  color="rgb(126 34 206)"
+                  cssOverride={{ width: '100%' }}
+                  height={1}
+                  loading={updating && updatingValues.includes('endDate')}
                 />
-              )}
-              <BarLoader
-                color="rgb(126 34 206)"
-                cssOverride={{ width: '100%' }}
-                height={1}
-                loading={updating && updatingValues.includes('endDate')}
-              />
+              </div>
             </div>
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-lg font-semibold whitespace-nowrap truncate">Begrüßung</span>
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Begrüßung</span>
           <ContentEditable
-            className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none enabled:hover:ring-gray-200 enabled:hover:ring-1 text-base text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
-              updating && updatingValues.includes('greeting') ? '!py-0' : ''
-            }`}
-            disabled={loader.loading || !survey?.draft || updating}
-            html={updatedSurvey.greeting || ''}
+            className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+              !loader.loading && updatedSurvey.draft && !updating
+                ? 'hover:ring-gray-200 hover:ring-1'
+                : ''
+            } ${updating && updatingValues.includes('greeting') ? '!py-0' : ''}`}
+            disabled={loader.loading || !updatedSurvey.draft || updating}
+            html={updatedSurvey.greeting}
             onBlur={(event) => {
               updateSurvey({ greeting: event.target.innerHTML });
             }}
@@ -390,24 +447,25 @@ const SurveyOverview: () => React.JSX.Element = () => {
           />
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-lg font-semibold whitespace-nowrap truncate">Fragen</span>
-          <div className="w-full flex flex-col items-center justify-center gap-2">
-            {updatedSurvey.questions.map((question, index) => {
-              return (
-                <div key={'question_' + index} className="w-full">
-                  <span>{question.question}</span>
-                </div>
-              );
-            })}
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Fragen</span>
+          <div className="w-full" ref={surveyQuestionsRef}>
+            <QuestionList
+              dragConstraints={surveyQuestionsRef}
+              onDragEnd={reorderSurveyQuestions}
+              onQuestionsReorder={(newQuestions) => {
+                updateSurveyInternal({ questions: newQuestions });
+              }}
+              questions={updatedSurvey.questions}
+            />
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-lg font-semibold whitespace-nowrap truncate">Finalisierung</span>
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Finalisierung</span>
           <span className="text-base italic whitespace-break-spaces text-ellipsis">
             Nach dem Finalisieren der Umfrage können an dieser keine Änderungen mehr vorgenommen
             werden.
           </span>
-          {!survey?.draft ? (
+          {!updatedSurvey.draft ? (
             <span className="text-base text-red-500 font-medium">
               Die Umfrage ist bereits finalisiert.
             </span>

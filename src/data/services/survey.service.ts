@@ -1,4 +1,9 @@
-import { CreateSurveyValues, Survey, UpdateSurveyValues } from '../types/survey.types';
+import {
+  CreateSurveyValues,
+  FinalizeSurveyValues,
+  Survey,
+  UpdateSurveyValues
+} from '../types/survey.types';
 import { APIPaging } from '../types/common.types';
 import API from '../api';
 
@@ -23,4 +28,10 @@ const updateSurvey = (id: string, values: UpdateSurveyValues) => {
   return API.patch<{ surveyId: string }, typeof values>('/surveys/' + id, values);
 };
 
-export default { getSurveys, getSurvey, createSurvey, updateSurvey };
+const finalizeSurvey = (id: string) => {
+  return API.patch<{ surveyId: string }, FinalizeSurveyValues>('/surveys/' + id + '/finalize', {
+    draft: false
+  });
+};
+
+export default { getSurveys, getSurvey, createSurvey, updateSurvey, finalizeSurvey };

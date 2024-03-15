@@ -17,10 +17,10 @@ type Survey = {
 
 type CreateSurveyValues = Partial<Pick<Survey, 'description' | 'greeting' | 'name'>>;
 
+type UpdateSurveyValues = Partial<
+  Pick<Survey, 'description' | 'endDate' | 'greeting' | 'name' | 'startDate'>
+>;
+
 type FinalizeSurveyValues = Partial<Pick<Survey, 'draft'>>;
 
-type UpdateSurveyValues =
-  | FinalizeSurveyValues
-  | Partial<Pick<Survey, 'description' | 'endDate' | 'greeting' | 'name' | 'startDate'>>;
-
-export type { Survey, CreateSurveyValues, UpdateSurveyValues };
+export type { Survey, CreateSurveyValues, UpdateSurveyValues, FinalizeSurveyValues };

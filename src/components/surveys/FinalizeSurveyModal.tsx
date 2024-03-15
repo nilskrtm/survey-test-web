@@ -64,13 +64,11 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
   const finalizeSurvey: () => void = () => {
     setFinalizing(true);
 
-    const values: Partial<Survey> = { draft: false };
-
-    SurveyService.updateSurvey(props.survey._id, values)
+    SurveyService.finalizeSurvey(props.survey._id)
       .then((response) => {
         if (response.success) {
           setVisible(false);
-          props.onFinalized(true, { ...props.survey, ...values });
+          props.onFinalized(true, { ...props.survey, draft: false });
         } else {
           setVisible(false);
           props.onFinalized(false);
@@ -93,7 +91,11 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
   };
 
   return (
-    <Modal closeable={true} onRequestClose={onClose} title="Umfrage finalisieren" visible={visible}>
+    <Modal
+      closeable={!finalizing}
+      onRequestClose={onClose}
+      title="Umfrage finalisieren"
+      visible={visible}>
       <div className="w-full flex flex-col">
         <div className="w-full flex flex-col justify-center items-start gap-4">
           <span className="">

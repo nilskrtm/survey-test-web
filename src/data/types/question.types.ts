@@ -8,4 +8,6 @@ type Question = {
   answerOptions: Array<AnswerOption>;
 };
 
-export type { Question };
+type QuestionOrdering = { [questionId: string]: number };
+
+export type { Question, QuestionOrdering };
