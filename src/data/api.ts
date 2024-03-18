@@ -118,7 +118,7 @@ class API {
     };
 
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<unknown>;
+      const axiosError = error as AxiosError<unknown, any>;
 
       if (axiosError.response?.status) {
         apiError.status = axiosError.response.status;

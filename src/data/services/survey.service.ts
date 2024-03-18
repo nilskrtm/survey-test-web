@@ -25,7 +25,7 @@ const createSurvey = (initialValues?: CreateSurveyValues) => {
 };
 
 const updateSurvey = (id: string, values: UpdateSurveyValues) => {
-  return API.patch<{ surveyId: string }, typeof values>('/surveys/' + id, values);
+  return API.patch<undefined, typeof values>('/surveys/' + id, values);
 };
 
 const finalizeSurvey = (id: string) => {
@@ -34,4 +34,8 @@ const finalizeSurvey = (id: string) => {
   });
 };
 
-export default { getSurveys, getSurvey, createSurvey, updateSurvey, finalizeSurvey };
+const removeSurvey = (surveyId: string) => {
+  return API.delete<undefined>('/surveys/' + surveyId);
+};
+
+export default { getSurveys, getSurvey, createSurvey, updateSurvey, finalizeSurvey, removeSurvey };

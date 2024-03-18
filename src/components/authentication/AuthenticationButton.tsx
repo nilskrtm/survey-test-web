@@ -24,7 +24,7 @@ const AuthenticationButton: (
         onClick={props.onClick}
         className={`px-3 py-[8px] rounded-md bg-purple-700 text-sm text-white font-medium uppercase focus:outline-none focus:ring-2 focus:ring-purple-500 ${
           props.className
-        } ${props.loading ? ' loading-authentication-button' : ''}`}>
+        } ${props.loading ? ' loading-default-button' : ''}`}>
         {props.children}
       </button>
     </div>

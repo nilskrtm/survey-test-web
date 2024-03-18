@@ -1,5 +1,7 @@
 import { Survey } from '../../data/types/survey.types';
 import { AnswerPicture } from '../../data/types/answer.picture.types';
+import { Queries } from '@testing-library/react';
+import { Question } from '../../data/types/question.types';
 
 export const dummySurvey: () => Survey = () => {
   return {
@@ -15,6 +17,16 @@ export const dummySurvey: () => Survey = () => {
     draft: false,
     archived: false,
     questions: []
+  };
+};
+
+export const dummyQuestion: () => Question = () => {
+  return {
+    _id: 'dummy',
+    question: '',
+    timeout: -1,
+    order: 1,
+    answerOptions: []
   };
 };
 

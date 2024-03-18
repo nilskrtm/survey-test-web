@@ -98,7 +98,7 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
       visible={visible}>
       <div className="w-full flex flex-col">
         <div className="w-full flex flex-col justify-center items-start gap-4">
-          <span className="">
+          <span className="text-base font-normal">
             Nach dem Finalisieren der Umfrage können an dieser keine Änderungen mehr vorgenommen
             werden. Sie kann erst nach der Finalisierung aktiv für Abstimmungen genutzt werden.
           </span>

@@ -16,10 +16,19 @@ import DateTimePicker from '../../components/layout/time/DateTimePicker';
 import useGroupClickOutside from '../../utils/hooks/use.group.click.outside.hook';
 import { dummySurvey } from '../../utils/surveys/surveys.util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamation } from '@fortawesome/free-solid-svg-icons';
-import { Question, QuestionOrdering } from '../../data/types/question.types';
+import { faExclamation, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Question } from '../../data/types/question.types';
 import QuestionService from '../../data/services/question.service';
-import QuestionList from '../../components/questions/QuestionList';
+import QuestionModal, {
+  QuestionModalRefAttributes
+} from '../../components/questions/QuestionModal';
+import ReorderQuestionsModal, {
+  ReorderQuestionsModalRefAttributes
+} from '../../components/questions/ReorderQuestionsModal';
+import DeleteSurveyModal, {
+  DeleteSurveyModalRefAttributes
+} from '../../components/surveys/DeleteSurveyModal';
+import questionModal from '../../components/questions/QuestionModal';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -28,12 +37,16 @@ interface SurveyOverviewPathParams extends Record<string, string> {
 const SurveyOverview: () => React.JSX.Element = () => {
   const setDashboardTitle = useDashboardTitle('Meine Umfrage');
   const navigate = useNavigate();
+  const toaster = useToasts();
 
   const { surveyId } = useParams<SurveyOverviewPathParams>();
   const loader = useLoader();
   const [survey, setSurvey] = useState<Survey>();
 
+  const questionModalRef = createRef<QuestionModalRefAttributes>();
+  const reorderQuestionsModalRef = createRef<ReorderQuestionsModalRefAttributes>();
   const finalizeSurveyModalRef = createRef<FinalizeSurveyModalRefAttributes>();
+  const deleteSurveyModalRef = createRef<DeleteSurveyModalRefAttributes>();
 
   const [updating, setUpdating] = useState(false);
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
@@ -46,13 +59,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
   const surveyEndDateRef = createRef<HTMLSpanElement>();
   const surveyStartDatePickerRef = createRef<HTMLDivElement>();
   const surveyEndDatePickerRef = createRef<HTMLDivElement>();
-  const surveyQuestionsRef = createRef<HTMLDivElement>();
 
-  const [editingSurveyDate, setEditingSurveyDateInternal] = useState<
-    'startDate' | 'endDate' | undefined
-  >(undefined);
-
-  const toaster = useToasts();
+  const [editingSurveyDate, setEditingSurveyDate] = useState<'startDate' | 'endDate'>();
 
   useEffect(() => {
     loadSurvey();
@@ -112,12 +120,13 @@ const SurveyOverview: () => React.JSX.Element = () => {
           const error = response.error as APIError;
 
           if (error.hasFieldErrors) {
-            /* TODO: specify error messages
             const errorMessages: string[] = [];
 
+            for (const key of Object.keys(error.fieldErrors)) {
+              errorMessages.push(error.fieldErrors[key]);
+            }
+
             toaster.sendToast('error', errorMessages);
-             */
-            toaster.sendToast('error', error.errorMessage);
           } else {
             toaster.sendToast(
               'error',
@@ -132,56 +141,107 @@ const SurveyOverview: () => React.JSX.Element = () => {
       });
   };
 
-  const setEditingSurveyDate: (date: 'startDate' | 'endDate' | undefined) => void = (date) => {
-    setEditingSurveyDateInternal(date);
+  const openQuestion: (question: Question) => void = (question) => {
+    if (!survey) return;
 
-    // TODO: maybe something more?
+    questionModalRef.current?.open(question);
   };
 
-  const reorderSurveyQuestions: () => void = () => {
-    if (console) return;
+  const removeQuestion: (question: Question) => void = (question) => {
     if (!survey || !survey.draft) return;
 
-    const questions: Question[] = updatedSurvey.questions;
-    const ordering: QuestionOrdering = {};
-
-    questions.forEach((question) => {
-      ordering[question._id] = question.order;
-    });
-
     setUpdating(true);
-    setUpdatingValues(['questions']);
+    setUpdatingValues(['questions', 'removeQuestion', 'question:' + question._id]);
 
-    QuestionService.reorderQuestions(survey._id, ordering)
-      .then((response) => {
-        if (response.success) {
-          setSurvey({ ...survey, questions: questions });
-          setUpdatedSurvey({ ...survey, questions: questions });
-        } else {
-          setUpdatedSurvey(survey);
+    QuestionService.removeQuestion(survey._id, question._id).then((response) => {
+      if (response.success) {
+        QuestionService.getQuestions(survey._id)
+          .then((questionsResponse) => {
+            if (questionsResponse.success) {
+              const newQuestions = questionsResponse.data.questions;
 
-          const error = response.error as APIError;
+              setSurvey({ ...survey, questions: newQuestions });
+              setUpdatedSurvey({ ...survey, questions: newQuestions });
+            } else {
+              setUpdatedSurvey(survey);
 
-          if (error.hasFieldErrors) {
-            /* TODO: specify error messages
-            const errorMessages: string[] = [];
+              toaster.sendToast(
+                'error',
+                'Ein unbekannter Fehler ist beim Löschen der Frage aufgetreten.'
+              );
+            }
+          })
+          .finally(() => {
+            setUpdating(false);
+            setUpdatingValues([]);
+          });
+      } else {
+        setUpdatedSurvey(survey);
 
-            toaster.sendToast('error', errorMessages);
-             */
-            console.log(error.fieldErrors);
-            toaster.sendToast('error', error.errorMessage);
-          } else {
-            toaster.sendToast(
-              'error',
-              'Ein unbekannter Fehler ist beim Sortieren der Fragen aufgetreten.'
-            );
-          }
-        }
-      })
-      .finally(() => {
+        toaster.sendToast(
+          'error',
+          'Ein unbekannter Fehler ist beim Löschen der Frage aufgetreten.'
+        );
+
         setUpdating(false);
         setUpdatingValues([]);
-      });
+      }
+    });
+  };
+
+  const createQuestion: () => void = () => {
+    if (!survey || !survey.draft) return;
+
+    setUpdating(true);
+    setUpdatingValues(['questions', 'createQuestion']);
+
+    QuestionService.createQuestion(survey._id).then((response) => {
+      if (response.success) {
+        const questionId = response.data.id;
+
+        QuestionService.getQuestion(survey._id, questionId)
+          .then((questionResponse) => {
+            if (questionResponse.success) {
+              const question = questionResponse.data.question;
+              const oldQuestions = [...survey.questions];
+
+              oldQuestions.push(question);
+
+              setSurvey({ ...survey, questions: oldQuestions });
+              setUpdatedSurvey({ ...survey, questions: oldQuestions });
+            } else {
+              setUpdatedSurvey(survey);
+
+              toaster.sendToast(
+                'error',
+                'Ein unbekannter Fehler ist beim Hinzufügen einer Frage aufgetreten.'
+              );
+            }
+          })
+          .finally(() => {
+            setUpdating(false);
+            setUpdatingValues([]);
+          });
+      } else {
+        setUpdatedSurvey(survey);
+
+        toaster.sendToast(
+          'error',
+          'Ein unbekannter Fehler ist beim Hinzufügen einer Frage aufgetreten.'
+        );
+
+        setUpdating(false);
+        setUpdatingValues([]);
+      }
+    });
+  };
+
+  const reorderQuestions: () => void = () => {
+    if (!survey || !survey.draft) return;
+
+    if (reorderQuestionsModalRef.current) {
+      reorderQuestionsModalRef.current.open(survey.questions);
+    }
   };
 
   const finalizeSurvey: () => void = () => {
@@ -212,11 +272,19 @@ const SurveyOverview: () => React.JSX.Element = () => {
     setUpdatingValues([]);
   };
 
+  const deleteSurvey: () => void = () => {
+    if (!survey || !survey.draft) return;
+
+    if (deleteSurveyModalRef.current) {
+      deleteSurveyModalRef.current.open();
+    }
+  };
+
   useGroupClickOutside(
     [surveyStartDateRef, surveyEndDateRef, surveyStartDatePickerRef, surveyEndDatePickerRef],
     () => {
       if (editingSurveyDate !== undefined) {
-        setEditingSurveyDateInternal(undefined);
+        setEditingSurveyDate(undefined);
         updateSurvey({ startDate: updatedSurvey.startDate, endDate: updatedSurvey.endDate });
       }
     }
@@ -246,12 +314,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
+              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
                 !loader.loading && updatedSurvey.draft && !updating
                   ? 'hover:ring-gray-200 hover:ring-1'
                   : ''
               } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
-              disabled={loader.loading || updatedSurvey.draft || updating}
+              disabled={loader.loading || !updatedSurvey.draft || updating}
               html={updatedSurvey.name}
               onBlur={(event) => {
                 updateSurvey({ name: event.target.innerHTML });
@@ -270,6 +338,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   surveyNameRef.current?.blur();
                 }
               }}
+              maxLength={50}
               preventLinebreak={true}
               preventPaste={true}
               innerRef={surveyNameRef}
@@ -284,7 +353,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
           <div className="w-full inline-block">
             <ContentEditable
-              className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-base text-gray-600 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-base text-gray-600 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
                 !loader.loading && updatedSurvey.draft && !updating
                   ? 'hover:ring-gray-200 hover:ring-1'
                   : ''
@@ -308,6 +377,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   surveyDescriptionRef.current?.blur();
                 }
               }}
+              maxLength={150}
               preventLinebreak={true}
               preventPaste={true}
               innerRef={surveyDescriptionRef}
@@ -416,7 +486,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Begrüßung</span>
           <ContentEditable
-            className={`max-w-full resize-none rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+            className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
               !loader.loading && updatedSurvey.draft && !updating
                 ? 'hover:ring-gray-200 hover:ring-1'
                 : ''
@@ -440,24 +510,107 @@ const SurveyOverview: () => React.JSX.Element = () => {
                 surveyGreetingRef.current?.blur();
               }
             }}
+            maxLength={300}
             preventLinebreak={true}
             preventPaste={true}
             innerRef={surveyGreetingRef}
             tagName="span"
           />
+          <BarLoader
+            color="rgb(126 34 206)"
+            cssOverride={{ width: '100%' }}
+            height={1}
+            loading={updating && updatingValues.includes('greeting')}
+          />
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Fragen</span>
-          <div className="w-full" ref={surveyQuestionsRef}>
-            <QuestionList
-              dragConstraints={surveyQuestionsRef}
-              onDragEnd={reorderSurveyQuestions}
-              onQuestionsReorder={(newQuestions) => {
-                updateSurveyInternal({ questions: newQuestions });
-              }}
-              questions={updatedSurvey.questions}
-            />
+          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+            {updatedSurvey.draft
+              ? 'Doppelklick auf eine Frage um diese zu Bearbeiten.'
+              : 'Doppelklick auf eine Frage um Details zu sehen.'}
+          </span>
+          <div className="w-full flex flex-col items-center justify-center gap-2 mt-2 mb-2 overflow-y-hidden">
+            {updatedSurvey.questions
+              .sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map((question, index) => {
+                return (
+                  <div
+                    key={'question_' + index}
+                    className={`w-full flex flex-row items-center justify-between rounded-lg border border-gray-200 py-2 ${
+                      updating &&
+                      updatingValues.includes('removeQuestion') &&
+                      updatingValues.includes('question:' + question._id)
+                        ? 'opacity-50'
+                        : ''
+                    }`}
+                    title={updatedSurvey.draft ? 'Doppelklick zum Bearbeiten' : undefined}
+                    onClick={(event) => {
+                      if (!loader.loading && !updating && event.detail === 2) {
+                        openQuestion(question);
+                      }
+                    }}>
+                    <div className="h-12 w-16 flex items-center justify-center p-4 select-none">
+                      <span className="text-3xl font-medium text-purple-700">{question.order}</span>
+                    </div>
+                    <div className="flex-grow flex flex-col items-start justify-center gap-2">
+                      <span className="text-lg font-medium">{question.question}</span>
+                      <span className="text-base">
+                        {question.answerOptions.length} Antwortmöglichkeit
+                        {question.answerOptions.length !== 1 ? 'en' : ''}
+                      </span>
+                    </div>
+                    {survey?.draft && (
+                      <div className="h-12 w-16 flex items-center justify-center">
+                        <button
+                          className="rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 p-2 disabled:cursor-not-allowed"
+                          disabled={loader.loading || updating}
+                          onClick={() => {
+                            removeQuestion(question);
+                          }}>
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            size="1x"
+                            className="text-lg text-red-500"
+                            fixedWidth
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
           </div>
+          {survey?.draft && (
+            <div className="w-full flex flex-row items-center justify-start gap-2">
+              <button
+                onClick={createQuestion}
+                className={`px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed ${
+                  updating && updatingValues.includes('createQuestion')
+                    ? 'loading-default-button'
+                    : ''
+                }`}
+                disabled={loader.loading || updating || !survey?.draft}
+                title={
+                  survey?.draft
+                    ? 'eine neue Frage erstellen'
+                    : 'es kann keine Frage mehr zu der Umfrage hinzugefügt werden'
+                }>
+                Frage hinzufügen
+              </button>
+              <button
+                onClick={reorderQuestions}
+                className="px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed"
+                disabled={loader.loading || updating || !survey?.draft}
+                title={
+                  survey?.draft
+                    ? 'Reihenfolge der Fragen ändern'
+                    : 'Die Reihenfolge der Fragen kann nicht mehr geändert werden'
+                }>
+                Reihenfolge ändern
+              </button>
+            </div>
+          )}
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Finalisierung</span>
@@ -473,12 +626,59 @@ const SurveyOverview: () => React.JSX.Element = () => {
             <button
               onClick={finalizeSurvey}
               className="px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed"
-              disabled={loader.loading || updating}>
+              disabled={loader.loading || updating}
+              title={
+                survey?.draft ? 'Finalisieren der Umfrage' : 'die Umfrage ist bereits finalisiert'
+              }>
               Finalisieren
             </button>
           )}
         </div>
+        <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>
+          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+            Mit dem Löschen der Umfrage werden alle Daten zu dieser, inklusive aller bereits
+            gespeicherten Abstimmungen gelöscht. Dieser Vorgang kann nicht rückgängig gemacht
+            werden.
+          </span>
+          <button
+            onClick={deleteSurvey}
+            className="px-3 py-[8px] rounded-md bg-red-600 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed"
+            disabled={loader.loading || updating}
+            title="Löschen der Umfrage">
+            Löschen
+          </button>
+        </div>
       </div>
+
+      {/* question modal */}
+      {survey && (
+        <QuestionModal
+          ref={questionModalRef}
+          survey={survey}
+          onUpdateQuestion={(question) => {
+            const tempSurvey: Survey = Object.assign({}, survey);
+            const questionIndex = tempSurvey.questions.findIndex((q) => q.order == question.order);
+
+            tempSurvey.questions[questionIndex] = question;
+
+            setSurvey(tempSurvey);
+            setUpdatedSurvey(tempSurvey);
+          }}
+        />
+      )}
+
+      {/* reorder questions modal */}
+      {survey && (
+        <ReorderQuestionsModal
+          survey={survey}
+          ref={reorderQuestionsModalRef}
+          onUpdateQuestionsOrder={(questions) => {
+            setSurvey({ ...survey, questions: questions });
+            setUpdatedSurvey({ ...survey, questions: questions });
+          }}
+        />
+      )}
 
       {/* finalize survey modal */}
       {survey && (
@@ -488,6 +688,9 @@ const SurveyOverview: () => React.JSX.Element = () => {
           onFinalized={finalizedSurvey}
         />
       )}
+
+      {/* delete survey modal */}
+      {survey && <DeleteSurveyModal survey={survey} ref={deleteSurveyModalRef} />}
     </>
   );
 };

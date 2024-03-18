@@ -91,7 +91,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
         <div className="w-full flex flex-col">
           <label
             htmlFor={id}
-            className="py-2 text-base font-medium"
+            className="py-2 text-lg font-medium"
             onClick={(event) => event.preventDefault()}>
             Name der Umfrage
           </label>

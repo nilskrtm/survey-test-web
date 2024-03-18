@@ -21,6 +21,7 @@ type DivProps = Pick<
 interface ContentEditableProps
   extends Pick<ReactContentEditableProps, 'disabled' | 'html' | 'innerRef' | 'tagName'>,
     DivProps {
+  maxLength?: number;
   onChange?: (event: ContentEditableEvent) => void;
   preventLinebreak?: boolean;
   preventPaste?: boolean;
@@ -35,6 +36,7 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
   onKeyPress,
   onKeyDown,
   onPaste,
+  maxLength,
   preventLinebreak,
   preventPaste,
   ...props
@@ -148,6 +150,17 @@ const ContentEditable: (props: ContentEditableProps) => React.JSX.Element = ({
               if (preventLinebreak === true) {
                 args.forEach((event) => {
                   if (event.key === 'Enter') {
+                    event.preventDefault();
+                  }
+                });
+              }
+
+              if (maxLength !== undefined) {
+                args.forEach((event) => {
+                  if (
+                    (event.target as HTMLDivElement).innerHTML.length >= maxLength &&
+                    event.key !== 'Backspace'
+                  ) {
                     event.preventDefault();
                   }
                 });

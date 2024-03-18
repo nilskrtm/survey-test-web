@@ -53,7 +53,7 @@
 @tailwind components;
 
 @layer components {
-  @keyframes loading-authentication-button {
+  @keyframes loading-default-button {
     0% {
       @apply bg-purple-700;
     }
@@ -64,8 +64,8 @@
       @apply bg-purple-700;
     }
   }
-  .loading-authentication-button {
-    animation: loading-authentication-button 2s linear infinite;
+  .loading-default-button {
+    animation: loading-default-button 2s linear infinite;
   }
   @keyframes loading-dots {
     0% {
