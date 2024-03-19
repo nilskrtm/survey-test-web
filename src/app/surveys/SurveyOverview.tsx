@@ -566,7 +566,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                     {survey?.draft && (
                       <div className="h-12 w-16 flex items-center justify-center">
                         <button
-                          className="rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 p-2 disabled:cursor-not-allowed"
+                          className="flex items-center justify-center rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 p-2 disabled:cursor-not-allowed"
                           disabled={loader.loading || updating || !survey.draft}
                           title="Frage löschen"
                           onClick={() => {
@@ -575,7 +575,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                           <FontAwesomeIcon
                             icon={faTrash}
                             size="1x"
-                            className="text-lg text-red-500"
+                            className="text-xl text-red-500"
                             fixedWidth
                           />
                         </button>

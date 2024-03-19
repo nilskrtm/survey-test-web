@@ -18,7 +18,7 @@ import { BarLoader } from 'react-spinners';
 import { AnswerPictureUrls } from '../../data/types/answer.picture.types';
 import AnswerPictureService from '../../data/services/answer.picture.service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faPalette, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AnswerOption } from '../../data/types/answer.option.types';
 import AnswerOptionsService from '../../data/services/answer.options.service';
 import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
@@ -158,6 +158,14 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
         setUpdating(false);
         setUpdatingValues([]);
       });
+  };
+
+  const changeAnswerOptionPicture: (answerOption: AnswerOption) => void = (answerOption) => {
+    //
+  };
+
+  const changeAnswerOptionColor: (answerOption: AnswerOption) => void = (answerOption) => {
+    //
   };
 
   const removeAnswerOption: (answerOption: AnswerOption) => void = (answerOption) => {
@@ -362,7 +370,11 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
                         : ''
                     }`}>
                     <div className="h-12 w-16 flex items-center justify-center p-4 select-none">
-                      <span className="text-3xl font-medium text-purple-700">
+                      <span
+                        className="text-3xl font-medium text-purple-700"
+                        style={{
+                          color: CSS.supports('color', answerOption.color) ? answerOption.color : ''
+                        }}>
                         {answerOption.order}
                       </span>
                     </div>
@@ -386,9 +398,37 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
                       )}
                     </div>
                     {props.survey.draft && (
-                      <div className="h-12 w-16 flex items-center justify-center">
+                      <div className="h-12 flex flex-row items-center justify-evenly gap-1 px-1">
                         <button
-                          className="rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 p-2 disabled:cursor-not-allowed"
+                          className="flex items-center justify-center rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 px-1 py-2 disabled:cursor-not-allowed"
+                          disabled={updating || !props.survey.draft}
+                          title="Antwortbild ändern"
+                          onClick={() => {
+                            changeAnswerOptionPicture(answerOption);
+                          }}>
+                          <FontAwesomeIcon
+                            icon={faImage}
+                            size="1x"
+                            className="text-xl text-purple-800"
+                            fixedWidth
+                          />
+                        </button>
+                        <button
+                          className="flex items-center justify-center rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 px-1 py-2 disabled:cursor-not-allowed"
+                          disabled={updating || !props.survey.draft}
+                          title="Farbe ändern"
+                          onClick={() => {
+                            changeAnswerOptionColor(answerOption);
+                          }}>
+                          <FontAwesomeIcon
+                            icon={faPalette}
+                            size="1x"
+                            className="text-xl text-purple-800"
+                            fixedWidth
+                          />
+                        </button>
+                        <button
+                          className="flex items-center justify-center rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 px-1 py-2 disabled:cursor-not-allowed"
                           disabled={updating || !props.survey.draft}
                           title="Antwortmöglichkeit löschen"
                           onClick={() => {
@@ -397,7 +437,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
                           <FontAwesomeIcon
                             icon={faTrash}
                             size="1x"
-                            className="text-lg text-red-500"
+                            className="text-xl text-red-500"
                             fixedWidth
                           />
                         </button>

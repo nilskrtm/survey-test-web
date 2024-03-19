@@ -17,7 +17,15 @@ const RawReorderAnswerOptionItem: (props: ReorderAnswerOptionItemProps) => React
         </span>
       </div>
       <div className="flex-grow flex flex-row items-center justify-start">
-        <span className="text-lg">Antwortmöglichkeit {props.answerOption.order}</span>
+        <span
+          className="text-lg"
+          style={{
+            color: CSS.supports('color', props.answerOption.color)
+              ? props.answerOption.color
+              : 'black'
+          }}>
+          Antwortmöglichkeit {props.answerOption.order}
+        </span>
       </div>
     </div>
   );

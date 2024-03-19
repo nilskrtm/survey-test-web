@@ -121,7 +121,7 @@ const ReorderQuestionsModal: ForwardRefRenderFunction<
     <Modal
       closeable={!ordering}
       onRequestClose={onClose}
-      title={'Reihenfolge der Fragen'}
+      title="Reihenfolge der Fragen"
       visible={visible}>
       <div className="w-full flex flex-col items-start justify-center">
         <ReorderQuestionList

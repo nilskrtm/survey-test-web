@@ -49,6 +49,7 @@ const ReorderAnswerOptionsModal: ForwardRefRenderFunction<
   const onClose = () => {
     if (visible && !ordering) {
       setVisible(false);
+      setOrdering(false);
       setAnswerOptions([]);
     }
   };
@@ -128,7 +129,7 @@ const ReorderAnswerOptionsModal: ForwardRefRenderFunction<
       containerRef={props.containerRef}
       closeable={!ordering}
       onRequestClose={onClose}
-      title={'Reihenfolge der Antwortmöglichkeiten'}
+      title="Reihenfolge der Antwortmöglichkeiten"
       visible={visible}>
       <div className="w-full flex flex-col items-start justify-center">
         <ReorderAnswerOptionList
