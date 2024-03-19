@@ -68,7 +68,10 @@ const CreateSurveyModal: ForwardRefRenderFunction<
           const error = response.error as APIError;
 
           if (!error.hasFieldErrors) {
-            setErrorMessage(error?.errorMessage);
+            setErrorMessage(
+              error.errorMessage ||
+                'Beim erstellen der Umfrage ist ein unbekannter Fehler aufgetreten.'
+            );
           } else {
             if ('name' in error.fieldErrors) {
               setErrorMessage(error.fieldErrors.name);

@@ -112,7 +112,7 @@ class API {
   public createErrorResponse<T>(error: unknown) {
     const apiError: APIError = {
       status: undefined,
-      errorMessage: 'Ein unbekannter Fehler ist aufgetreten.',
+      errorMessage: undefined,
       hasFieldErrors: false,
       fieldErrors: {}
     };
@@ -128,7 +128,10 @@ class API {
             const errors = (
               error as AxiosError<
                 | {
-                    errors: { [field: string]: { msg: string } } | Array<string>;
+                    errors:
+                      | { [field: string]: { msg: string } }
+                      | Array<string>
+                      | { error: string };
                   }
                 | undefined
               >

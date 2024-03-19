@@ -69,7 +69,7 @@ const Login: () => React.JSX.Element = () => {
           const error = response.error as APIError;
 
           if (!error.hasFieldErrors) {
-            setGeneralValidation(error?.errorMessage);
+            setGeneralValidation(error.errorMessage || 'Ein unbekannter Fehler ist aufgetreten.');
           } else {
             if ('username' in error.fieldErrors) {
               setUsernameValidation(error.fieldErrors.username);

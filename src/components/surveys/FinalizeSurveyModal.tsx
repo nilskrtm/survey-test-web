@@ -75,14 +75,11 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
 
           const error = response.error as APIError;
 
-          if (error.hasFieldErrors) {
-            toaster.sendToast('error', error.errorMessage);
-          } else {
-            toaster.sendToast(
-              'error',
+          toaster.sendToast(
+            'error',
+            error.errorMessage ||
               'Ein unbekannter Fehler ist beim Finalisieren der Umfrage aufgetreten.'
-            );
-          }
+          );
         }
       })
       .finally(() => {

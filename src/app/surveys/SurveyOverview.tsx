@@ -130,7 +130,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
           } else {
             toaster.sendToast(
               'error',
-              'Ein unbekannter Fehler ist beim Bearbeiten der Umfrage aufgetreten.'
+              error.errorMessage ||
+                'Ein unbekannter Fehler ist beim Bearbeiten der Umfrage aufgetreten.'
             );
           }
         }

@@ -7,7 +7,7 @@ type APIResponse<T> = {
 
 type APIError = {
   status?: number;
-  errorMessage: string;
+  errorMessage?: string;
   hasFieldErrors: boolean;
   fieldErrors: { [field: string]: string };
 };
