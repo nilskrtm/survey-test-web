@@ -59,8 +59,8 @@ const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Elemen
           />
           <FontAwesomeIcon
             icon={props.icon}
-            size="lg"
-            className="absolute right-5 top-3 text-black pointer-events-none"
+            size="1x"
+            className="absolute right-5 top-3 text-xl text-black pointer-events-none"
           />
         </div>
       ) : (
