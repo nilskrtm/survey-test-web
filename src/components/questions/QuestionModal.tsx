@@ -376,6 +376,10 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
                           className="h-full py-2"
                           src={answerPictureUrls[answerOption.picture.fileName]}
                           alt="Bild der Antwortmöglichkeit"
+                          onError={(event) => {
+                            (event.nativeEvent.target as HTMLImageElement).alt =
+                              'Bild konnte nicht geladen werden';
+                          }}
                         />
                       ) : (
                         <span className="text-lg font-normal text-red-500">Noch kein Bild</span>
