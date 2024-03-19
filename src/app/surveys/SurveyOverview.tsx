@@ -28,7 +28,7 @@ import ReorderQuestionsModal, {
 import DeleteSurveyModal, {
   DeleteSurveyModalRefAttributes
 } from '../../components/surveys/DeleteSurveyModal';
-import questionModal from '../../components/questions/QuestionModal';
+import { hasChanged } from '../../utils/data/update.util';
 
 interface SurveyOverviewPathParams extends Record<string, string> {
   surveyId: string;
@@ -104,7 +104,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
   };
 
   const updateSurvey: (values: Partial<Survey>) => void = (values) => {
-    if (!survey || !survey.draft) return;
+    if (!survey || !survey.draft || !hasChanged(survey, values)) return;
 
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
@@ -415,7 +415,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   } ${
                     updatedSurvey.draft &&
                     new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
-                      ? '!text-red-500'
+                      ? 'TODO'
                       : ''
                   }`}>
                   {moment(updatedSurvey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
@@ -425,7 +425,6 @@ const SurveyOverview: () => React.JSX.Element = () => {
                     className="absolute z-10 top-8"
                     ref={surveyStartDatePickerRef}
                     value={new Date(updatedSurvey.startDate)}
-                    minDate={new Date()}
                     maxDate={new Date(updatedSurvey.endDate)}
                     onChange={(date) => updateSurveyInternal({ startDate: date.toISOString() })}
                   />
@@ -530,7 +529,10 @@ const SurveyOverview: () => React.JSX.Element = () => {
               ? 'Doppelklick auf eine Frage um diese zu Bearbeiten.'
               : 'Doppelklick auf eine Frage um Details zu sehen.'}
           </span>
-          <div className="w-full flex flex-col items-center justify-center gap-2 mt-2 mb-2 overflow-y-hidden">
+          {survey?.questions.length === 0 && (
+            <span className="text-base font-normal text-red-500">Noch keine Fragen</span>
+          )}
+          <div className="w-full flex flex-col items-center justify-center gap-2 overflow-y-hidden">
             {updatedSurvey.questions
               .sort((a, b) => (a.order > b.order ? 1 : -1))
               .map((question, index) => {
@@ -564,7 +566,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
                       <div className="h-12 w-16 flex items-center justify-center">
                         <button
                           className="rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 p-2 disabled:cursor-not-allowed"
-                          disabled={loader.loading || updating}
+                          disabled={loader.loading || updating || !survey.draft}
+                          title="Frage löschen"
                           onClick={() => {
                             removeQuestion(question);
                           }}>
@@ -601,7 +604,9 @@ const SurveyOverview: () => React.JSX.Element = () => {
               <button
                 onClick={reorderQuestions}
                 className="px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed"
-                disabled={loader.loading || updating || !survey?.draft}
+                disabled={
+                  loader.loading || updating || !survey?.draft || survey.questions.length === 0
+                }
                 title={
                   survey?.draft
                     ? 'Reihenfolge der Fragen ändern'
@@ -658,9 +663,18 @@ const SurveyOverview: () => React.JSX.Element = () => {
           survey={survey}
           onUpdateQuestion={(question) => {
             const tempSurvey: Survey = Object.assign({}, survey);
-            const questionIndex = tempSurvey.questions.findIndex((q) => q.order == question.order);
+            const questionIndex = tempSurvey.questions.findIndex((q) => q.order === question.order);
 
             tempSurvey.questions[questionIndex] = question;
+
+            setSurvey(tempSurvey);
+            setUpdatedSurvey(tempSurvey);
+          }}
+          onUpdateAnswerOptions={(question, answerOptions) => {
+            const tempSurvey: Survey = Object.assign({}, survey);
+            const questionIndex = tempSurvey.questions.findIndex((q) => q.order === question.order);
+
+            tempSurvey.questions[questionIndex].answerOptions = answerOptions;
 
             setSurvey(tempSurvey);
             setUpdatedSurvey(tempSurvey);

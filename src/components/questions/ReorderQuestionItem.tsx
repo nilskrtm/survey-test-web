@@ -10,7 +10,7 @@ const RawReorderQuestionItem: (props: ReorderQuestionItemProps) => React.JSX.Ele
   return (
     <div className="w-full flex flex-row items-center justify-between rounded-lg border border-gray-200 py-2 z-30">
       <div className="w-16 flex items-center justify-center select-none">
-        <span className="text-xl font-medium truncate text-purple-800 px-4">
+        <span className="text-xl font-semibold truncate text-purple-800 px-4">
           {props.question.order}
         </span>
       </div>

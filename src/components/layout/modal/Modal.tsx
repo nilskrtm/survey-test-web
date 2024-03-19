@@ -1,10 +1,13 @@
-import React, { createRef, PropsWithChildren } from 'react';
+import React, { createRef, LegacyRef, PropsWithChildren, RefObject } from 'react';
 import useClickOutside from '../../../utils/hooks/use.click.outside.hook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import useGroupClickOutside from '../../../utils/hooks/use.group.click.outside.hook';
 
-type ModalProps = {
+export type ModalProps = {
+  childModals?: RefObject<HTMLDivElement>[];
   closeable?: boolean;
+  containerRef?: LegacyRef<HTMLDivElement>;
   onRequestClose?: () => void;
   title: string;
   visible?: boolean;
@@ -13,16 +16,26 @@ type ModalProps = {
 const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (props) => {
   const backgroundOverlayRef = createRef<HTMLDivElement>();
 
-  useClickOutside(backgroundOverlayRef, () => {
-    if (props.onRequestClose) {
-      props.onRequestClose();
-    }
-  });
+  if (props.childModals !== undefined) {
+    useGroupClickOutside([...props.childModals, backgroundOverlayRef], () => {
+      if (props.onRequestClose) {
+        props.onRequestClose();
+      }
+    });
+  } else {
+    useClickOutside(backgroundOverlayRef, () => {
+      if (props.onRequestClose) {
+        props.onRequestClose();
+      }
+    });
+  }
 
   return (
     <>
       {!!props.visible && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 z-30 h-full w-full flex items-center justify-center bg-slate-200/50">
+        <div
+          className="absolute top-0 left-0 right-0 bottom-0 z-30 h-full w-full flex items-center justify-center bg-slate-200/50"
+          ref={props.containerRef}>
           <div
             className="modal w-full max-h-[95vh] rounded-lg border border-gray-300 bg-white"
             ref={backgroundOverlayRef}>

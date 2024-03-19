@@ -7,4 +7,6 @@ type AnswerPicture = {
   edited: string;
 };
 
-export type { AnswerPicture };
+type AnswerPictureUrls = { [fileName: string]: string };
+
+export type { AnswerPicture, AnswerPictureUrls };
