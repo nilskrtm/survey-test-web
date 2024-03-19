@@ -274,7 +274,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
   };
 
   const deleteSurvey: () => void = () => {
-    if (!survey || !survey.draft) return;
+    if (!survey) return;
 
     if (deleteSurveyModalRef.current) {
       deleteSurveyModalRef.current.open();
