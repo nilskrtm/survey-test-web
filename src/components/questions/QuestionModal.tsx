@@ -66,6 +66,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
           answerPictureUrlsLoader.set(LoadingOption.RESET);
           setQuestion(question);
           setUpdatedQuestion(question);
+          setAnswerPictureUrls({});
           setUpdating(false);
           setUpdatingValues([]);
           setVisible(true);
@@ -88,6 +89,12 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
       }
     });
 
+    if (answerPictureFileNames.length === 0) {
+      setAnswerPictureUrls({});
+
+      return;
+    }
+
     AnswerPictureService.getAnswerPictureUrls(answerPictureFileNames).then((response) => {
       if (response.success) {
         answerPictureUrlsLoader.set(LoadingOption.RESET);
@@ -109,6 +116,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
       setUpdatingValues([]);
       setQuestion(dummyQuestion());
       setUpdatedQuestion(dummyQuestion());
+      setAnswerPictureUrls({});
     }
   };
 
