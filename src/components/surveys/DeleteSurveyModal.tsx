@@ -10,6 +10,7 @@ import { Survey } from '../../data/types/survey.types';
 import SurveyService from '../../data/services/survey.service';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import { useNavigate } from 'react-router-dom';
+import VotingService from '../../data/services/voting.service';
 
 type DeleteSurveyModalProps = {
   survey: Survey;
@@ -48,8 +49,13 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
   useEffect(() => {
     if (visible) {
       // modal was opened
-      // TODO: query amount of votings for the survey and set to 'votingCount'
-      setVotingCount(500); // temporary
+      VotingService.getVotingCount(props.survey._id).then((response) => {
+        if (response.success) {
+          setVotingCount(response.data.count);
+        } else {
+          setVotingCount(-1);
+        }
+      });
     }
   }, [visible]);
 
