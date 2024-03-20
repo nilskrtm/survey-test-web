@@ -21,12 +21,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
+import useVisible from '../../../utils/hooks/use.visible.hook';
 
 type DashboardLayoutProps = {
   //
 };
 
-const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
+const SaveDashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
   props
 ) => {
   const dashboardTitle = useAppSelector(selectDashboardTitle);
@@ -36,10 +37,9 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
-
-  const mobileDropdownRef = createRef<HTMLDivElement>();
+  const mobileNavigationRef = createRef<HTMLDivElement>();
+  const desktopNavigationRef = createRef<HTMLDivElement>();
   const profileDropdownRef = createRef<HTMLDivElement>();
-
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
   const toggleProfileDropdown = () => {
@@ -50,12 +50,20 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
     setMobileDropdownOpen(!mobileDropdownOpen);
   };
 
-  useClickOutside(profileDropdownRef, () => {
-    if (profileDropdownOpen) toggleProfileDropdown();
+  useVisible(mobileNavigationRef, (visible) => {
+    if (visible && profileDropdownOpen) {
+      toggleProfileDropdown();
+    }
   });
 
-  useClickOutside(mobileDropdownRef, () => {
-    if (mobileDropdownOpen) toggleProfileDropdown();
+  useVisible(desktopNavigationRef, (visible) => {
+    if (visible && mobileDropdownOpen) {
+      toggleMobileDropdown();
+    }
+  });
+
+  useClickOutside(profileDropdownRef, () => {
+    if (profileDropdownOpen) toggleProfileDropdown();
   });
 
   useEffect(() => {
@@ -73,14 +81,13 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 
   return (
     <>
-      <div className="w-full h-full flex max-lg:flex-col lg:flex-row bg-white">
-        <div className="lg:h-full lg:w-[250px] max-lg:sticky max-lg:z-20 max-lg:top-0 max-lg:h-[56px] max-lg:flex max-lg:flex-col select-none">
-          <div className="w-full lg:h-[60px] max-lg:h-full flex flex-row max-lg:justify-between lg:justify-center lg:items-center max-lg:px-6">
-            <p className="lg:text-3xl max-lg:text-xl text-purple-700 font-medium tracking-tight">
-              GBU-SmartData
-            </p>
+      {/* mobile version */}
+      <div className="w-full h-full flex lg:hidden flex-col bg-white" ref={mobileNavigationRef}>
+        <div className="sticky z-20 top-0 h-[56px] flex flex-col select-none">
+          <div className="w-full h-full flex flex-row justify-between items-center px-6">
+            <p className="text-xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
             <button
-              className="lg:hidden max-lg:flex justify-center items-center text-xl"
+              className="flex justify-center items-center text-xl"
               onClick={toggleMobileDropdown}>
               <FontAwesomeIcon
                 icon={faBars}
@@ -90,9 +97,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </button>
           </div>
           {mobileDropdownOpen && (
-            <div
-              className="absolute top-[56px] w-full lg:hidden max-lg:flex flex-col justify-center items-center bg-white border-t-2 border-b-2 border-gray-300"
-              ref={mobileDropdownRef}>
+            <div className="absolute top-[56px] w-full flex flex-col justify-center items-center bg-white border-t-2 border-b-2 border-gray-300">
               <div className="w-full flex flex-col justify-center items-center px-6 py-1">
                 <DashboardNavigationEntry
                   icon={faChartPie}
@@ -137,7 +142,19 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
               </div>
             </div>
           )}
-          <nav className="h-[calc(100%-60px)] w-full lg:flex max-lg:hidden flex-col items-center justify-between bg-gray-50">
+        </div>
+        <div className="w-full h-[calc(100%-56px)]">
+          <main className="w-full h-full block bg-gray-100">{props.children}</main>
+        </div>
+      </div>
+
+      {/* desktop version */}
+      <div className="w-full h-full lg:flex hidden flex-row bg-white" ref={desktopNavigationRef}>
+        <div className="h-full w-[250px] select-none">
+          <header className="h-[60px] w-full flex items-center justify-center">
+            <p className="text-3xl text-purple-700 font-medium tracking-tight">GBU-SmartData</p>
+          </header>
+          <nav className="h-[calc(100%-60px)] w-full flex flex-col items-center justify-between bg-gray-50">
             <div className="w-full p-5 pt-8 flex flex-col items-center justify-center">
               <button
                 type="button"
@@ -196,8 +213,8 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </NavLink>
           </nav>
         </div>
-        <div className="lg:w-[calc(100%-250px)] max-lg:w-full max-lg:h-[calc(100%-56px)]">
-          <header className="h-[60px] grow max-lg:hidden lg:flex flex-row items-center justify-between py-4 px-8 select-none">
+        <div className="w-[calc(100%-250px)]">
+          <header className="h-[60px] grow flex flex-row items-center justify-between py-4 px-8 select-none">
             <p className="text-3xl text-black font-semibold">{dashboardTitle}</p>
             <div className="relative" ref={profileDropdownRef}>
               <button
@@ -224,9 +241,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
               )}
             </div>
           </header>
-          <main className="w-full max-lg:h-full lg:h-[calc(100%-60px)] block bg-gray-100">
-            {props.children}
-          </main>
+          <main className="w-full h-[calc(100%-60px)] block bg-gray-100">{props.children}</main>
         </div>
       </div>
 
@@ -236,4 +251,4 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   );
 };
 
-export default DashboardLayout;
+export default SaveDashboardLayout;

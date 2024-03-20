@@ -13,7 +13,9 @@ const useVisible: (ref: RefObject<HTMLElement>, callback: (visible: boolean) => 
   );
 
   useEffect(() => {
-    observer.observe(ref.current as Element);
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
 
     return () => observer.disconnect();
   }, [ref]);
