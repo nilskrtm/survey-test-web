@@ -53,19 +53,19 @@
 @tailwind components;
 
 @layer components {
-  @keyframes loading-default-button {
+  .loading-button {
+    animation: loading-button 2s linear infinite;
+  }
+  @keyframes loading-button {
     0% {
-      @apply bg-purple-700;
+      @apply opacity-100;
     }
     50% {
-      @apply bg-purple-400;
+      @apply opacity-70;
     }
     100% {
-      @apply bg-purple-700;
+      @apply opacity-100;
     }
-  }
-  .loading-default-button {
-    animation: loading-default-button 2s linear infinite;
   }
   @keyframes loading-dots {
     0% {

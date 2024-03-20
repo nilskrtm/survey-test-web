@@ -134,7 +134,7 @@ const ReorderQuestionsModal: ForwardRefRenderFunction<
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className={`px-3 py-[8px] rounded-md text-base text-white font-medium bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed ${
-              ordering ? 'loading-default-button' : ''
+              ordering ? 'loading-button' : ''
             }`}
             disabled={ordering || !orderingPending()}
             onClick={saveOrdering}

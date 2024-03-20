@@ -475,9 +475,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
               <button
                 onClick={createAnswerOption}
                 className={`px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed ${
-                  updating && updatingValues.includes('createAnswerOption')
-                    ? 'loading-default-button'
-                    : ''
+                  updating && updatingValues.includes('createAnswerOption') ? 'loading-button' : ''
                 }`}
                 disabled={updating || !props.survey.draft}
                 title={
