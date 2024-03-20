@@ -67,7 +67,7 @@ const PasswordReset: () => React.JSX.Element = () => {
           <span className="text-xl lg:text-2xl xl:text-4xl font-light">Passwort zurücksetzen</span>
         </div>
 
-        {reset ? (
+        {!reset ? (
           <>
             <div className="text-left mt-2">
               <p className="font-light">
