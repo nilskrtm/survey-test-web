@@ -189,8 +189,8 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
         </div>
         <div className="w-full flex flex-row items-center justify-between mt-2">
           <span className="text-lg font-medium">Auswahl:</span>
-          <div className="flex-grow flex flex-row items-center justify-end gap-2 mr-1">
-            <div className="flex flex-row items-center justify-center space-x-2">
+          <div className="flex-grow flex flex-row items-center justify-end gap-2 mx-1">
+            <div className="flex flex-row items-center justify-center gap-2">
               <input
                 type="checkbox"
                 checked={colorPickerType === 'image'}
@@ -204,7 +204,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
               />
               <p className="font-normal text-lg">Bild</p>
             </div>
-            <div className="flex flex-row items-center justify-center space-x-2">
+            <div className="flex flex-row items-center justify-center gap-2">
               <input
                 type="checkbox"
                 checked={colorPickerType === 'field'}
