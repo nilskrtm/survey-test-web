@@ -313,83 +313,104 @@ const SurveyOverview: () => React.JSX.Element = () => {
     <>
       <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 xl:gap-6 p-6 overflow-y-scroll">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
-          <div className="w-full inline-block">
-            <ContentEditable
-              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-nowrap truncate overflow-hidden after:px-2 ${
-                !loader.loading && updatedSurvey.draft && !updating
-                  ? 'hover:ring-gray-200 hover:ring-1'
-                  : ''
-              } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
-              disabled={loader.loading || !updatedSurvey.draft || updating}
-              html={updatedSurvey.name}
-              onBlur={(event) => {
-                updateSurvey({ name: event.target.innerHTML });
-              }}
-              onChange={(event) => {
-                updateSurveyInternal({ name: event.target.value });
-              }}
-              onClick={() => {
-                if (surveyNameRef.current != document.activeElement) {
-                  surveyNameRef.current?.focus();
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  surveyNameRef.current?.blur();
-                }
-              }}
-              maxLength={50}
-              preventLinebreak={true}
-              preventPaste={true}
-              innerRef={surveyNameRef}
-              tagName="span"
-            />
-            <BarLoader
-              color="rgb(126 34 206)"
-              cssOverride={{ width: '100%' }}
-              height={1}
-              loading={updating && updatingValues.includes('name')}
-            />
-          </div>
-          <div className="w-full inline-block">
-            <ContentEditable
-              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-base text-gray-600 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
-                !loader.loading && updatedSurvey.draft && !updating
-                  ? 'hover:ring-gray-200 hover:ring-1'
-                  : ''
-              } ${updating && updatingValues.includes('description') ? '!py-0' : ''}`}
-              disabled={loader.loading || !updatedSurvey.draft || updating}
-              html={updatedSurvey.description}
-              onBlur={(event) => {
-                updateSurvey({ description: event.target.innerHTML });
-              }}
-              onChange={(event) => {
-                updateSurveyInternal({ description: event.target.value });
-              }}
-              onClick={() => {
-                if (surveyDescriptionRef.current != document.activeElement) {
-                  surveyDescriptionRef.current?.focus();
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  surveyDescriptionRef.current?.blur();
-                }
-              }}
-              maxLength={150}
-              preventLinebreak={true}
-              preventPaste={true}
-              innerRef={surveyDescriptionRef}
-              tagName="span"
-            />
-            <BarLoader
-              color="rgb(126 34 206)"
-              cssOverride={{ width: '100%' }}
-              height={1}
-              loading={updating && updatingValues.includes('description')}
-            />
+          <div className="w-full flex flex-row items-center justify-between">
+            <div className="w-[calc(100%-56px)]">
+              <div className="w-full inline-block">
+                <ContentEditable
+                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                    !loader.loading && updatedSurvey.draft && !updating
+                      ? 'hover:ring-gray-200 hover:ring-1'
+                      : ''
+                  } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
+                  disabled={loader.loading || !updatedSurvey.draft || updating}
+                  html={updatedSurvey.name}
+                  onBlur={(event) => {
+                    updateSurvey({ name: event.target.innerHTML });
+                  }}
+                  onChange={(event) => {
+                    updateSurveyInternal({ name: event.target.value });
+                  }}
+                  onClick={() => {
+                    if (surveyNameRef.current != document.activeElement) {
+                      surveyNameRef.current?.focus();
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      surveyNameRef.current?.blur();
+                    }
+                  }}
+                  maxLength={50}
+                  preventLinebreak={true}
+                  preventPaste={true}
+                  innerRef={surveyNameRef}
+                  tagName="span"
+                />
+                <BarLoader
+                  color="rgb(126 34 206)"
+                  cssOverride={{ width: '100%' }}
+                  height={1}
+                  loading={updating && updatingValues.includes('name')}
+                />
+              </div>
+              <div className="w-full inline-block">
+                <ContentEditable
+                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-base text-gray-600 font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                    !loader.loading && updatedSurvey.draft && !updating
+                      ? 'hover:ring-gray-200 hover:ring-1'
+                      : ''
+                  } ${updating && updatingValues.includes('description') ? '!py-0' : ''}`}
+                  disabled={loader.loading || !updatedSurvey.draft || updating}
+                  html={updatedSurvey.description}
+                  onBlur={(event) => {
+                    updateSurvey({ description: event.target.innerHTML });
+                  }}
+                  onChange={(event) => {
+                    updateSurveyInternal({ description: event.target.value });
+                  }}
+                  onClick={() => {
+                    if (surveyDescriptionRef.current != document.activeElement) {
+                      surveyDescriptionRef.current?.focus();
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      surveyDescriptionRef.current?.blur();
+                    }
+                  }}
+                  maxLength={150}
+                  preventLinebreak={true}
+                  preventPaste={true}
+                  innerRef={surveyDescriptionRef}
+                  tagName="span"
+                />
+                <BarLoader
+                  color="rgb(126 34 206)"
+                  cssOverride={{ width: '100%' }}
+                  height={1}
+                  loading={updating && updatingValues.includes('description')}
+                />
+              </div>
+            </div>
+            <div className="h-full w-20 flex flex-col items-center justify-start gap-1 pl-2">
+              {survey?.draft && (
+                <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-purple-800">
+                  <span className="text-xs text-white font-semibold no-select">Entwurf</span>
+                </div>
+              )}
+              {!survey?.draft && (
+                <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
+                  <span className="text-xs text-white font-semibold no-select">Bereit</span>
+                </div>
+              )}
+              {survey?.archived && (
+                <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-orange-400">
+                  <span className="text-xs text-white font-semibold no-select">Archiv</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
