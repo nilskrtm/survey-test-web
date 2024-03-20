@@ -109,13 +109,13 @@ const Login: () => React.JSX.Element = () => {
             autoComplete="username"
             autoFocus={true}
             icon={faUser}
-            label="Nutzername"
+            label="Nutzername oder E-Mail"
             onChange={(e) => {
               setUsername((e.target as HTMLInputElement).value);
               setGeneralValidation('');
               setUsernameValidation('');
             }}
-            placeholder="Nutzername"
+            placeholder="Nutzername oder E-Mail"
             type="text"
             validationMessage={usernameValidation}
             value={username}
