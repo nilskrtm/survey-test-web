@@ -6,7 +6,7 @@ type PickerCircleCoordinates = {
   size: number;
 };
 
-type ColorPickerProps = {
+type ColorPickerProps = Pick<React.JSX.IntrinsicElements['div'], 'className'> & {
   onPickColor: (color: string) => void;
 };
 
@@ -124,7 +124,7 @@ const ColorPicker: (props: ColorPickerProps) => React.JSX.Element = (props) => {
       : '';
   };
 
-  const onClick: (event: MouseEvent<HTMLCanvasElement>) => void = (event) => {
+  const onMouseMove: (event: MouseEvent<HTMLCanvasElement>) => void = (event) => {
     if (canvas.current) {
       const canvasContext = canvas.current.getContext('2d');
 
@@ -139,7 +139,9 @@ const ColorPicker: (props: ColorPickerProps) => React.JSX.Element = (props) => {
         const colorRGBA =
           'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
 
-        props.onPickColor(rgba2hex(colorRGBA));
+        if (mouseDown) {
+          props.onPickColor(rgba2hex(colorRGBA));
+        }
 
         drawColorField({
           ...pickerCircleCoordinates,
@@ -150,22 +152,16 @@ const ColorPicker: (props: ColorPickerProps) => React.JSX.Element = (props) => {
     }
   };
 
-  const onMouseMove: (event: MouseEvent<HTMLCanvasElement>) => void = (event) => {
-    if (!mouseDown || !canvas.current) return;
-
-    drawColorField({
-      ...pickerCircleCoordinates,
-      x: (event.nativeEvent.offsetX / canvas.current.clientWidth) * canvas.current.width,
-      y: (event.nativeEvent.offsetY / canvas.current.clientHeight) * canvas.current.height
-    });
-  };
-
   return (
     <canvas
+      className={props.className}
       ref={canvas}
-      onClick={onClick}
-      onMouseDown={() => setMouseDown(true)}
-      onMouseUp={() => setMouseDown(false)}
+      onMouseDown={() => {
+        setMouseDown(true);
+      }}
+      onMouseUp={() => {
+        setMouseDown(false);
+      }}
       onMouseMove={onMouseMove}
       width={500}
       height={500}
