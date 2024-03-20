@@ -69,6 +69,18 @@ const SurveyList: () => React.JSX.Element = () => {
     }
   };
 
+  const surveyActive: (survey: Survey) => boolean = (survey) => {
+    if (!survey || survey?.draft) return false;
+
+    const currentDate = new Date();
+    const startDate = new Date(survey.startDate);
+    const endDate = new Date(survey.endDate);
+
+    return (
+      startDate.getTime() <= currentDate.getTime() && currentDate.getTime() < endDate.getTime()
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-between space-y-8 p-6 overflow-y-scroll">
       <div className="w-full flex flex-row items-center justify-between rounded-lg bg-white border border-gray-200 py-4 px-10">
@@ -122,15 +134,39 @@ const SurveyList: () => React.JSX.Element = () => {
                 className="w-full rounded-lg bg-white border border-gray-200 hover:ring-1 hover:ring-purple-500"
                 key={'survey-card-' + survey._id}
                 to={'/surveys/' + survey._id}>
-                <div className="w-full flex flex-col items-start justify-center py-6 px-6">
-                  <span
-                    className="w-full font-semibold text-xl text-black whitespace-nowrap truncate"
-                    title={survey.name}>
-                    {survey.name}
-                  </span>
-                  <span className="w-full font-semibold text-md text-gray-600">
-                    {survey.description}
-                  </span>
+                <div className="w-full flex flex-row items-start justify-between py-6 px-6">
+                  <div className="flex flex-col items-center justify-start">
+                    <span
+                      className="w-full font-semibold text-xl text-black whitespace-break-spaces truncate"
+                      title={survey.name}>
+                      {survey.name}
+                    </span>
+                    <span className="w-full font-semibold text-md text-gray-600 whitespace-break-spaces truncate">
+                      {survey.description}
+                    </span>
+                  </div>
+                  <div className="h-full w-20 flex flex-col items-center justify-start gap-1 pl-2">
+                    {survey.draft && (
+                      <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-purple-800">
+                        <span className="text-xs text-white font-semibold no-select">Entwurf</span>
+                      </div>
+                    )}
+                    {!survey.draft && !surveyActive(survey) && (
+                      <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
+                        <span className="text-xs text-white font-semibold no-select">Bereit</span>
+                      </div>
+                    )}
+                    {!survey.draft && surveyActive(survey) && (
+                      <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
+                        <span className="text-xs text-white font-semibold no-select">Aktiv</span>
+                      </div>
+                    )}
+                    {survey.archived && (
+                      <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-orange-400">
+                        <span className="text-xs text-white font-semibold no-select">Archiv</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <hr className="w-full h-[1px] bg-gray-200" />
                 <div className="w-full flex flex-row items-center justify-center gap-2 py-2 px-8">
