@@ -513,14 +513,14 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
           onUpdateAnswerOption={(answerOption: AnswerOption) => {
             const tempQuestion: Question = Object.assign({}, question);
             const answerOptionIndex = tempQuestion.answerOptions.findIndex(
-              (q) => q.order === question.order
+              (aw) => aw.order === answerOption.order
             );
 
             tempQuestion.answerOptions[answerOptionIndex] = answerOption;
 
+            props.onUpdateQuestion(tempQuestion);
             setQuestion(tempQuestion);
             setUpdatedQuestion(tempQuestion);
-            props.onUpdateQuestion(tempQuestion);
           }}
         />
       )}
@@ -535,14 +535,14 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
           onUpdateAnswerOption={(answerOption: AnswerOption) => {
             const tempQuestion: Question = Object.assign({}, question);
             const answerOptionIndex = tempQuestion.answerOptions.findIndex(
-              (q) => q.order === question.order
+              (aw) => aw.order === answerOption.order
             );
 
             tempQuestion.answerOptions[answerOptionIndex] = answerOption;
 
+            props.onUpdateQuestion(tempQuestion);
             setQuestion(tempQuestion);
             setUpdatedQuestion(tempQuestion);
-            props.onUpdateQuestion(tempQuestion);
           }}
         />
       )}

@@ -118,9 +118,9 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
     )
       .then((response) => {
         if (response.success) {
-          setAnswerOption({ ...answerOption, color: updateAnswerOption.color });
-          setUpdateAnswerOption({ ...answerOption, color: updateAnswerOption.color });
-          props.onUpdateAnswerOption({ ...answerOption, color: updateAnswerOption.color });
+          setAnswerOption({ ...answerOption, ...updateAnswerOption });
+          setUpdateAnswerOption({ ...answerOption, ...updateAnswerOption });
+          props.onUpdateAnswerOption({ ...answerOption, ...updateAnswerOption });
         } else {
           setUpdateAnswerOption(answerOption);
         }
@@ -194,6 +194,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
               <input
                 type="checkbox"
                 checked={colorPickerType === 'image'}
+                readOnly
                 onClick={() => {
                   setColorPickerType('image');
                 }}
@@ -208,6 +209,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
               <input
                 type="checkbox"
                 checked={colorPickerType === 'field'}
+                readOnly
                 onClick={() => {
                   setColorPickerType('field');
                 }}
