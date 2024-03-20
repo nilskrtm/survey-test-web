@@ -485,43 +485,45 @@ const SurveyOverview: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Begrüßung</span>
-          <ContentEditable
-            className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
-              !loader.loading && updatedSurvey.draft && !updating
-                ? 'hover:ring-gray-200 hover:ring-1'
-                : ''
-            } ${updating && updatingValues.includes('greeting') ? '!py-0' : ''}`}
-            disabled={loader.loading || !updatedSurvey.draft || updating}
-            html={updatedSurvey.greeting}
-            onBlur={(event) => {
-              updateSurvey({ greeting: event.target.innerHTML });
-            }}
-            onChange={(event) => {
-              updateSurveyInternal({ greeting: event.target.value });
-            }}
-            onClick={() => {
-              if (surveyGreetingRef.current != document.activeElement) {
-                surveyGreetingRef.current?.focus();
-              }
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                surveyGreetingRef.current?.blur();
-              }
-            }}
-            maxLength={300}
-            preventLinebreak={true}
-            preventPaste={true}
-            innerRef={surveyGreetingRef}
-            tagName="span"
-          />
-          <BarLoader
-            color="rgb(126 34 206)"
-            cssOverride={{ width: '100%' }}
-            height={1}
-            loading={updating && updatingValues.includes('greeting')}
-          />
+          <div className="w-full inline-block">
+            <ContentEditable
+              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                !loader.loading && updatedSurvey.draft && !updating
+                  ? 'hover:ring-gray-200 hover:ring-1'
+                  : ''
+              } ${updating && updatingValues.includes('greeting') ? '!py-0' : ''}`}
+              disabled={loader.loading || !updatedSurvey.draft || updating}
+              html={updatedSurvey.greeting}
+              onBlur={(event) => {
+                updateSurvey({ greeting: event.target.innerHTML });
+              }}
+              onChange={(event) => {
+                updateSurveyInternal({ greeting: event.target.value });
+              }}
+              onClick={() => {
+                if (surveyGreetingRef.current != document.activeElement) {
+                  surveyGreetingRef.current?.focus();
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  surveyGreetingRef.current?.blur();
+                }
+              }}
+              maxLength={300}
+              preventLinebreak={true}
+              preventPaste={true}
+              innerRef={surveyGreetingRef}
+              tagName="span"
+            />
+            <BarLoader
+              color="rgb(126 34 206)"
+              cssOverride={{ width: '100%' }}
+              height={1}
+              loading={updating && updatingValues.includes('greeting')}
+            />
+          </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Fragen</span>
