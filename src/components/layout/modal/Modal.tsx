@@ -41,7 +41,7 @@ const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (prop
               props.className ? props.className : ''
             }`}
             ref={backgroundOverlayRef}>
-            <div className="flex-grow flex flex-row items-center justify-between px-4 md:py-1">
+            <div className="flex-grow flex flex-row items-center justify-between gap-2 px-4 md:py-1">
               <span className="text-nowrap text-xl font-semibold truncate">{props.title}</span>
               <button
                 disabled={props.closeable != undefined ? !props.closeable : false}
