@@ -12,8 +12,8 @@ import { clearTokens, setAuthenticationData } from '../store/features/authentica
 import { APIError, APIResponse } from './types/common.types';
 import { globalNavigate } from '../components/navigation/GlobalNavigationProvider';
 
-const baseUrl: string = process.env.REACT_APP_API_ENDPOINT || 'http://127.0.0.1:5000';
-const timeout: number = parseInt(process.env.REACT_APP_API_TIMEOUT || '10000');
+const baseUrl: string = import.meta.env.VITE_API_ENDPOINT || 'http://127.0.0.1:5000';
+const timeout: number = parseInt(import.meta.env.VITE_API_TIMEOUT || '10000');
 
 export const defaultClient: AxiosInstance = axios.create({
   timeout: timeout,

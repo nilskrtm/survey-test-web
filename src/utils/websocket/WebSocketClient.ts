@@ -1,8 +1,8 @@
 import { WebSocketData } from '../interfaces/websocket.data.interface';
 import { store } from '../../store/store';
 
-const baseUrl: string = process.env.REACT_APP_WS_ENDPOINT || 'ws://127.0.0.1:5000';
-const reconnectTimeout: number = parseInt(process.env.REACT_APP_WS_RECONNECT_TIMEOUT || '3000');
+const baseUrl: string = import.meta.env.VITE_WS_ENDPOINT || 'ws://127.0.0.1:5000/ws';
+const reconnectTimeout: number = parseInt(import.meta.env.VITE_WS_RECONNECT_TIMEOUT || '3000');
 
 class WebSocketClient {
   private webSocket: WebSocket | null = null;
