@@ -281,6 +281,18 @@ const SurveyOverview: () => React.JSX.Element = () => {
     }
   };
 
+  const surveyActive: () => boolean = () => {
+    if (!survey || survey?.draft) return false;
+
+    const currentDate = new Date();
+    const startDate = new Date(survey.startDate);
+    const endDate = new Date(survey.endDate);
+
+    return (
+      startDate.getTime() <= currentDate.getTime() && currentDate.getTime() < endDate.getTime()
+    );
+  };
+
   useGroupClickOutside(
     [surveyStartDateRef, surveyEndDateRef, surveyStartDatePickerRef, surveyEndDatePickerRef],
     () => {
@@ -400,9 +412,14 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   <span className="text-xs text-white font-semibold no-select">Entwurf</span>
                 </div>
               )}
-              {!survey?.draft && (
+              {!survey?.draft && !surveyActive() && (
                 <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
                   <span className="text-xs text-white font-semibold no-select">Bereit</span>
+                </div>
+              )}
+              {!survey?.draft && surveyActive() && (
+                <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
+                  <span className="text-xs text-white font-semibold no-select">Aktiv</span>
                 </div>
               )}
               {survey?.archived && (
