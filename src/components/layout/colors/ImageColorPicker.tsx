@@ -18,8 +18,8 @@ type ImageColorPickerProps = Pick<React.JSX.IntrinsicElements['div'], 'className
 
 const ImageColorPicker: (props: ImageColorPickerProps) => React.JSX.Element = (props) => {
   const [canvasDimensions, setCanvasDimensions] = useState<CanvasDimensions>({
-    width: -1,
-    height: -1
+    width: 500,
+    height: 500
   });
   const [pickerCircleCoordinates, setPickerCircleCoordinates] = useState<PickerCircleCoordinates>({
     x: -999999,
