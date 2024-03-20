@@ -40,7 +40,7 @@ const Dashboard: () => React.JSX.Element = () => {
   });
 
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 xl:gap-6 p-6">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 p-6">
       <DashboardMetricBox
         className=""
         icon={faClipboard}

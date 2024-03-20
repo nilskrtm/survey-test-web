@@ -323,7 +323,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
 
   return (
     <>
-      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 xl:gap-6 p-6 overflow-y-scroll">
+      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <div className="w-full flex flex-row items-center justify-between">
             <div className="w-[calc(100%-56px)]">
@@ -679,6 +679,23 @@ const SurveyOverview: () => React.JSX.Element = () => {
               Finalisieren
             </button>
           )}
+        </div>
+        <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Archivieren</span>
+          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+            {survey?.draft
+              ? 'Die Umfrage ist bereits archiviert.'
+              : 'Die Umfrage als archiviert markieren.'}
+          </span>
+          <button
+            onClick={() => {
+              updateSurvey({ archived: !survey?.archived });
+            }}
+            className="px-3 py-[8px] rounded-md bg-orange-400 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-orange-200 disabled:cursor-not-allowed"
+            disabled={loader.loading || updating}
+            title={survey?.archived ? 'Umfrage aus dem Archiv entfernen' : 'Umfrage archivieren'}>
+            {survey?.archived ? 'Aus Archiv entfernen' : 'Archivieren'}
+          </button>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>

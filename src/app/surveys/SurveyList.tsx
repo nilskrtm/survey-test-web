@@ -123,7 +123,7 @@ const SurveyList: () => React.JSX.Element = () => {
         </div>
       )}
       {!loader.loading && !loader.error && surveys.length > 0 && (
-        <div className="w-full flex-auto grid auto-rows-min grid-cols-1 md:grid-cols-2 gap-4 xl:gap-6 gap-y-4">
+        <div className="w-full flex-auto grid auto-rows-min grid-cols-1 md:grid-cols-2 gap-4 gap-y-4">
           {surveys.map((survey: Survey) => {
             const editedDateString = moment(survey.edited).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
             const createdDateString =
