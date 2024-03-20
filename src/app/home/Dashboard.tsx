@@ -48,7 +48,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-purple-200"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.surveyCount}
-        text="Umfragen gesamt"
+        text="Umfragen"
       />
       <DashboardMetricBox
         className=""
