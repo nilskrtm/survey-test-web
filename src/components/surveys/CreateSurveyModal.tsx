@@ -86,6 +86,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
 
   return (
     <Modal
+      className="w-full"
       closeable={!creating}
       onRequestClose={onClose}
       title="Umfrage erstellen"

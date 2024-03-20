@@ -89,6 +89,7 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
 
   return (
     <Modal
+      className="w-full"
       closeable={!finalizing}
       onRequestClose={onClose}
       title="Umfrage finalisieren"

@@ -26,6 +26,12 @@ import ReorderAnswerOptionsModal, {
   ReorderAnswerOptionsModalRefAttributes
 } from '../answer.options/ReorderAnswerOptionsModal';
 import { hasChanged } from '../../utils/data/update.util';
+import AnswerOptionColorModal, {
+  AnswerOptionColorModalRefAttributes
+} from '../answer.options/AnswerOptionColorModal';
+import AnswerOptionPictureModal, {
+  AnswerOptionPictureModalRefAttributes
+} from '../answer.options/AnswerOptionPictureModal';
 
 type QuestionModalProps = {
   survey: Survey;
@@ -54,6 +60,10 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
 
   const reorderAnswerOptionsModalRef = createRef<ReorderAnswerOptionsModalRefAttributes>();
   const reorderAnswerOptionsModalContainerRef = createRef<HTMLDivElement>();
+  const changeAnswerOptionPictureModalRef = createRef<AnswerOptionPictureModalRefAttributes>();
+  const changeAnswerOptionPictureModalContainerRef = createRef<HTMLDivElement>();
+  const changeAnswerOptionColorModalRef = createRef<AnswerOptionColorModalRefAttributes>();
+  const changeAnswerOptionColorModalContainerRef = createRef<HTMLDivElement>();
 
   const questionQuestionRef = createRef<HTMLSpanElement>();
   const questionTimeoutRef = createRef<HTMLSpanElement>();
@@ -161,11 +171,19 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
   };
 
   const changeAnswerOptionPicture: (answerOption: AnswerOption) => void = (answerOption) => {
-    //
+    if (!props.survey || !props.survey.draft) return;
+
+    if (changeAnswerOptionPictureModalRef.current) {
+      changeAnswerOptionPictureModalRef.current.open(answerOption);
+    }
   };
 
   const changeAnswerOptionColor: (answerOption: AnswerOption) => void = (answerOption) => {
-    //
+    if (!props.survey || !props.survey.draft) return;
+
+    if (changeAnswerOptionColorModalRef.current) {
+      changeAnswerOptionColorModalRef.current.open(answerOption);
+    }
   };
 
   const removeAnswerOption: (answerOption: AnswerOption) => void = (answerOption) => {
@@ -272,7 +290,12 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
   return (
     <>
       <Modal
-        childModals={[reorderAnswerOptionsModalContainerRef]}
+        className="w-full"
+        childModals={[
+          reorderAnswerOptionsModalContainerRef,
+          changeAnswerOptionPictureModalContainerRef,
+          changeAnswerOptionColorModalContainerRef
+        ]}
         closeable={!updating}
         onRequestClose={onClose}
         title={'Frage ' + question?.order}
@@ -479,6 +502,50 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
           )}
         </div>
       </Modal>
+
+      {/* change answer-option picture modal */}
+      {props.survey && question && (
+        <AnswerOptionPictureModal
+          survey={props.survey}
+          question={question}
+          ref={changeAnswerOptionPictureModalRef}
+          containerRef={changeAnswerOptionPictureModalContainerRef}
+          onUpdateAnswerOption={(answerOption: AnswerOption) => {
+            const tempQuestion: Question = Object.assign({}, question);
+            const answerOptionIndex = tempQuestion.answerOptions.findIndex(
+              (q) => q.order === question.order
+            );
+
+            tempQuestion.answerOptions[answerOptionIndex] = answerOption;
+
+            setQuestion(tempQuestion);
+            setUpdatedQuestion(tempQuestion);
+            props.onUpdateQuestion(tempQuestion);
+          }}
+        />
+      )}
+
+      {/* change answer-option color modal */}
+      {props.survey && question && (
+        <AnswerOptionColorModal
+          survey={props.survey}
+          question={question}
+          ref={changeAnswerOptionColorModalRef}
+          containerRef={changeAnswerOptionColorModalContainerRef}
+          onUpdateAnswerOption={(answerOption: AnswerOption) => {
+            const tempQuestion: Question = Object.assign({}, question);
+            const answerOptionIndex = tempQuestion.answerOptions.findIndex(
+              (q) => q.order === question.order
+            );
+
+            tempQuestion.answerOptions[answerOptionIndex] = answerOption;
+
+            setQuestion(tempQuestion);
+            setUpdatedQuestion(tempQuestion);
+            props.onUpdateQuestion(tempQuestion);
+          }}
+        />
+      )}
 
       {/* reorder questions modal */}
       {props.survey && question && (

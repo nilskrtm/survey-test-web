@@ -126,6 +126,7 @@ const ReorderAnswerOptionsModal: ForwardRefRenderFunction<
 
   return (
     <Modal
+      className="w-full"
       containerRef={props.containerRef}
       closeable={!ordering}
       onRequestClose={onClose}

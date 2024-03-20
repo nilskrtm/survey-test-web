@@ -119,6 +119,7 @@ const ReorderQuestionsModal: ForwardRefRenderFunction<
 
   return (
     <Modal
+      className="w-full"
       closeable={!ordering}
       onRequestClose={onClose}
       title="Reihenfolge der Fragen"

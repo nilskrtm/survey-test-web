@@ -1,7 +1,7 @@
 import { Survey } from '../../data/types/survey.types';
 import { AnswerPicture } from '../../data/types/answer.picture.types';
-import { Queries } from '@testing-library/react';
 import { Question } from '../../data/types/question.types';
+import { AnswerOption } from '../../data/types/answer.option.types';
 
 export const dummySurvey: () => Survey = () => {
   return {
@@ -27,6 +27,15 @@ export const dummyQuestion: () => Question = () => {
     timeout: -1,
     order: 1,
     answerOptions: []
+  };
+};
+
+export const dummyAnswerOption: () => AnswerOption = () => {
+  return {
+    _id: 'dummy',
+    color: '',
+    order: 1,
+    picture: undefined as unknown as AnswerPicture
   };
 };
 

@@ -92,6 +92,7 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
 
   return (
     <Modal
+      className="w-full"
       closeable={!deleting}
       onRequestClose={onClose}
       title="Umfrage finalisieren"
