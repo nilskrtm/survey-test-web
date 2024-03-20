@@ -689,7 +689,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
             onClick={() => {
               updateSurvey({ archived: !survey?.archived });
             }}
-            className="px-3 py-[8px] rounded-md bg-orange-400 loading-button text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-orange-200 disabled:cursor-not-allowed"
+            className={`px-3 py-[8px] rounded-md bg-orange-400 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-orange-200 disabled:cursor-not-allowed
+              ${updating && updatingValues.includes('archived') ? 'loading-button' : ''}`}
             disabled={loader.loading || updating}
             title={survey?.archived ? 'Umfrage aus dem Archiv entfernen' : 'Umfrage archivieren'}>
             {survey?.archived ? 'Aus Archiv entfernen' : 'Archivieren'}
