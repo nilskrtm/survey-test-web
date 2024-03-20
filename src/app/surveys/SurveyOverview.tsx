@@ -683,7 +683,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Archivieren</span>
           <span className="text-base italic whitespace-break-spaces text-ellipsis">
-            {survey?.draft
+            {survey?.archived
               ? 'Die Umfrage ist bereits archiviert.'
               : 'Die Umfrage als archiviert markieren.'}
           </span>
