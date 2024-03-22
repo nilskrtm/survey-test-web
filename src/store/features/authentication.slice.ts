@@ -46,7 +46,9 @@ export const { resetAuthenticationData, clearTokens, setAuthenticationData, setP
 
 export const selectLoggedIn = (state: RootState) =>
   !!state.authentication.accessToken && !!state.authentication.refreshToken;
+export const selectUserId = (state: RootState) => state.authentication.userId;
 export const selectAccessToken = (state: RootState) => state.authentication.accessToken;
+export const selectRefreshToken = (state: RootState) => state.authentication.refreshToken;
 export const selectPermissionLevel = (state: RootState) => state.authentication.permissionLevel;
 
 export default authenticationSlice.reducer;
