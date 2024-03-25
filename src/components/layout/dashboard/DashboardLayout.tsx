@@ -74,7 +74,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   return (
     <>
       <div className="w-full h-full flex max-lg:flex-col lg:flex-row bg-white">
-        <div className="lg:h-full lg:w-[250px] max-lg:sticky max-lg:z-20 max-lg:top-0 max-lg:h-[56px] max-lg:flex max-lg:flex-col select-none">
+        <div className="lg:h-full lg:w-[250px] max-lg:sticky max-lg:z-20 max-lg:top-0 max-lg:h-[56px] max-lg:flex max-lg:flex-col max-lg:bg-white select-none">
           <div className="w-full lg:h-[60px] max-lg:h-full flex flex-row max-lg:justify-between lg:justify-center items-center max-lg:px-6">
             <p className="lg:text-3xl max-lg:text-xl text-purple-700 font-medium tracking-tight">
               GBU-SmartData
