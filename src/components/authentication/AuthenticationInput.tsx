@@ -75,7 +75,7 @@ const AuthenticationInput: (props: AuthenticationInputProps) => React.JSX.Elemen
           className="form-input w-full h-11 rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
         />
       )}
-      <p className="p-1 pt-2 text-sm text-red-500 font-medium">{props.validationMessage}</p>
+      <span className="p-1 pt-2 text-sm text-red-500 font-medium">{props.validationMessage}</span>
     </div>
   );
 };

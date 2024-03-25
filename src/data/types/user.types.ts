@@ -4,7 +4,15 @@ type User = {
   email: string;
   firstname: string;
   lastname: string;
-  permissionLevel: string;
+  permissionLevel: number;
 };
 
-export type { User };
+type CreateUserValues = Pick<User, 'username' | 'email' | 'firstname' | 'lastname'> & {
+  password: string;
+} & Partial<Pick<User, 'permissionLevel'>>;
+
+type UpdateUserValues = Partial<
+  Pick<User, 'email' | 'firstname' | 'lastname' | 'permissionLevel'> & { password: string }
+>;
+
+export type { User, CreateUserValues, UpdateUserValues };
