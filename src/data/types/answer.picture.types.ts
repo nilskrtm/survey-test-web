@@ -7,6 +7,15 @@ type AnswerPicture = {
   edited: string;
 };
 
+type CreateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'>>;
+
+type UpdateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'>>;
+
 type AnswerPictureUrls = { [fileName: string]: string };
 
-export type { AnswerPicture, AnswerPictureUrls };
+export type {
+  AnswerPicture,
+  CreateAnswerPictureValues,
+  UpdateAnswerPictureValues,
+  AnswerPictureUrls
+};
