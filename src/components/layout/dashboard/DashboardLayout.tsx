@@ -144,7 +144,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                 onClick={createSurvey}
                 className="flex items-center justify-between space-x-4 px-6 py-3 rounded-lg bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 <span className="text-lg text-white font-medium">Neue Umfrage</span>
-                <FontAwesomeIcon icon={faPlus} size="lg" className="text-white" />
+                <FontAwesomeIcon icon={faPlus} size="1x" className="text-white text-xl" />
               </button>
               <div className="w-full mt-8 flex flex-col items-center justify-center space-y-3">
                 <DashboardNavigationEntry
