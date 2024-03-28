@@ -12,6 +12,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      # TODO: remove temporary flag to force install (because of react-sortable-hoc)
-      - run: npm ci -f
+      - run: npm ci
       - run: npm run build
