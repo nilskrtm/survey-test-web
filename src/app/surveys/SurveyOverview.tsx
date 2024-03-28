@@ -50,7 +50,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
 
   const [updating, setUpdating] = useState(false);
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
-  const [updatedSurvey, setUpdatedSurvey] = useState<Survey>(dummySurvey);
+  const [updatedSurvey, setUpdatedSurvey] = useState<Survey>(dummySurvey());
 
   const surveyNameRef = createRef<HTMLSpanElement>();
   const surveyDescriptionRef = createRef<HTMLSpanElement>();

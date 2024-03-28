@@ -39,6 +39,10 @@ export const dummyAnswerOption: () => AnswerOption = () => {
   };
 };
 
+export const dummyAnswerPicture: () => AnswerPicture = () => {
+  return { _id: 'dummy', name: '', edited: '', created: '', owner: '', fileName: '' };
+};
+
 export const isSurveyFinalizeable: (survey: Survey) => boolean = (survey) => {
   const surveyStartDate = new Date(survey.startDate).getTime();
   const surveyEndDate = new Date(survey.endDate).getTime();

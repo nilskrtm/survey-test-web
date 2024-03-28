@@ -1,5 +1,17 @@
 import API from '../api';
+import { AnswerPicture } from '../types/answer.picture.types';
+import { APIPaging } from '../types/common.types';
 import { AnswerPictureUrls } from '../types/answer.picture.types';
+
+const getAnswerPictures = (page: number, perPage: number, filter?: { [key: string]: string }) => {
+  return API.get<{ answerPictures: Array<AnswerPicture>; paging: APIPaging }>('/answer-pictures', {
+    params: { page: page, perPage: perPage, ...filter }
+  });
+};
+
+const getAnswerPicture = (id: string) => {
+  return API.get<{ answerPicture: AnswerPicture }>('/answer-pictures/' + id);
+};
 
 const getAnswerPictureUrls = (fileNames: string | Array<string>) => {
   const finalFileNames: Array<string> = Array.isArray(fileNames)
@@ -10,4 +22,4 @@ const getAnswerPictureUrls = (fileNames: string | Array<string>) => {
   return API.get<{ urls: AnswerPictureUrls }>('/answer-pictures/urls?fileNames=' + queryFileNames);
 };
 
-export default { getAnswerPictureUrls };
+export default { getAnswerPictures, getAnswerPicture, getAnswerPictureUrls };

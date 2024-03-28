@@ -16,11 +16,12 @@ import { layoutRoute } from './utils/layout/layout.util';
 import Imprint from './app/legal/Imprint';
 import SurveyList from './app/surveys/SurveyList';
 import SurveyOverview from './app/surveys/SurveyOverview';
-import AnswerPictures from './app/answer.pictures/AnswerPictures';
+import AnswerPictureList from './app/answer.pictures/AnswerPictureList';
 import Settings from './app/settings/Settings';
 import Votings from './app/votings/Votings';
 import ToastProvider from './components/layout/toasts/ToastProvider';
 import PasswordReset from './app/authentication/PasswordReset';
+import AnswerPictureOverview from './app/answer.pictures/AnswerPictureOverview';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -33,7 +34,8 @@ const dashboardRoute = layoutRoute(<Dashboard />);
 const surveyListRoute = layoutRoute(<SurveyList />);
 const surveyOverviewRoute = layoutRoute(<SurveyOverview />);
 const votingsRoute = layoutRoute(<Votings />);
-const answerPicturesRoute = layoutRoute(<AnswerPictures />);
+const answerPictureListRoute = layoutRoute(<AnswerPictureList />);
+const answerPictureOverviewRoute = layoutRoute(<AnswerPictureOverview />);
 const settingsRoute = layoutRoute(<Settings />);
 
 root.render(
@@ -55,7 +57,11 @@ root.render(
           <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
           <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
           <Route path="/votings" element={protectRoute(votingsRoute, false)} />
-          <Route path="/answer-pictures" element={protectRoute(answerPicturesRoute, false)} />
+          <Route path="/answer-pictures" element={protectRoute(answerPictureListRoute, false)} />
+          <Route
+            path="/answer-pictures/:answerPictureId"
+            element={protectRoute(answerPictureOverviewRoute, false)}
+          />
           <Route path="/settings" element={protectRoute(settingsRoute, false)} />
           <Route path="*" element={defaultRoute} />
         </Routes>
