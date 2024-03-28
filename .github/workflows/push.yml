@@ -8,9 +8,13 @@ jobs:
     name: Build App
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: npm ci --no-fund
-      - run: npm run build
+      - name: Install Node Packages
+        run: npm ci --no-fund
+      - name: Build React App
+        run: npm run build
