@@ -138,7 +138,9 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
     }
   }
 
-  return <div></div>;
+  return (
+    <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll"></div>
+  );
 };
 
 export default AnswerPictureOverview;
