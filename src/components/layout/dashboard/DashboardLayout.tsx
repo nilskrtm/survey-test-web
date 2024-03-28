@@ -168,6 +168,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                 />
                 <DashboardNavigationEntry
                   icon={faImage}
+                  matchPathPattern={['/answer-pictures', '/answer-pictures/:answerPictureId']}
                   name="Bilder"
                   path="/answer-pictures"
                   type={DashboardNavigationEntryType.DESKTOP}
