@@ -1,0 +1,17 @@
+name: Push - Build
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Build App
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      # TODO: remove temporary flag to force install (because of react-sortable-hoc)
+      - run: npm ci -f
+      - run: npm run build
