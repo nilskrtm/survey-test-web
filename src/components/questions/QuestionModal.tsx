@@ -508,7 +508,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
           question={question}
           ref={changeAnswerOptionPictureModalRef}
           containerRef={changeAnswerOptionPictureModalContainerRef}
-          onUpdateAnswerOption={(answerOption: AnswerOption) => {
+          onUpdateAnswerOption={(answerOption: AnswerOption, answerPictureUrl) => {
             const tempQuestion: Question = Object.assign({}, question);
             const answerOptionIndex = tempQuestion.answerOptions.findIndex(
               (aw) => aw.order === answerOption.order
@@ -519,6 +519,12 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             props.onUpdateQuestion(tempQuestion);
             setQuestion(tempQuestion);
             setUpdatedQuestion(tempQuestion);
+
+            if (answerPictureUrl) {
+              setAnswerPictureUrls((prev) =>
+                Object.assign({}, prev, { [answerOption.picture.fileName]: answerPictureUrl })
+              );
+            }
           }}
         />
       )}

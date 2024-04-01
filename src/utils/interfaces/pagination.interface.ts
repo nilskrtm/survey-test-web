@@ -11,4 +11,5 @@ export type ComputedPagingData = {
 
 export interface Pagination extends PagingData, ComputedPagingData {
   update: (newPagingData: APIPaging, pageCount: number) => PagingData;
+  reset: () => void;
 }

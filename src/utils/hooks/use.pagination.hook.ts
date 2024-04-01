@@ -50,6 +50,15 @@ const usePagination: (requestPerPage: number) => Pagination = (perPage: number) 
       setData(fullPagingData);
 
       return fullPagingData;
+    },
+    reset: () => {
+      setData({
+        perPage: perPage,
+        page: 1,
+        lastPage: 1,
+        pageCount: 0,
+        count: 0
+      });
     }
   };
 

@@ -9,9 +9,9 @@ type AnswerPicture = {
 
 type AnswerPictureFile = { file?: File };
 
-type CreateAnswerPictureValues = AnswerPictureFile & Partial<Pick<AnswerPicture, 'name'>>;
+type CreateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'> & AnswerPictureFile>;
 
-type UpdateAnswerPictureValues = AnswerPictureFile & Partial<Pick<AnswerPicture, 'name'>>;
+type UpdateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'> & AnswerPictureFile>;
 
 type AnswerPictureUrls = { [fileName: string]: string };
 

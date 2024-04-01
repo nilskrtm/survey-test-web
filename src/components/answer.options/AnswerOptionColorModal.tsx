@@ -120,6 +120,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
         if (response.success) {
           setAnswerOption({ ...answerOption, ...updateAnswerOption });
           setUpdateAnswerOption({ ...answerOption, ...updateAnswerOption });
+          onClose();
           props.onUpdateAnswerOption({ ...answerOption, ...updateAnswerOption });
         } else {
           setUpdateAnswerOption(answerOption);
@@ -228,7 +229,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
             }`}
             disabled={updating}
             onClick={updateColor}
-            title="Umfrage erstellen">
+            title="Farbe speichern">
             Speichern
           </button>
         </div>
