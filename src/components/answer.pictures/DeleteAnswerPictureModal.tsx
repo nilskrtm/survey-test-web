@@ -6,40 +6,40 @@ import React, {
   useState
 } from 'react';
 import Modal from '../layout/modal/Modal';
-import { Survey } from '../../data/types/survey.types';
-import SurveyService from '../../data/services/survey.service';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import { useNavigate } from 'react-router-dom';
-import VotingService from '../../data/services/voting.service';
+import AnswerPictureService from '../../data/services/answer.picture.service';
+import { AnswerPicture } from '../../data/types/answer.picture.types';
 
-type DeleteSurveyModalProps = {
-  survey: Survey;
+type DeleteAnswerPictureModalProps = {
+  answerPicture: AnswerPicture;
 };
 
-export type DeleteSurveyModalRefAttributes = {
+export type DeleteAnswerPictureModalRefAttributes = {
   open: () => void;
 };
 
-const DeleteSurveyModal: ForwardRefRenderFunction<
-  DeleteSurveyModalRefAttributes,
-  DeleteSurveyModalProps
+const DeleteAnswerPictureModal: ForwardRefRenderFunction<
+  DeleteAnswerPictureModalRefAttributes,
+  DeleteAnswerPictureModalProps
 > = (props, ref) => {
   const navigate = useNavigate();
   const toaster = useToasts();
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [votingCount, setVotingCount] = useState<number>(-1);
+
+  const [isUsed, setIsUsed] = useState<boolean | undefined>(undefined);
 
   const [deleting, setDeleting] = useState<boolean>(false);
 
-  useImperativeHandle<DeleteSurveyModalRefAttributes, DeleteSurveyModalRefAttributes>(
+  useImperativeHandle<DeleteAnswerPictureModalRefAttributes, DeleteAnswerPictureModalRefAttributes>(
     ref,
     () => ({
       open: () => {
         if (!visible) {
           setVisible(true);
-          setVotingCount(-1);
           setDeleting(false);
+          setIsUsed(undefined);
         }
       }
     }),
@@ -49,11 +49,11 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
   useEffect(() => {
     if (visible) {
       // modal was opened
-      VotingService.getVotingCount(props.survey._id).then((response) => {
+      AnswerPictureService.getAnswerPictureStatus(props.answerPicture._id).then((response) => {
         if (response.success) {
-          setVotingCount(response.data.count);
+          setIsUsed(response.data.used);
         } else {
-          setVotingCount(-1);
+          setIsUsed(undefined);
         }
       });
     }
@@ -62,16 +62,17 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
   const onClose = () => {
     if (visible && !deleting) {
       setVisible(false);
+      setIsUsed(undefined);
     }
   };
 
-  const deleteSurvey: () => void = () => {
+  const deleteAnswerPicture: () => void = () => {
     setDeleting(true);
 
-    SurveyService.removeSurvey(props.survey._id)
+    AnswerPictureService.removeAnswerPicture(props.answerPicture._id)
       .then((response) => {
         if (response.success) {
-          toaster.sendToast('success', 'Die Umfrage wurde erfolgreich gelöscht.');
+          toaster.sendToast('success', 'Das Bild wurde erfolgreich gelöscht.');
 
           navigate(-1);
         } else {
@@ -79,7 +80,7 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
 
           toaster.sendToast(
             'error',
-            'Ein unbekannter Fehler ist beim Löschen der Umfrage aufgetreten.'
+            'Ein unbekannter Fehler ist beim Löschen des Bildes aufgetreten.'
           );
         }
       })
@@ -93,26 +94,23 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
       className="w-full"
       closeable={!deleting}
       onRequestClose={onClose}
-      title="Umfrage löschen"
+      title="Bild löschen"
       visible={visible}>
       <div className="w-full flex flex-col">
         <span className="text-base font-normal">
-          Mit dem Löschen der Umfrage werden alle Daten zu dieser, inklusive aller bereits
-          gespeicherten Abstimmungen gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.
-          Die genutzten Antwort-Bilder bleiben erhalten.
+          Das Bild kann nur gelöscht werden, wenn es derzeit in keiner Umfrage genutzt wird.
         </span>
         <span className="text-base font-semibold mt-2">
-          Anzahl der Abstimmungen der Umfrage:{' '}
-          <span className={votingCount === -1 ? 'loading-dots' : ''}>
-            {votingCount === -1 ? '' : votingCount}
-          </span>
+          {isUsed
+            ? 'Das Bild kann nicht gelöscht werden, da es derzeit in einer Umfrage genutzt wird.'
+            : 'Das Bild kann gelöscht werden.'}
         </span>
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className="px-3 py-[8px] rounded-md text-base text-white font-medium bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed"
-            disabled={deleting}
-            onClick={deleteSurvey}
-            title="Umfrage löschen">
+            disabled={deleting || isUsed === undefined || isUsed}
+            onClick={deleteAnswerPicture}
+            title="Bild löschen">
             Löschen
           </button>
         </div>
@@ -121,6 +119,6 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef<DeleteSurveyModalRefAttributes, DeleteSurveyModalProps>(
-  DeleteSurveyModal
+export default forwardRef<DeleteAnswerPictureModalRefAttributes, DeleteAnswerPictureModalProps>(
+  DeleteAnswerPictureModal
 );

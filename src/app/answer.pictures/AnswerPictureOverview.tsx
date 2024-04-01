@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
 import { useNavigate, useParams } from 'react-router-dom';
 import useToasts from '../../utils/hooks/use.toasts.hook';
@@ -11,6 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { hasChanged } from '../../utils/data/update.util';
 import { APIError } from '../../data/types/common.types';
+import DeleteAnswerPictureModal, {
+  DeleteAnswerPictureModalRefAttributes
+} from 'components/answer.pictures/DeleteAnswerPictureModal';
 
 interface AnswerPictureOverviewPathParams extends Record<string, string> {
   answerPictureId: string;
@@ -25,6 +28,8 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
   const loader = useLoader();
   const [answerPicture, setAnswerPicture] = useState<AnswerPicture>();
   const [isUsed, setIsUsed] = useState<boolean>(true);
+
+  const deleteAnswerPictureModalRef = createRef<DeleteAnswerPictureModalRefAttributes>();
 
   const [updating, setUpdating] = useState(false);
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
@@ -120,6 +125,12 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
       });
   };
 
+  const deleteAnswerPicture: () => void = () => {
+    if (deleteAnswerPictureModalRef.current) {
+      deleteAnswerPictureModalRef.current.open();
+    }
+  };
+
   if (loader.loading || loader.error) {
     if (loader.loading) {
       return (
@@ -139,7 +150,28 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
   }
 
   return (
-    <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll"></div>
+    <>
+      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
+        <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>
+          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+            Das Bild kann nur gelöscht werden, wenn es derzeit in keiner Umfrage genutzt wird.
+          </span>
+          <button
+            onClick={deleteAnswerPicture}
+            className="px-3 py-[8px] rounded-md bg-red-600 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed"
+            disabled={loader.loading || updating}
+            title="Löschen des Bildes">
+            Löschen
+          </button>
+        </div>
+      </div>
+
+      {/* delete answer-picture modal */}
+      {answerPicture && (
+        <DeleteAnswerPictureModal answerPicture={answerPicture} ref={deleteAnswerPictureModalRef} />
+      )}
+    </>
   );
 };
 

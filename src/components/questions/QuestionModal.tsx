@@ -99,6 +99,12 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
       }
     });
 
+    if (answerPictureFileNames.length === 0) {
+      answerPictureUrlsLoader.set(LoadingOption.RESET);
+
+      return;
+    }
+
     AnswerPictureService.getAnswerPictureUrls(answerPictureFileNames).then((response) => {
       if (response.success) {
         answerPictureUrlsLoader.set(LoadingOption.RESET);

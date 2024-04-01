@@ -39,6 +39,10 @@ const updateAnswerPicture = (id: string, values: UpdateAnswerPictureValues) => {
   return API.patch<undefined, typeof values>('/answer-pictures/' + id, values);
 };
 
+const removeAnswerPicture = (answerPictureId: string) => {
+  return API.delete<undefined>('/answer-pictures/' + answerPictureId);
+};
+
 const getAnswerPictureUrls = (fileNames: string | Array<string>) => {
   const finalFileNames: Array<string> = Array.isArray(fileNames)
     ? fileNames
@@ -57,6 +61,7 @@ export default {
   getAnswerPicture,
   createAnswerPicture,
   updateAnswerPicture,
+  removeAnswerPicture,
   getAnswerPictureUrls,
   getAnswerPictureStatus
 };
