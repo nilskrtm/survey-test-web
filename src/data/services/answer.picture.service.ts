@@ -18,24 +18,46 @@ const getAnswerPicture = (id: string) => {
 };
 
 const createAnswerPicture = (initialValues: CreateAnswerPictureValues) => {
-  const formData = new FormData();
+  if ('file' in initialValues) {
+    const formData = new FormData();
 
-  for (const key in initialValues) {
-    const value = initialValues[key as keyof CreateAnswerPictureValues];
+    for (const key in initialValues) {
+      const value = initialValues[key as keyof CreateAnswerPictureValues];
 
-    if (value) {
-      formData.append(key, value);
+      if (value) {
+        formData.append(key, value);
+      }
     }
+
+    return API.post<{ id: string }, FormData>('/answer-pictures', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
   }
 
-  return API.post<{ id: string }, FormData>('/answer-pictures', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  });
+  return API.post<{ id: string }, typeof initialValues>('/answer-pictures', initialValues);
 };
 
 const updateAnswerPicture = (id: string, values: UpdateAnswerPictureValues) => {
+  if ('file' in values) {
+    const formData = new FormData();
+
+    for (const key in values) {
+      const value = values[key as keyof UpdateAnswerPictureValues];
+
+      if (value) {
+        formData.append(key, value);
+      }
+    }
+
+    return API.patch<{ id: string }, FormData>('/answer-pictures/' + id, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
+
   return API.patch<undefined, typeof values>('/answer-pictures/' + id, values);
 };
 

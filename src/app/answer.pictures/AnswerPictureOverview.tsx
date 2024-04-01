@@ -3,10 +3,14 @@ import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
 import { useNavigate, useParams } from 'react-router-dom';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
-import { AnswerPicture, UpdateAnswerPictureValues } from '../../data/types/answer.picture.types';
+import {
+  AnswerPicture,
+  AnswerPictureFile,
+  UpdateAnswerPictureValues
+} from '../../data/types/answer.picture.types';
 import AnswerPictureService from '../../data/services/answer.picture.service';
 import { dummyAnswerPicture } from '../../utils/surveys/surveys.util';
-import { BounceLoader } from 'react-spinners';
+import { BarLoader, BounceLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 import { hasChanged } from '../../utils/data/update.util';
@@ -14,6 +18,7 @@ import { APIError } from '../../data/types/common.types';
 import DeleteAnswerPictureModal, {
   DeleteAnswerPictureModalRefAttributes
 } from 'components/answer.pictures/DeleteAnswerPictureModal';
+import ContentEditable from '../../components/layout/editable.content/ContentEditable';
 
 interface AnswerPictureOverviewPathParams extends Record<string, string> {
   answerPictureId: string;
@@ -35,6 +40,9 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
   const [updatedAnswerPicture, setUpdatedAnswerPicture] =
     useState<AnswerPicture>(dummyAnswerPicture());
+
+  const answerPictureNameRef = createRef<HTMLSpanElement>();
+  const fileInputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
     loadAnswerPicture();
@@ -86,8 +94,13 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
     });
   };
 
-  const updateAnswerPicture: (values: Partial<AnswerPicture>) => void = (values) => {
-    if (!answerPicture || isUsed || !hasChanged(answerPicture, values)) return;
+  const updateAnswerPicture: (values: Partial<AnswerPicture & AnswerPictureFile>) => void = (
+    values
+  ) => {
+    if (!answerPicture || isUsed || !hasChanged(answerPicture, values)) {
+      alert('ref');
+      return;
+    }
 
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
@@ -152,6 +165,80 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
   return (
     <>
       <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
+        <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
+          <div className="w-full inline-block">
+            <ContentEditable
+              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                !loader.loading && !isUsed && !updating ? 'hover:ring-gray-200 hover:ring-1' : ''
+              } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
+              disabled={loader.loading || isUsed || updating}
+              html={updatedAnswerPicture.name}
+              onBlur={(event) => {
+                updateAnswerPicture({ name: event.target.innerHTML });
+              }}
+              onChange={(event) => {
+                updateAnswerPictureInternal({ name: event.target.value });
+              }}
+              onClick={() => {
+                if (answerPictureNameRef.current != document.activeElement) {
+                  answerPictureNameRef.current?.focus();
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  answerPictureNameRef.current?.blur();
+                }
+              }}
+              maxLength={50}
+              preventLinebreak={true}
+              preventPaste={true}
+              innerRef={answerPictureNameRef}
+              tagName="span"
+            />
+            <BarLoader
+              color="rgb(126 34 206)"
+              cssOverride={{ width: '100%' }}
+              height={1}
+              loading={updating && updatingValues.includes('name')}
+            />
+          </div>
+        </div>
+        <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
+          <span className="text-xl font-semibold whitespace-nowrap truncate">Bild</span>
+          <button
+            onClick={() => {
+              fileInputRef.current?.click();
+            }}
+            className="relative px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed"
+            disabled={loader.loading || updating || isUsed}
+            title="Bild ändern">
+            <input
+              ref={fileInputRef}
+              onChange={(event) => {
+                const file = event.target.files?.item(0);
+
+                if (file) {
+                  const fileSize = file.size;
+
+                  if (fileSize > 10000000) {
+                    toaster.sendToast('warning', 'Das Bild ist größer als 10 mb.');
+
+                    return;
+                  }
+
+                  updateAnswerPicture({ file: file });
+                }
+              }}
+              id="answerPicture_file"
+              type="file"
+              accept="image/jpeg,
+          image/png"
+              className="absolute top-0 left-0 w-full h-full hidden"
+            />
+            Bild ändern
+          </button>
+        </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>
           <span className="text-base italic whitespace-break-spaces text-ellipsis">

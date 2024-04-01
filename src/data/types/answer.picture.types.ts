@@ -17,6 +17,7 @@ type AnswerPictureUrls = { [fileName: string]: string };
 
 export type {
   AnswerPicture,
+  AnswerPictureFile,
   CreateAnswerPictureValues,
   UpdateAnswerPictureValues,
   AnswerPictureUrls
