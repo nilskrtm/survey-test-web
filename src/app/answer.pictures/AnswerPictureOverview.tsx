@@ -3,7 +3,7 @@ import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
 import { useNavigate, useParams } from 'react-router-dom';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
-import { AnswerPicture } from '../../data/types/answer.picture.types';
+import { AnswerPicture, UpdateAnswerPictureValues } from '../../data/types/answer.picture.types';
 import AnswerPictureService from '../../data/services/answer.picture.service';
 import { dummyAnswerPicture } from '../../utils/surveys/surveys.util';
 import { BounceLoader } from 'react-spinners';
@@ -87,7 +87,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
 
-    AnswerPictureService.updateAnswerPicture(answerPicture._id, values)
+    AnswerPictureService.updateAnswerPicture(answerPicture._id, values as UpdateAnswerPictureValues)
       .then((response) => {
         if (response.success) {
           setAnswerPicture({ ...answerPicture, ...values });

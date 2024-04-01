@@ -7,9 +7,11 @@ type AnswerPicture = {
   edited: string;
 };
 
-type CreateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'>>;
+type AnswerPictureFile = { file?: File };
 
-type UpdateAnswerPictureValues = Partial<Pick<AnswerPicture, 'name'>>;
+type CreateAnswerPictureValues = AnswerPictureFile & Partial<Pick<AnswerPicture, 'name'>>;
+
+type UpdateAnswerPictureValues = AnswerPictureFile & Partial<Pick<AnswerPicture, 'name'>>;
 
 type AnswerPictureUrls = { [fileName: string]: string };
 

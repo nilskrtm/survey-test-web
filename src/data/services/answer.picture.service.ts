@@ -1,5 +1,9 @@
 import API from '../api';
-import { AnswerPicture, UpdateAnswerPictureValues } from '../types/answer.picture.types';
+import {
+  AnswerPicture,
+  CreateAnswerPictureValues,
+  UpdateAnswerPictureValues
+} from '../types/answer.picture.types';
 import { APIPaging } from '../types/common.types';
 import { AnswerPictureUrls } from '../types/answer.picture.types';
 
@@ -11,6 +15,24 @@ const getAnswerPictures = (page: number, perPage: number, filter?: { [key: strin
 
 const getAnswerPicture = (id: string) => {
   return API.get<{ answerPicture: AnswerPicture }>('/answer-pictures/' + id);
+};
+
+const createAnswerPicture = (initialValues: CreateAnswerPictureValues) => {
+  const formData = new FormData();
+
+  for (const key in initialValues) {
+    const value = initialValues[key as keyof CreateAnswerPictureValues];
+
+    if (value) {
+      formData.append(key, value);
+    }
+  }
+
+  return API.post<{ id: string }, FormData>('/answer-pictures', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
 
 const updateAnswerPicture = (id: string, values: UpdateAnswerPictureValues) => {
@@ -33,6 +55,7 @@ const getAnswerPictureStatus = (id: string) => {
 export default {
   getAnswerPictures,
   getAnswerPicture,
+  createAnswerPicture,
   updateAnswerPicture,
   getAnswerPictureUrls,
   getAnswerPictureStatus

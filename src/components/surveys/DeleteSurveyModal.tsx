@@ -73,9 +73,7 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
         if (response.success) {
           toaster.sendToast('success', 'Die Umfrage wurde erfolgreich gelöscht.');
 
-          setTimeout(() => {
-            navigate(-1);
-          }, 1500);
+          navigate(-1);
         } else {
           setVisible(false);
 
