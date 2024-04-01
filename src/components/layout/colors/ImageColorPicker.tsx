@@ -14,6 +14,7 @@ type PickerCircleCoordinates = {
 type ImageColorPickerProps = Pick<React.JSX.IntrinsicElements['div'], 'className'> & {
   imageUrl: string;
   onPickColor: (color: string) => void;
+  useCacheBreak?: boolean;
 };
 
 const ImageColorPicker: (props: ImageColorPickerProps) => React.JSX.Element = (props) => {
@@ -44,7 +45,12 @@ const ImageColorPicker: (props: ImageColorPickerProps) => React.JSX.Element = (p
     image.onload = function () {
       callback(image.naturalWidth, image.naturalHeight);
     };
-    image.src = url;
+
+    if (props.useCacheBreak !== undefined && props.useCacheBreak) {
+      image.src = url + '?cacheBreak=' + new Date().getTime();
+    } else {
+      image.src = url;
+    }
   };
 
   const recalculatePickerSize: (
@@ -105,7 +111,11 @@ const ImageColorPicker: (props: ImageColorPickerProps) => React.JSX.Element = (p
               canvasContext.stroke();
               canvasContext.closePath();
             };
-            newImage.src = props.imageUrl;
+            if (props.useCacheBreak !== undefined && props.useCacheBreak) {
+              newImage.src = props.imageUrl + '?cacheBreak=' + new Date().getTime();
+            } else {
+              newImage.src = props.imageUrl;
+            }
 
             setCanvasDimensions(newCanvasDimensions);
             setPickerCircleCoordinates(newPickerCircleCoordinates);

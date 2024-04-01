@@ -165,6 +165,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
                 className="w-auto h-auto max-h-52 object-contain ring-1 ring-black"
                 imageUrl={answerPictureUrl}
                 onPickColor={onPickColor}
+                useCacheBreak={true}
               />
             </div>
           )}
