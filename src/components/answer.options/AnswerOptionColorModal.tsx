@@ -41,7 +41,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
   const [updateAnswerOption, setUpdateAnswerOption] = useState<AnswerOption>(dummyAnswerOption());
 
   const [colorPickerType, setColorPickerType] = useState<'field' | 'image'>('field');
-  const answerPictuerUrlLoader = useLoader();
+  const answerPictureUrlLoader = useLoader();
   const [answerPictureUrl, setAnswerPictureUrl] = useState<string>('');
 
   const [updating, setUpdating] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
           setVisible(true);
           setUpdating(false);
           setColorPickerType('field');
-          answerPictuerUrlLoader.set(LoadingOption.RESET);
+          answerPictureUrlLoader.set(LoadingOption.RESET);
           setAnswerPictureUrl('');
           setAnswerOption(answerOption);
           setUpdateAnswerOption(answerOption);
@@ -73,16 +73,16 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
         return;
       }
 
-      answerPictuerUrlLoader.set(LoadingOption.LOADING);
+      answerPictureUrlLoader.set(LoadingOption.LOADING);
 
       AnswerPictureService.getAnswerPictureUrls([answerOption.picture.fileName]).then(
         (response) => {
           if (response.success) {
             setAnswerPictureUrl(response.data.urls[answerOption.picture.fileName]);
-            answerPictuerUrlLoader.set(LoadingOption.RESET);
+            answerPictureUrlLoader.set(LoadingOption.RESET);
           } else {
             setAnswerPictureUrl('');
-            answerPictuerUrlLoader.set(LoadingOption.ERROR);
+            answerPictureUrlLoader.set(LoadingOption.ERROR);
 
             toaster.sendToast('error', 'Fehler beim Ändern der Farbe der Antwortmöglichkeit.');
           }
@@ -98,7 +98,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
       setAnswerOption(dummyAnswerOption());
       setUpdateAnswerOption(dummyAnswerOption());
       setAnswerPictureUrl('');
-      answerPictuerUrlLoader.set(LoadingOption.RESET);
+      answerPictureUrlLoader.set(LoadingOption.RESET);
       setColorPickerType('field');
     }
   };
@@ -138,16 +138,16 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
       title="Farbe der Antwortmöglichkeit"
       visible={visible}>
       <div className="w-full flex flex-col items-center justify-start">
-        {answerPictuerUrlLoader.loading &&
-          !answerPictuerUrlLoader.error &&
+        {answerPictureUrlLoader.loading &&
+          !answerPictureUrlLoader.error &&
           colorPickerType === 'image' && (
             <div className="flex flex-col items-center justify-center space-y-4">
               <BounceLoader color="rgb(126 34 206)" size={70} />
               <p className="text-medium font-medium text-gray-700">Laden des Bildes</p>
             </div>
           )}
-        {!answerPictuerUrlLoader.loading &&
-          answerPictuerUrlLoader.error &&
+        {!answerPictureUrlLoader.loading &&
+          answerPictureUrlLoader.error &&
           colorPickerType === 'image' && (
             <div className="flex flex-col items-center justify-center space-y-4">
               <FontAwesomeIcon icon={faExclamation} size="1x" className="text-4xl text-red-500" />
@@ -156,8 +156,8 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
               </p>
             </div>
           )}
-        {!answerPictuerUrlLoader.loading &&
-          !answerPictuerUrlLoader.error &&
+        {!answerPictureUrlLoader.loading &&
+          !answerPictureUrlLoader.error &&
           colorPickerType === 'image' && (
             <div className="w-full flex flex-row items-center justify-center p-2 my-1">
               <ImageColorPicker
