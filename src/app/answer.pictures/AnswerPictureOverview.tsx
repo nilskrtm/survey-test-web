@@ -206,11 +206,25 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Bild</span>
+          <div className="w-full max-h-56 flex flex-row items-center justify-start">
+            {answerPicture?.fileName && 'url' in answerPicture ? (
+              <img
+                className="max-h-56 w-auto p-4"
+                alt="Bild"
+                src={
+                  (answerPicture as unknown as any)?.url + '?cacheBreak=' + new Date().getTime() ||
+                  ''
+                }
+              />
+            ) : (
+              <span className="text-lg font-normal text-red-500">Noch kein Bild</span>
+            )}
+          </div>
           <button
             onClick={() => {
               fileInputRef.current?.click();
             }}
-            className="relative px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed"
+            className={`relative px-3 py-[8px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed ${updating ? 'loading-button' : ''}`}
             disabled={loader.loading || updating || isUsed}
             title="Bild ändern">
             <input

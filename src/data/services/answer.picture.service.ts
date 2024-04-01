@@ -14,7 +14,7 @@ const getAnswerPictures = (page: number, perPage: number, filter?: { [key: strin
 };
 
 const getAnswerPicture = (id: string) => {
-  return API.get<{ answerPicture: AnswerPicture }>('/answer-pictures/' + id);
+  return API.get<{ answerPicture: AnswerPicture & { url: string } }>('/answer-pictures/' + id);
 };
 
 const createAnswerPicture = (initialValues: CreateAnswerPictureValues) => {

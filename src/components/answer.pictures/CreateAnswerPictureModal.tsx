@@ -34,6 +34,7 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
   const [answerPictureName, setAnswerPictureName] = useState<string>('');
   const [answerPictureFile, setAnswerPictureFile] = useState<File>();
   const [answerPictureNameErrorMessage, setAnswerPictureNameErrorMessage] = useState<string>('');
+  const [answerPictureFileErrorMessage, setAnswerPictureFileErrorMessage] = useState<string>('');
 
   const fileInputRef = createRef<HTMLInputElement>();
 
@@ -47,6 +48,8 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
           setVisible(true);
           setCreating(false);
           setAnswerPictureFile(undefined);
+          setAnswerPictureNameErrorMessage('');
+          setAnswerPictureFileErrorMessage('');
         }
       }
     }),
@@ -58,12 +61,15 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
       setVisible(false);
       setCreating(false);
       setAnswerPictureFile(undefined);
+      setAnswerPictureNameErrorMessage('');
+      setAnswerPictureFileErrorMessage('');
     }
   };
 
   const createAnswerPicture: () => void = () => {
     setCreating(true);
     setAnswerPictureNameErrorMessage('');
+    setAnswerPictureFileErrorMessage('');
 
     AnswerPictureService.createAnswerPicture({
       name: answerPictureName,
@@ -75,6 +81,7 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
 
           setCreating(false);
           setAnswerPictureNameErrorMessage('');
+          setAnswerPictureFileErrorMessage('');
           setAnswerPictureName('');
           setAnswerPictureFile(undefined);
           setVisible(false);
@@ -84,13 +91,17 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
           const error = response.error as APIError;
 
           if (!error.hasFieldErrors) {
-            setAnswerPictureNameErrorMessage(
+            toaster.sendToast(
+              'error',
               error.errorMessage ||
                 'Beim erstellen des Bildes ist ein unbekannter Fehler aufgetreten.'
             );
           } else {
             if ('name' in error.fieldErrors) {
               setAnswerPictureNameErrorMessage(error.fieldErrors.name);
+            }
+            if ('file' in error.fieldErrors) {
+              setAnswerPictureFileErrorMessage(error.fieldErrors.file);
             }
           }
         }
@@ -177,6 +188,11 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
               className="absolute top-0 left-0 w-full h-full hidden"
             />
           </button>
+          {answerPictureFileErrorMessage && (
+            <p className="p-1 pt-2 text-sm text-red-500 font-medium">
+              {answerPictureFileErrorMessage}
+            </p>
+          )}
         </div>
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
