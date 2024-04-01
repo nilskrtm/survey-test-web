@@ -97,10 +97,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
   const updateAnswerPicture: (values: Partial<AnswerPicture & AnswerPictureFile>) => void = (
     values
   ) => {
-    if (!answerPicture || isUsed || !hasChanged(answerPicture, values)) {
-      alert('ref');
-      return;
-    }
+    if (!answerPicture || isUsed || !hasChanged(answerPicture, values)) return;
 
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
@@ -166,42 +163,55 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
     <>
       <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
-          <div className="w-full inline-block">
-            <ContentEditable
-              className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
-                !loader.loading && !isUsed && !updating ? 'hover:ring-gray-200 hover:ring-1' : ''
-              } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
-              disabled={loader.loading || isUsed || updating}
-              html={updatedAnswerPicture.name}
-              onBlur={(event) => {
-                updateAnswerPicture({ name: event.target.innerHTML });
-              }}
-              onChange={(event) => {
-                updateAnswerPictureInternal({ name: event.target.value });
-              }}
-              onClick={() => {
-                if (answerPictureNameRef.current != document.activeElement) {
-                  answerPictureNameRef.current?.focus();
-                }
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  answerPictureNameRef.current?.blur();
-                }
-              }}
-              maxLength={50}
-              preventLinebreak={true}
-              preventPaste={true}
-              innerRef={answerPictureNameRef}
-              tagName="span"
-            />
-            <BarLoader
-              color="rgb(126 34 206)"
-              cssOverride={{ width: '100%' }}
-              height={1}
-              loading={updating && updatingValues.includes('name')}
-            />
+          <div className="w-full flex flex-row items-center justify-between">
+            <div className="-[calc(100%-56px)]">
+              <div className="w-full inline-block">
+                <ContentEditable
+                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                    !loader.loading && !isUsed && !updating
+                      ? 'hover:ring-gray-200 hover:ring-1'
+                      : ''
+                  } ${updating && updatingValues.includes('name') ? '!py-0' : ''}`}
+                  disabled={loader.loading || isUsed || updating}
+                  html={updatedAnswerPicture.name}
+                  onBlur={(event) => {
+                    updateAnswerPicture({ name: event.target.innerHTML });
+                  }}
+                  onChange={(event) => {
+                    updateAnswerPictureInternal({ name: event.target.value });
+                  }}
+                  onClick={() => {
+                    if (answerPictureNameRef.current != document.activeElement) {
+                      answerPictureNameRef.current?.focus();
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      answerPictureNameRef.current?.blur();
+                    }
+                  }}
+                  maxLength={50}
+                  preventLinebreak={true}
+                  preventPaste={true}
+                  innerRef={answerPictureNameRef}
+                  tagName="span"
+                />
+                <BarLoader
+                  color="rgb(126 34 206)"
+                  cssOverride={{ width: '100%' }}
+                  height={1}
+                  loading={updating && updatingValues.includes('name')}
+                />
+              </div>
+            </div>
+            <div className="h-full w-20 flex flex-col items-center justify-start gap-1 pl-2">
+              {!isUsed && (
+                <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
+                  <span className="text-xs text-white font-semibold no-select">Genutzt</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
