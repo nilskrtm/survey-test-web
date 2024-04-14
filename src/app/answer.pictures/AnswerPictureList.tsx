@@ -22,7 +22,6 @@ import PagingBox from '../../components/paging/PagingBox';
 import CreateAnswerPictureModal, {
   CreateAnswerPictureModalRefAttributes
 } from '../../components/answer.pictures/CreateAnswerPictureModal';
-import createAnswerPictureModal from '../../components/answer.pictures/CreateAnswerPictureModal';
 
 interface AnswerPictureListQueryParams extends QuerySearchParams {
   page: number;
