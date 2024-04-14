@@ -104,7 +104,14 @@ const SurveyOverview: () => React.JSX.Element = () => {
   };
 
   const updateSurvey: (values: Partial<Survey>) => void = (values) => {
-    if (!survey || !survey.draft || !hasChanged(survey, values)) return;
+    if (
+      !survey ||
+      (!survey.draft &&
+        !Object.keys(values).includes('archived') &&
+        Object.keys(values).length == 1) ||
+      !hasChanged(survey, values)
+    )
+      return;
 
     setUpdating(true);
     setUpdatingValues(Object.keys(values));
