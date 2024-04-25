@@ -6,11 +6,6 @@
     "es6": true,
     "node": true
   },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -33,5 +28,10 @@
     "react/prop-types": 0,
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/no-explicit-any": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
