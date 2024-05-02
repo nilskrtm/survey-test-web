@@ -206,7 +206,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
               </div>
             </div>
             <div className="h-full w-20 flex flex-col items-center justify-start gap-1 pl-2">
-              {!isUsed && (
+              {isUsed && (
                 <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
                   <span className="text-xs text-white font-semibold no-select">Genutzt</span>
                 </div>
@@ -256,8 +256,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
               }}
               id="answerPicture_file"
               type="file"
-              accept="image/jpeg,
-          image/png"
+              accept="image/jpeg,image/png"
               className="absolute top-0 left-0 w-full h-full hidden"
             />
             Bild ändern
