@@ -173,7 +173,7 @@ const Votings: () => React.JSX.Element = () => {
               checked={displayOptions.daySpan}
               readOnly
               onClick={() => {
-                setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.absolute }));
+                setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.daySpan }));
               }}
               className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
                 displayOptions.daySpan ? '!bg-purple-800 !accent-purple-800' : ''
