@@ -162,7 +162,7 @@ const AnswerPictureList: () => React.JSX.Element = () => {
                 </select>{' '}
                 <select
                   value={sortingType}
-                  disabled={sortingOption === ''}
+                  disabled={!sortingOption}
                   onChange={(event) => {
                     updateQuery('sortingType', event.target.value);
                   }}
