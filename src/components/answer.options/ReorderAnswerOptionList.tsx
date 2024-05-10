@@ -12,7 +12,7 @@ const RawReorderAnswerOptionList: (props: ReorderAnswerOptionListProps) => React
   props
 ) => {
   return (
-    <div className="w-full max-h-72 lg:max-h-96 flex flex-col items-center justify-start gap-2 overflow-y-scroll">
+    <div className="w-full max-h-72 lg:max-h-96 flex flex-col items-center justify-start gap-2 overflow-y-auto">
       {props.answerOptions.map((answeroption, index) => {
         return (
           <ReorderAnswerOptionItem

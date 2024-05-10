@@ -384,7 +384,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
               Noch keine Antwortmöglichkeiten
             </span>
           )}
-          <div className="w-full max-h-72 flex flex-col justify-start items-center gap-2 overflow-y-scroll">
+          <div className="w-full max-h-72 flex flex-col justify-start items-center gap-2 overflow-y-auto">
             {updatedQuestion.answerOptions
               .sort((a, b) => (a.order > b.order ? 1 : -1))
               .map((answerOption, index) => {

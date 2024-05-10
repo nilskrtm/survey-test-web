@@ -162,7 +162,7 @@ const Settings: () => React.JSX.Element = () => {
 
   return (
     <>
-      <div className="w-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
+      <div className="w-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-auto">
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">
             Persönliche Daten

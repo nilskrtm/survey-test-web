@@ -107,7 +107,7 @@ const SurveyList: () => React.JSX.Element = () => {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col items-center justify-between space-y-8 p-6 overflow-y-scroll">
+      <div className="w-full h-full flex flex-col items-center justify-between space-y-8 p-6 overflow-y-auto">
         <div className="w-full flex flex-row items-center rounded-lg bg-white border border-gray-200 py-4 px-6">
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-4">

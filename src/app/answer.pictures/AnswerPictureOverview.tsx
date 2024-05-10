@@ -161,10 +161,10 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
 
   return (
     <>
-      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-scroll">
+      <div className="w-full h-full grid auto-rows-min grid-cols-1 gap-4 p-6 overflow-y-auto">
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
           <div className="w-full flex flex-row items-center justify-between">
-            <div className="-[calc(100%-56px)]">
+            <div className="w-[calc(100%-56px)]">
               <div className="w-full inline-block">
                 <ContentEditable
                   className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
