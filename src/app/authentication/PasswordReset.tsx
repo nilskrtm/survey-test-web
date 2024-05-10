@@ -71,8 +71,8 @@ const PasswordReset: () => React.JSX.Element = () => {
           <>
             <div className="text-left mt-2">
               <p className="font-light">
-                Geben Sie Ihre E-Mail Adresse an. Wenn ein Konto unter dieser existiert, wir Ihnen
-                ihr neues Passwort per Mail zugeschickt.
+                Geben Sie Ihre E-Mail Adresse an. Wenn ein Konto unter dieser existiert, wird Ihnen
+                ihr neues Passwort per E-Mail zugeschickt.
               </p>
             </div>
 

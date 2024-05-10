@@ -164,7 +164,7 @@ const Votings: () => React.JSX.Element = () => {
               onClick={() => {
                 setDisplayOptions((prev) => ({ ...prev, absolute: !prev.absolute }));
               }}>
-              absolut
+              Gesamt
             </p>
           </div>
           <div className="flex flex-row items-center justify-start gap-2">
