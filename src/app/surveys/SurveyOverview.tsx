@@ -439,8 +439,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Zeitraum</span>
-          <div className="w-full flex flex-col lg:flex-row">
-            <div className="w-full lg:w-1/2 flex flex-row items-center justify-start">
+          <div className="w-full flex flex-col lg:flex-row gap-x-2">
+            <div className="w-full lg:w-fit flex flex-row items-center justify-start">
               <span className="text-lg font-semibold whitespace-nowrap truncate">Start:&nbsp;</span>
               <div className="relative flex flex-col">
                 <span
@@ -461,7 +461,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   } ${
                     updatedSurvey.draft &&
                     new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
-                      ? 'TODO'
+                      ? '!text-red-500'
                       : ''
                   }`}>
                   {moment(updatedSurvey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
@@ -483,7 +483,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                 />
               </div>
             </div>
-            <div className="w-full lg:w-1/2 flex flex-crow items-center justify-start">
+            <div className="w-full lg:w-fit flex flex-crow items-center justify-start">
               <span className="text-lg font-semibold whitespace-nowrap truncate">Ende:&nbsp;</span>
               <div className="relative flex flex-col">
                 <span

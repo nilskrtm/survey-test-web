@@ -109,7 +109,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                 />
                 <DashboardNavigationEntry
                   icon={faSquarePollVertical}
-                  name="Abstimmungen"
+                  name="Auswertung"
                   path="/votings"
                   type={DashboardNavigationEntryType.MOBILE}
                 />
@@ -162,7 +162,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                 />
                 <DashboardNavigationEntry
                   icon={faSquarePollVertical}
-                  name="Abstimmungen"
+                  name="Auswertung"
                   path="/votings"
                   type={DashboardNavigationEntryType.DESKTOP}
                 />
