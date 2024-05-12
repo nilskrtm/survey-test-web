@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useCollapse: () => [boolean, () => void] = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+const useCollapse: (initialCollapsed?: boolean) => [boolean, () => void] = (initialCollapsed) => {
+  const [collapsed, setCollapsed] = useState<boolean>(initialCollapsed ? initialCollapsed : false);
 
   const clickHandler = () => {
     setCollapsed(!collapsed);

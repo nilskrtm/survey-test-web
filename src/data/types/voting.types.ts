@@ -19,7 +19,6 @@ type AbsoluteSurveyVotings = [
         count: number;
       }
     ];
-    count: number;
   }
 ];
 

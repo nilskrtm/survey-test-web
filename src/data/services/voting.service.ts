@@ -6,7 +6,7 @@ const getVotingCount = (surveyId: string) => {
 };
 
 const getVotingsAbsoluteOfSurvey = (surveyId: string) => {
-  return API.get<{ answerOptions: AbsoluteSurveyVotings; count: number }>(
+  return API.get<{ questions: AbsoluteSurveyVotings }>(
     '/surveys/' + surveyId + '/votings/absolute'
   );
 };

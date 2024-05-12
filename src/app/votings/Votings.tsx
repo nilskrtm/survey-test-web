@@ -14,6 +14,8 @@ import useCollapse from '../../utils/hooks/use.collapse.hook';
 import DatePicker from '../../components/layout/time/DatePicker';
 import moment from 'moment';
 import TimePicker from '../../components/layout/time/TimePicker';
+import VotingService from '../../data/services/voting.service';
+import VotingsQuestionCard from '../../components/votings/VotingsQuestionCard';
 
 const Votings: () => React.JSX.Element = () => {
   useDashboardTitle('Auswertung');
@@ -22,6 +24,7 @@ const Votings: () => React.JSX.Element = () => {
   const [depictionCollapsed, depictionCollapser] = useCollapse();
   const [daySpanCollapsed, daySpanCollapser] = useCollapse();
   const [hourSpanCollapsed, hourSpanCollapser] = useCollapse();
+  const [votingsCollapsed, votingsCollapser] = useCollapse();
 
   const searchBarRef = useRef<HTMLInputElement>(null);
   const searchCompletionRef = useRef<HTMLInputElement>(null);
@@ -73,6 +76,16 @@ const Votings: () => React.JSX.Element = () => {
     endDate: new Date().toISOString()
   });
 
+  const [absoluteVotings, setAbsoluteVotings] = useState<{
+    loading: boolean;
+    error: boolean;
+    questions: {
+      [questionId: string]: {
+        answerOptions: { [answerOptionId: string]: number };
+      };
+    };
+  }>({ loading: false, error: false, questions: {} });
+
   const loadSurveys: (keyword?: string) => void = (keyword) => {
     SurveyService.getSurveys(1, 10, {
       keyword: keyword || searchText,
@@ -84,6 +97,50 @@ const Votings: () => React.JSX.Element = () => {
         setSurveys([]);
       }
     });
+  };
+
+  const loadAbsoluteVotings: () => void = () => {
+    if (!survey) return;
+
+    setAbsoluteVotings({ loading: true, error: false, questions: {} });
+
+    VotingService.getVotingsAbsoluteOfSurvey(survey._id).then((response) => {
+      if (response.success) {
+        const questions: {
+          [questionId: string]: {
+            answerOptions: { [answerOptionId: string]: number };
+          };
+        } = {};
+
+        response.data.questions.forEach((questionVotings) => {
+          const answerOptions: { [answerOptionId: string]: number } = {};
+
+          questionVotings.answerOptions.forEach((answerOptionsVotings) => {
+            answerOptions[answerOptionsVotings.answerOptionId] = answerOptionsVotings.count;
+          });
+
+          questions[questionVotings.questionId] = {
+            answerOptions: answerOptions
+          };
+        });
+
+        setAbsoluteVotings({
+          loading: false,
+          error: false,
+          questions: questions
+        });
+      } else {
+        setAbsoluteVotings({ loading: false, error: true, questions: {} });
+      }
+    });
+  };
+
+  const loadDaySpanVotings: () => void = () => {
+    //
+  };
+
+  const loadHourSpanVotings: () => void = () => {
+    //
   };
 
   useGroupClickOutside([searchBarRef, searchCompletionRef], () => {
@@ -111,6 +168,19 @@ const Votings: () => React.JSX.Element = () => {
     if (displayOptions.daySpan && daySpanCollapsed) {
       daySpanCollapser();
     }
+    if (displayOptions.hourSpan && hourSpanCollapsed) {
+      hourSpanCollapser();
+    }
+
+    if (displayOptions.absolute) {
+      loadAbsoluteVotings();
+    }
+    if (displayOptions.daySpan) {
+      loadDaySpanVotings();
+    }
+    if (displayOptions.hourSpan) {
+      loadHourSpanVotings();
+    }
   }, [displayOptions]);
 
   useGroupClickOutside(
@@ -118,7 +188,7 @@ const Votings: () => React.JSX.Element = () => {
     () => {
       if (editingDaySpanDate !== undefined) {
         setEditingDaySpanDate(undefined);
-        // TODO: refresh day-span based votings based on dates in 'daySpanDates'
+        loadDaySpanVotings();
       }
     }
   );
@@ -135,14 +205,15 @@ const Votings: () => React.JSX.Element = () => {
     () => {
       if (editingHourSpanDate !== undefined) {
         setEditingHourSpanDate(undefined);
-        // TODO: refresh hour-span based votings based on dates in 'hourSpanDates'
+        loadHourSpanVotings();
       }
     }
   );
 
   useEffect(() => {
     if (survey) {
-      setDaySpanDates({ startDate: survey.startDate, endDate: survey.endDate });
+      setDisplayOptions({ absolute: false, daySpan: false, hourSpan: false });
+      setDaySpanDates({ startDate: survey.startDate, endDate: survey.startDate });
       setHourSpanDates({
         dayDate: survey.startDate,
         startDate: new Date(0, 0, 0, 0, 0, 0).toISOString(),
@@ -205,7 +276,7 @@ const Votings: () => React.JSX.Element = () => {
               <div className="relative lg:w-1/2 w-full" ref={searchCompletionRef}>
                 {searchFocused && (
                   <div className="absolute top-0.5 left-0 w-full">
-                    <ul className="w-full max-h-36 rounded-md bg-white border border-gray-200 overflow-y-scroll">
+                    <ul className="w-full max-h-36 rounded-md bg-white border border-gray-200 overflow-y-auto">
                       {surveys.length === 0 ? (
                         <li className="px-4 py-2 font-normal text-base text-gray-600">
                           Keine Ergebnisse
@@ -217,9 +288,11 @@ const Votings: () => React.JSX.Element = () => {
                               <li
                                 className="px-4 py-2 font-normal text-base text-black hover:text-purple-700 whitespace-nowrap truncate cursor-pointer"
                                 onClick={() => {
-                                  setSearchFocused(false);
-                                  setSearchText(survey.name);
-                                  setSurvey(survey);
+                                  if (searchText !== survey.name) {
+                                    setSearchFocused(false);
+                                    setSearchText(survey.name);
+                                    setSurvey(survey);
+                                  }
                                 }}
                                 key={'survey_' + survey._id}>
                                 {survey.name}
@@ -266,95 +339,99 @@ const Votings: () => React.JSX.Element = () => {
         </div>
       </div>
 
-      <div className="w-full flex flex-row items-center justify-start rounded-lg bg-white border border-gray-200 p-6">
-        <div className="w-[calc(100%-40px)] flex flex-col items-start justify-center gap-2">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Darstellung(-en)</span>
-          {!depictionCollapsed && (
-            <div className="w-full flex flex-row flex-wrap justify-start items-center gap-x-4">
-              <div className="flex flex-row items-center justify-start gap-2">
-                <input
-                  type="checkbox"
-                  checked={displayOptions.absolute}
-                  readOnly
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, absolute: !prev.absolute }));
-                  }}
-                  className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
-                    displayOptions.absolute ? '!bg-purple-800 !accent-purple-800' : ''
-                  }`}
-                />
-                <p
-                  className="font-normal text-lg cursor-pointer whitespace-nowrap"
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, absolute: !prev.absolute }));
-                  }}>
-                  Gesamt
-                </p>
+      {survey && (
+        <div className="w-full flex flex-row items-center justify-start rounded-lg bg-white border border-gray-200 p-6">
+          <div className="w-[calc(100%-40px)] flex flex-col items-start justify-center gap-2">
+            <span className="text-xl font-semibold whitespace-nowrap truncate">
+              Darstellung(-en)
+            </span>
+            {!depictionCollapsed && (
+              <div className="w-full flex flex-row flex-wrap justify-start items-center gap-x-4">
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={displayOptions.absolute}
+                    readOnly
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, absolute: !prev.absolute }));
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      displayOptions.absolute ? '!bg-purple-800 !accent-purple-800' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, absolute: !prev.absolute }));
+                    }}>
+                    Gesamt
+                  </p>
+                </div>
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={displayOptions.daySpan}
+                    readOnly
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.daySpan }));
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      displayOptions.daySpan ? '!bg-purple-800 !accent-purple-800' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.daySpan }));
+                    }}>
+                    Zeitraum (Tage)
+                  </p>
+                </div>
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={displayOptions.hourSpan}
+                    readOnly
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, hourSpan: !prev.hourSpan }));
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      displayOptions.hourSpan ? '!bg-purple-800 !accent-purple-800' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      setDisplayOptions((prev) => ({ ...prev, hourSpan: !prev.hourSpan }));
+                    }}>
+                    Zeitraum (Stunden)
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-row items-center justify-start gap-2">
-                <input
-                  type="checkbox"
-                  checked={displayOptions.daySpan}
-                  readOnly
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.daySpan }));
-                  }}
-                  className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
-                    displayOptions.daySpan ? '!bg-purple-800 !accent-purple-800' : ''
-                  }`}
-                />
-                <p
-                  className="font-normal text-lg cursor-pointer whitespace-nowrap"
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, daySpan: !prev.daySpan }));
-                  }}>
-                  Zeitraum (Tage)
-                </p>
-              </div>
-              <div className="flex flex-row items-center justify-start gap-2">
-                <input
-                  type="checkbox"
-                  checked={displayOptions.hourSpan}
-                  readOnly
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, hourSpan: !prev.hourSpan }));
-                  }}
-                  className={`form-checkbox pr-2 rounded-md border-gray-300 checked:accent-purple-800 checked:bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
-                    displayOptions.hourSpan ? '!bg-purple-800 !accent-purple-800' : ''
-                  }`}
-                />
-                <p
-                  className="font-normal text-lg cursor-pointer whitespace-nowrap"
-                  onClick={() => {
-                    setDisplayOptions((prev) => ({ ...prev, hourSpan: !prev.hourSpan }));
-                  }}>
-                  Zeitraum (Stunden)
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="w-10 h-full">
-          <button
-            className="w-full flex flex-col items-center justify-start group"
-            type="button"
-            onClick={depictionCollapser}>
-            {!depictionCollapsed ? (
-              <FontAwesomeIcon
-                icon={faChevronUp}
-                size="1x"
-                className="text-2xl text-gray-600 group-hover:text-black"
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                size="1x"
-                className="text-2xl text-gray-600 group-hover:text-black"
-              />
             )}
-          </button>
+          </div>
+          <div className="w-10 h-full">
+            <button
+              className="w-full flex flex-col items-center justify-start group"
+              type="button"
+              onClick={depictionCollapser}>
+              {!depictionCollapsed ? (
+                <FontAwesomeIcon
+                  icon={faChevronUp}
+                  size="1x"
+                  className="text-2xl text-gray-600 group-hover:text-black"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  size="1x"
+                  className="text-2xl text-gray-600 group-hover:text-black"
+                />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {survey && displayOptions.daySpan && (
         <div className="w-full flex flex-row items-center justify-start rounded-lg bg-white border border-gray-200 p-6">
@@ -558,6 +635,48 @@ const Votings: () => React.JSX.Element = () => {
               type="button"
               onClick={hourSpanCollapser}>
               {!hourSpanCollapsed ? (
+                <FontAwesomeIcon
+                  icon={faChevronUp}
+                  size="1x"
+                  className="text-2xl text-gray-600 group-hover:text-black"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  size="1x"
+                  className="text-2xl text-gray-600 group-hover:text-black"
+                />
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {survey && (displayOptions.absolute || displayOptions.daySpan || displayOptions.hourSpan) && (
+        <div className="w-full flex flex-row items-center justify-start rounded-lg bg-white border border-gray-200 p-6">
+          <div className="w-[calc(100%-40px)] flex flex-col items-start justify-center gap-2">
+            <span className="text-xl font-semibold whitespace-nowrap truncate">Abstimmungen</span>
+            {!votingsCollapsed && (
+              <div className="w-full flex flex-col items-center justify-center gap-2">
+                {survey.questions.map((question, index) => {
+                  return (
+                    <VotingsQuestionCard
+                      key={'question_' + index}
+                      survey={survey}
+                      questionId={question._id}
+                      displayOptions={displayOptions}
+                      absoluteVotings={absoluteVotings}></VotingsQuestionCard>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <div className="w-10 h-full">
+            <button
+              className="w-full flex flex-col items-center justify-start group"
+              type="button"
+              onClick={votingsCollapser}>
+              {!votingsCollapsed ? (
                 <FontAwesomeIcon
                   icon={faChevronUp}
                   size="1x"
