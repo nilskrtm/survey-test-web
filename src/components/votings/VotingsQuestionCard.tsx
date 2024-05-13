@@ -12,9 +12,10 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 type VotingsQuestionCardProps = {
   survey: Survey;
@@ -26,6 +27,17 @@ type VotingsQuestionCardProps = {
     questions: {
       [questionId: string]: {
         answerOptions: { [answerOptionId: string]: number };
+      };
+    };
+  };
+  daySpanVotings: {
+    loading: boolean;
+    error: boolean;
+    questions: {
+      [questionId: string]: {
+        answerOptions: {
+          [answerOptionId: string]: Array<{ date: string; answerOptionId: string; votes: number }>;
+        };
       };
     };
   };
@@ -105,66 +117,75 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Gesamter Zeitraum
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
-                  <Bar
-                    width="100%"
-                    height="250px"
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      backgroundColor: 'white',
-                      plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                          enabled: true,
-                          callbacks: {
-                            title: function (this, item) {
-                              return 'Antwortmöglichkeit ' + (Number(item[0].dataIndex) + 1);
+                  {!props.absoluteVotings.loading && !props.absoluteVotings.error && (
+                    <Bar
+                      width="100%"
+                      height="250px"
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        backgroundColor: 'white',
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            enabled: true,
+                            callbacks: {
+                              title: function (this, item) {
+                                return 'Antwortmöglichkeit ' + (Number(item[0].dataIndex) + 1);
+                              },
+                              label: function (this, item) {
+                                const votes = Number(item.dataset.data[item.dataIndex]);
+
+                                return ' ' + votes + ' Abstimmung' + (votes > 0 ? 'en' : '');
+                              }
                             },
-                            label: function (this, item) {
-                              return (
-                                ' ' + Number(item.dataset.data[item.dataIndex]) + ' Abstimmungen'
-                              );
-                            }
+                            position: 'nearest'
                           },
-                          position: 'nearest'
-                        }
-                      },
-                      scales: {
-                        x: {
-                          display: true,
-                          type: 'category',
-                          title: { display: true, color: 'black', text: 'Antwortmöglichkeit' }
+                          datalabels: {
+                            color: 'white',
+                            font: {
+                              weight: 'bold'
+                            }
+                          }
                         },
-                        y: {
-                          beginAtZero: true,
-                          display: true,
-                          type: 'linear',
-                          title: { display: true, color: 'black', text: 'Abstimmungen' },
-                          ticks: {
-                            callback: (val) => {
-                              return !val.toString().includes(',') && !val.toString().includes('.')
-                                ? val
-                                : '';
+                        scales: {
+                          x: {
+                            display: true,
+                            type: 'category',
+                            title: { display: true, color: 'black', text: 'Antwortmöglichkeit' }
+                          },
+                          y: {
+                            beginAtZero: true,
+                            display: true,
+                            type: 'linear',
+                            title: { display: true, color: 'black', text: 'Abstimmungen' },
+                            ticks: {
+                              callback: (val) => {
+                                return !val.toString().includes(',') &&
+                                  !val.toString().includes('.')
+                                  ? val
+                                  : '';
+                              }
                             }
                           }
                         }
-                      }
-                    }}
-                    data={{
-                      labels: orderedAnswerOptions.map((answerOption) => {
-                        return answerOption.order;
-                      }),
-                      datasets: [
-                        {
-                          label: 'Abstimmungen',
-                          backgroundColor: orderedAnswerOptions.map(
-                            (answerOption) => answerOption.color
-                          ),
-                          data: absoluteVotingsData
-                        }
-                      ]
-                    }}
-                  />
+                      }}
+                      data={{
+                        labels: orderedAnswerOptions.map((answerOption) => {
+                          return answerOption.order;
+                        }),
+                        datasets: [
+                          {
+                            label: 'Abstimmungen',
+                            backgroundColor: orderedAnswerOptions.map(
+                              (answerOption) => answerOption.color
+                            ),
+                            data: absoluteVotingsData
+                          }
+                        ]
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -173,7 +194,104 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                 <span className="w-full text-center text-lg text-black font-medium">
                   Zeitraum (Tage)
                 </span>
-                <div className="w-full flex flex-row items-center justify-center"></div>
+                <div className="w-full flex flex-row items-center justify-center">
+                  {!props.daySpanVotings.loading && !props.daySpanVotings.error && (
+                    <Bar
+                      width="100%"
+                      height="250px"
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        backgroundColor: 'white',
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            enabled: true,
+                            callbacks: {
+                              title: function (this, item) {
+                                return 'Antwortmöglichkeit ' + (Number(item[0].dataIndex) + 1);
+                              },
+                              label: function (this, item) {
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                const votes = Number(item.dataset.data[item.dataIndex].votes | 0);
+
+                                return ' ' + votes + ' Abstimmung' + (votes > 0 ? 'en' : '');
+                              }
+                            },
+                            position: 'nearest'
+                          },
+                          datalabels: {
+                            formatter: function (_value, context) {
+                              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                              // @ts-ignore
+                              const votes = context.dataset.data[context.dataIndex].votes | 0;
+
+                              return votes === 0 ? '' : votes;
+                            },
+                            color: 'white',
+                            font: {
+                              weight: 'bold'
+                            }
+                          }
+                        },
+                        scales: {
+                          x: {
+                            display: true,
+                            type: 'category',
+                            stacked: false,
+                            title: { display: true, color: 'black', text: 'Tag der Abstimmung' }
+                          },
+                          y: {
+                            display: true,
+                            beginAtZero: false,
+                            type: 'linear',
+                            stacked: true,
+                            ticks: {
+                              callback: (val) => {
+                                return !val.toString().includes(',') &&
+                                  !val.toString().includes('.')
+                                  ? val
+                                  : '';
+                              }
+                            },
+                            title: {
+                              display: true,
+                              color: 'black',
+                              text: 'Abstimmungen je Antwortmöglichkeit'
+                            }
+                          }
+                        }
+                      }}
+                      data={{
+                        labels: props.daySpanVotings.questions[question._id].answerOptions[
+                          Object.keys(props.daySpanVotings.questions[question._id].answerOptions)[0]
+                        ].map((answerOptionVotings) => answerOptionVotings.date),
+                        datasets: Object.values(
+                          props.daySpanVotings.questions[question._id].answerOptions
+                        ).map((answerOptionVotings) => {
+                          return {
+                            label: 'Antwortmöglichkeit',
+                            data: answerOptionVotings,
+                            stack: 'stack',
+                            backgroundColor: answerOptionVotings.map((answerOptionVoting) => {
+                              const answerOption = question.answerOptions.find(
+                                (answerOption) =>
+                                  answerOption._id == answerOptionVoting.answerOptionId
+                              );
+
+                              return answerOption ? answerOption.color : 'black';
+                            }),
+                            parsing: {
+                              xAxisKey: 'date',
+                              yAxisKey: 'votes'
+                            }
+                          };
+                        })
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             )}
             {props.displayOptions.hourSpan && (

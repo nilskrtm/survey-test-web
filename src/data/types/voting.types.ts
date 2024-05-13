@@ -10,7 +10,7 @@ type Vote = {
   answerOption: string;
 };
 
-type AbsoluteSurveyVotings = [
+type AbsoluteVotings = [
   {
     questionId: string;
     answerOptions: [
@@ -22,4 +22,14 @@ type AbsoluteSurveyVotings = [
   }
 ];
 
-export type { Voting, AbsoluteSurveyVotings };
+type DaySpanVotings = {
+  [questionId: string]: {
+    dates: {
+      [date: string]: {
+        votes: Array<{ answerOptionId: string; votes: number }>;
+      };
+    };
+  };
+};
+
+export type { Voting, AbsoluteVotings, DaySpanVotings };

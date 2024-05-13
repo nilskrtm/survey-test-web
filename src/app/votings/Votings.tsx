@@ -85,6 +85,17 @@ const Votings: () => React.JSX.Element = () => {
       };
     };
   }>({ loading: false, error: false, questions: {} });
+  const [daySpanVotings, setDaySpanVotings] = useState<{
+    loading: boolean;
+    error: boolean;
+    questions: {
+      [questionId: string]: {
+        answerOptions: {
+          [answerOptionId: string]: Array<{ answerOptionId: string; date: string; votes: number }>;
+        };
+      };
+    };
+  }>({ loading: false, error: false, questions: {} });
 
   const loadSurveys: (keyword?: string) => void = (keyword) => {
     SurveyService.getSurveys(1, 10, {
@@ -136,7 +147,85 @@ const Votings: () => React.JSX.Element = () => {
   };
 
   const loadDaySpanVotings: () => void = () => {
-    //
+    if (!survey) return;
+
+    setDaySpanVotings({ loading: true, error: false, questions: {} });
+
+    VotingService.getVotingsDaySpanOfSurvey(
+      survey._id,
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      daySpanDates.startDate,
+      daySpanDates.endDate
+    ).then((response) => {
+      if (response.success) {
+        const questions: {
+          [questionId: string]: {
+            answerOptions: {
+              [answerOptionId: string]: Array<{
+                answerOptionId: string;
+                date: string;
+                votes: number;
+              }>;
+            };
+          };
+        } = {};
+
+        survey.questions.forEach((question) => {
+          if (question._id in response.data.questions) {
+            const answerOptions: {
+              [answerOptionId: string]: Array<{
+                date: string;
+                answerOptionId: string;
+                votes: number;
+              }>;
+            } = {};
+
+            question.answerOptions.forEach((answerOption) => {
+              const answerOptionVotings: Array<{
+                date: string;
+                answerOptionId: string;
+                votes: number;
+              }> = [];
+
+              for (const day in response.data.questions[question._id].dates) {
+                const foundVotings = response.data.questions[question._id].dates[day].votes;
+                const foundVoting = foundVotings.find(
+                  (voting) => voting.answerOptionId === answerOption._id
+                );
+
+                if (foundVoting) {
+                  answerOptionVotings.push({
+                    date: day,
+                    answerOptionId: answerOption._id,
+                    votes: foundVoting.votes
+                  });
+                } else {
+                  answerOptionVotings.push({
+                    date: day,
+                    answerOptionId: answerOption._id,
+                    votes: 0
+                  });
+                }
+              }
+
+              answerOptions[answerOption._id] = answerOptionVotings;
+            });
+
+            questions[question._id] = { answerOptions: answerOptions };
+          } else {
+            questions[question._id] = { answerOptions: {} };
+          }
+        });
+
+        setDaySpanVotings({
+          loading: false,
+          error: false,
+          questions: questions
+        });
+      } else {
+        setDaySpanVotings({ loading: false, error: true, questions: {} });
+      }
+    });
   };
 
   const loadHourSpanVotings: () => void = () => {
@@ -665,7 +754,8 @@ const Votings: () => React.JSX.Element = () => {
                       survey={survey}
                       questionId={question._id}
                       displayOptions={displayOptions}
-                      absoluteVotings={absoluteVotings}></VotingsQuestionCard>
+                      absoluteVotings={absoluteVotings}
+                      daySpanVotings={daySpanVotings}></VotingsQuestionCard>
                   );
                 })}
               </div>
