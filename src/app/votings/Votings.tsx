@@ -17,6 +17,7 @@ import {
   HourSpanVotingsResponse,
   HourVotings
 } from '../../data/types/voting.types';
+import useToasts from '../../utils/hooks/use.toasts.hook';
 
 export type AbsoluteVotingsData = {
   loading: boolean;
@@ -44,6 +45,8 @@ export type HourSpanVotingsData = Pick<HourSpanVotingsResponse, 'hours'> & {
 
 const Votings: () => React.JSX.Element = () => {
   useDashboardTitle('Auswertung');
+
+  const toaster = useToasts();
 
   const searchBarRef = useRef<HTMLInputElement>(null);
   const searchCompletionRef = useRef<HTMLInputElement>(null);
@@ -122,6 +125,8 @@ const Votings: () => React.JSX.Element = () => {
       if (response.success) {
         setSurveys(response.data.surveys);
       } else {
+        toaster.sendToast('error', 'Fehler beim Abrufen der Umfragen');
+
         setSurveys([]);
       }
     });
