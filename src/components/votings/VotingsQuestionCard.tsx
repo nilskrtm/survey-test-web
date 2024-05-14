@@ -63,6 +63,29 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
     (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
   );
 
+  const absoluteVotingsLabels = orderedAnswerOptions.map((answerOption) => {
+    return answerOption.order;
+  });
+  const absoluteVotingsBackgroundColors = orderedAnswerOptions.map(
+    (answerOption) => answerOption.color
+  );
+  const absoluteVotingsData = orderedAnswerOptions.map((answerOption) => {
+    return props.absoluteVotings.votesByAnswerOption[answerOption._id];
+  });
+
+  const daySpanVotingsDatasets = orderedAnswerOptions.map((answerOption) => {
+    return {
+      label: 'Antwortmöglichkeit ' + answerOption.order,
+      stack: 'stack',
+      backgroundColor: answerOption.color,
+      data: props.daySpanVotings.votesByAnswerOption[answerOption._id],
+      parsing: {
+        xAxisKey: 'date',
+        yAxisKey: 'votes'
+      }
+    };
+  });
+
   return (
     <div className="w-full flex flex-col items-center justify-center rounded-lg border border-gray-200 py-2">
       <button
@@ -175,18 +198,12 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                         }
                       }}
                       data={{
-                        labels: orderedAnswerOptions.map((answerOption) => {
-                          return answerOption.order;
-                        }),
+                        labels: absoluteVotingsLabels,
                         datasets: [
                           {
                             label: 'Abstimmungen',
-                            backgroundColor: orderedAnswerOptions.map(
-                              (answerOption) => answerOption.color
-                            ),
-                            data: orderedAnswerOptions.map((answerOption) => {
-                              return props.absoluteVotings.votesByAnswerOption[answerOption._id];
-                            })
+                            backgroundColor: absoluteVotingsBackgroundColors,
+                            data: absoluteVotingsData
                           }
                         ]
                       }}
@@ -297,18 +314,7 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                       }}
                       data={{
                         labels: props.daySpanVotings.days,
-                        datasets: orderedAnswerOptions.map((answerOption) => {
-                          return {
-                            label: 'Antwortmöglichkeit ' + answerOption.order,
-                            stack: 'stack',
-                            backgroundColor: answerOption.color,
-                            data: props.daySpanVotings.votesByAnswerOption[answerOption._id],
-                            parsing: {
-                              xAxisKey: 'date',
-                              yAxisKey: 'votes'
-                            }
-                          };
-                        })
+                        datasets: daySpanVotingsDatasets
                       }}
                     />
                   )}
