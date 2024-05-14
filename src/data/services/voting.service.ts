@@ -1,12 +1,12 @@
 import API from '../api';
-import { AbsoluteVotings, DaySpanVotings } from '../types/voting.types';
+import { AbsoluteVotingsResponse, DaySpanVotingsResponse } from '../types/voting.types';
 
 const getVotingCount = (surveyId: string) => {
   return API.get<{ count: number }>('/surveys/' + surveyId + '/votings/count');
 };
 
 const getVotingsAbsoluteOfSurvey = (surveyId: string) => {
-  return API.get<{ questions: AbsoluteVotings }>('/surveys/' + surveyId + '/votings/absolute');
+  return API.get<AbsoluteVotingsResponse>('/surveys/' + surveyId + '/votings/absolute');
 };
 
 const getVotingsDaySpanOfSurvey = (
@@ -15,16 +15,9 @@ const getVotingsDaySpanOfSurvey = (
   startDate: string,
   endDate: string
 ) => {
-  return API.get<{ questions: DaySpanVotings }>(
-    '/surveys/' +
-      surveyId +
-      '/votings/day-span?timezone=' +
-      timezone +
-      '&startDate=' +
-      startDate +
-      '&endDate=' +
-      endDate
-  );
+  return API.get<DaySpanVotingsResponse>('/surveys/' + surveyId + '/votings/day-span', {
+    params: { timezone: timezone, startDate: startDate, endDate: endDate }
+  });
 };
 
 export default { getVotingCount, getVotingsAbsoluteOfSurvey, getVotingsDaySpanOfSurvey };

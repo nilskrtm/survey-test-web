@@ -14,60 +14,26 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
+import { Question } from '../../data/types/question.types';
+import { AbsoluteVotingsData, DaySpanVotingsData } from '../../app/votings/Votings';
+import moment from 'moment/moment';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 type VotingsQuestionCardProps = {
   survey: Survey;
-  questionId: string;
+  question: Question;
   displayOptions: { absolute: boolean; daySpan: boolean; hourSpan: boolean };
-  absoluteVotings: {
-    loading: boolean;
-    error: boolean;
-    questions: {
-      [questionId: string]: {
-        answerOptions: { [answerOptionId: string]: number };
-      };
-    };
-  };
-  daySpanVotings: {
-    loading: boolean;
-    error: boolean;
-    questions: {
-      [questionId: string]: {
-        answerOptions: {
-          [answerOptionId: string]: Array<{ date: string; answerOptionId: string; votes: number }>;
-        };
-      };
-    };
-  };
+  absoluteVotings: AbsoluteVotingsData;
+  daySpanVotings: DaySpanVotingsData;
 };
 
 const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Element = (props) => {
-  const question = props.survey.questions.find((question) => question._id === props.questionId);
-
   const [collapsed, collapser] = useCollapse(true);
 
-  if (!question) return <></>;
-
-  const orderedAnswerOptions = question.answerOptions.sort(
+  const orderedAnswerOptions = props.question.answerOptions.sort(
     (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
   );
-  const absoluteVotingsData: Array<number> = [];
-
-  if (
-    !props.absoluteVotings.loading &&
-    !props.absoluteVotings.error &&
-    props.questionId in props.absoluteVotings.questions
-  ) {
-    const absoluteQuestionVotings = props.absoluteVotings.questions[props.questionId];
-
-    orderedAnswerOptions.forEach((answerOption) => {
-      if (answerOption._id in absoluteQuestionVotings.answerOptions) {
-        absoluteVotingsData.push(absoluteQuestionVotings.answerOptions[answerOption._id]);
-      }
-    });
-  }
 
   return (
     <div className="w-full flex flex-col items-center justify-center rounded-lg border border-gray-200 py-2">
@@ -76,10 +42,10 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
         type="button"
         onClick={collapser}>
         <div className="h-8 w-12 flex items-center justify-center p-4 select-none">
-          <span className="text-xl font-medium text-purple-700">{question.order}</span>
+          <span className="text-xl font-medium text-purple-700">{props.question.order}</span>
         </div>
         <div className="flex-grow flex flex-col items-start justify-center">
-          <span className="text-lg font-medium">{question.question}</span>
+          <span className="text-lg font-medium">{props.question.question}</span>
         </div>
         <div className="w-10 h-full px-6">
           <div className="w-full flex flex-col items-center justify-start">
@@ -136,7 +102,12 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                               label: function (this, item) {
                                 const votes = Number(item.dataset.data[item.dataIndex]);
 
-                                return ' ' + votes + ' Abstimmung' + (votes > 0 ? 'en' : '');
+                                return (
+                                  ' ' +
+                                  votes +
+                                  ' Abstimmung' +
+                                  (votes !== 0 && votes > 1 ? 'en' : '')
+                                );
                               }
                             },
                             position: 'nearest'
@@ -180,7 +151,9 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                             backgroundColor: orderedAnswerOptions.map(
                               (answerOption) => answerOption.color
                             ),
-                            data: absoluteVotingsData
+                            data: orderedAnswerOptions.map((answerOption) => {
+                              return props.absoluteVotings.votesByAnswerOption[answerOption._id];
+                            })
                           }
                         ]
                       }}
@@ -209,14 +182,26 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                             enabled: true,
                             callbacks: {
                               title: function (this, item) {
-                                return 'Antwortmöglichkeit ' + (Number(item[0].dataIndex) + 1);
+                                return [
+                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                  // @ts-ignore
+                                  moment(item[0].dataset.data[item[0].dataIndex].date).format(
+                                    'DD.MM.YYYY'
+                                  ),
+                                  'Antwortmöglichkeit ' + (Number(item[0].datasetIndex) + 1)
+                                ];
                               },
                               label: function (this, item) {
                                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
                                 const votes = Number(item.dataset.data[item.dataIndex].votes | 0);
 
-                                return ' ' + votes + ' Abstimmung' + (votes > 0 ? 'en' : '');
+                                return (
+                                  ' ' +
+                                  votes +
+                                  ' Abstimmung' +
+                                  (votes !== 0 && votes > 1 ? 'en' : '')
+                                );
                               }
                             },
                             position: 'nearest'
@@ -239,12 +224,21 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                           x: {
                             display: true,
                             type: 'category',
-                            stacked: false,
+                            grid: {
+                              offset: true
+                            },
+                            ticks: {
+                              callback: (value, index) => {
+                                const day = props.daySpanVotings.days.at(index);
+
+                                return day ? moment(new Date(day)).format('DD.MM.YYYY') : value;
+                              }
+                            },
                             title: { display: true, color: 'black', text: 'Tag der Abstimmung' }
                           },
                           y: {
                             display: true,
-                            beginAtZero: false,
+                            beginAtZero: true,
                             type: 'linear',
                             stacked: true,
                             ticks: {
@@ -264,24 +258,13 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                         }
                       }}
                       data={{
-                        labels: props.daySpanVotings.questions[question._id].answerOptions[
-                          Object.keys(props.daySpanVotings.questions[question._id].answerOptions)[0]
-                        ].map((answerOptionVotings) => answerOptionVotings.date),
-                        datasets: Object.values(
-                          props.daySpanVotings.questions[question._id].answerOptions
-                        ).map((answerOptionVotings) => {
+                        labels: props.daySpanVotings.days,
+                        datasets: orderedAnswerOptions.map((answerOption) => {
                           return {
-                            label: 'Antwortmöglichkeit',
-                            data: answerOptionVotings,
+                            label: 'Antwortmöglichkeit ' + answerOption.order,
                             stack: 'stack',
-                            backgroundColor: answerOptionVotings.map((answerOptionVoting) => {
-                              const answerOption = question.answerOptions.find(
-                                (answerOption) =>
-                                  answerOption._id == answerOptionVoting.answerOptionId
-                              );
-
-                              return answerOption ? answerOption.color : 'black';
-                            }),
+                            backgroundColor: answerOption.color,
+                            data: props.daySpanVotings.votesByAnswerOption[answerOption._id],
                             parsing: {
                               xAxisKey: 'date',
                               yAxisKey: 'votes'

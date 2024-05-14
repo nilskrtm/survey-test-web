@@ -10,26 +10,28 @@ type Vote = {
   answerOption: string;
 };
 
-type AbsoluteVotings = [
-  {
-    questionId: string;
-    answerOptions: [
-      {
-        answerOptionId: string;
-        count: number;
-      }
-    ];
-  }
-];
+type AbsoluteVotings = { questionId: string; answerOptionId: string; votes: number };
 
-type DaySpanVotings = {
-  [questionId: string]: {
-    dates: {
-      [date: string]: {
-        votes: Array<{ answerOptionId: string; votes: number }>;
-      };
-    };
-  };
+type AbsoluteVotingsResponse = {
+  votes: Array<AbsoluteVotings>;
 };
 
-export type { Voting, AbsoluteVotings, DaySpanVotings };
+type DayVotings = {
+  date: string;
+  questionId: string;
+  answerOptionId: string;
+  votes: number;
+};
+
+type DaySpanVotingsResponse = {
+  votes: Array<DayVotings>;
+  days: Array<string>;
+};
+
+export type {
+  Voting,
+  AbsoluteVotings,
+  AbsoluteVotingsResponse,
+  DayVotings,
+  DaySpanVotingsResponse
+};
