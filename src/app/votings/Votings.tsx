@@ -1,11 +1,6 @@
 import React, { createRef, Fragment, useEffect, useRef, useState } from 'react';
 import useDashboardTitle from '../../utils/hooks/use.dashboard.title.hook';
-import {
-  faChevronDown,
-  faChevronUp,
-  faCircleXmark,
-  faMagnifyingGlass
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Survey } from '../../data/types/survey.types';
 import SurveyService from '../../data/services/survey.service';
@@ -638,7 +633,6 @@ const Votings: () => React.JSX.Element = () => {
                     minDate={new Date(hourSpanDates.startDate)}
                     maxDate={new Date(survey.endDate)}
                     onChange={(date) => {
-                      console.log('change');
                       const correctedDate = new Date(date);
 
                       // TimePicker only details down to minutes, also set smaller values to max, to include all votes to this specific hour and minute
