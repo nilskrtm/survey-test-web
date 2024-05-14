@@ -116,22 +116,20 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
         <div className="flex-grow flex flex-col items-start justify-center">
           <span className="text-lg font-medium">{props.question.question}</span>
         </div>
-        <div className="w-10 h-full px-6">
-          <div className="w-full flex flex-col items-center justify-start">
-            {!collapsed ? (
-              <FontAwesomeIcon
-                icon={faChevronUp}
-                size="1x"
-                className="text-xl text-gray-600 group-hover:text-black"
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                size="1x"
-                className="text-xl text-gray-600 group-hover:text-black"
-              />
-            )}
-          </div>
+        <div className="w-10 h-full flex flex-col items-center justify-center px-6">
+          {!collapsed ? (
+            <FontAwesomeIcon
+              icon={faChevronUp}
+              size="1x"
+              className="text-xl text-gray-600 group-hover:text-black"
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              size="1x"
+              className="text-xl text-gray-600 group-hover:text-black"
+            />
+          )}
         </div>
       </button>
       {!collapsed && (
