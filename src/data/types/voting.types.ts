@@ -28,10 +28,24 @@ type DaySpanVotingsResponse = {
   days: Array<string>;
 };
 
+type HourVotings = {
+  hour: string;
+  questionId: string;
+  answerOptionId: string;
+  votes: number;
+};
+
+type HourSpanVotingsResponse = {
+  votes: Array<HourVotings>;
+  hours: Array<string>;
+};
+
 export type {
   Voting,
   AbsoluteVotings,
   AbsoluteVotingsResponse,
   DayVotings,
-  DaySpanVotingsResponse
+  DaySpanVotingsResponse,
+  HourVotings,
+  HourSpanVotingsResponse
 };

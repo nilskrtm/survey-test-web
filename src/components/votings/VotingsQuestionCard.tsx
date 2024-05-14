@@ -15,7 +15,11 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import { Question } from '../../data/types/question.types';
-import { AbsoluteVotingsData, DaySpanVotingsData } from '../../app/votings/Votings';
+import {
+  AbsoluteVotingsData,
+  DaySpanVotingsData,
+  HourSpanVotingsData
+} from '../../app/votings/Votings';
 import moment from 'moment/moment';
 import { BounceLoader } from 'react-spinners';
 
@@ -52,6 +56,7 @@ type VotingsQuestionCardProps = {
   displayOptions: { absolute: boolean; daySpan: boolean; hourSpan: boolean };
   absoluteVotings: AbsoluteVotingsData;
   daySpanVotings: DaySpanVotingsData;
+  hourSpanVotings: HourSpanVotingsData;
 };
 
 const CHART_HEIGHT = '250px';
@@ -81,6 +86,19 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
       data: props.daySpanVotings.votesByAnswerOption[answerOption._id],
       parsing: {
         xAxisKey: 'date',
+        yAxisKey: 'votes'
+      }
+    };
+  });
+
+  const hourSpanVotingsDatasets = orderedAnswerOptions.map((answerOption) => {
+    return {
+      label: 'Antwortmöglichkeit ' + answerOption.order,
+      stack: 'stack',
+      backgroundColor: answerOption.color,
+      data: props.hourSpanVotings.votesByAnswerOption[answerOption._id],
+      parsing: {
+        xAxisKey: 'hour',
         yAxisKey: 'votes'
       }
     };
@@ -326,7 +344,107 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                 <span className="w-full text-center text-lg text-black font-medium">
                   Zeitraum (Stunden)
                 </span>
-                <div className="w-full flex flex-row items-center justify-center"></div>
+                <div className="w-full flex flex-row items-center justify-center">
+                  <ChartPlaceholder
+                    loading={props.hourSpanVotings.loading}
+                    error={props.hourSpanVotings.error}
+                    height={CHART_HEIGHT}
+                  />
+                  {!props.hourSpanVotings.loading && !props.hourSpanVotings.error && (
+                    <Bar
+                      width="100%"
+                      height={CHART_HEIGHT}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        backgroundColor: 'transparent',
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            enabled: true,
+                            callbacks: {
+                              title: function (this, item) {
+                                return [
+                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                  // @ts-ignore
+                                  item[0].dataset.data[item[0].dataIndex].hour + ':00 Uhr',
+                                  'Antwortmöglichkeit ' + (Number(item[0].datasetIndex) + 1)
+                                ];
+                              },
+                              label: function (this, item) {
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                const votes = Number(item.dataset.data[item.dataIndex].votes | 0);
+
+                                return (
+                                  ' ' +
+                                  votes +
+                                  ' Abstimmung' +
+                                  (votes !== 0 && votes > 1 ? 'en' : '')
+                                );
+                              }
+                            },
+                            position: 'nearest'
+                          },
+                          datalabels: {
+                            formatter: function (_value, context) {
+                              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                              // @ts-ignore
+                              const votes = context.dataset.data[context.dataIndex].votes | 0;
+
+                              return votes === 0 ? '' : votes;
+                            },
+                            color: 'white',
+                            font: {
+                              weight: 'bold'
+                            }
+                          }
+                        },
+                        scales: {
+                          x: {
+                            display: true,
+                            type: 'category',
+                            grid: {
+                              offset: true
+                            },
+                            ticks: {
+                              align: 'end',
+                              callback: (value, index) => {
+                                const hour = props.hourSpanVotings.hours.at(index);
+
+                                return hour ? hour + ':00 Uhr' : value;
+                              }
+                            },
+                            title: { display: true, color: 'black', text: 'Stunde der Abstimmung' }
+                          },
+                          y: {
+                            display: true,
+                            beginAtZero: true,
+                            type: 'linear',
+                            stacked: true,
+                            ticks: {
+                              callback: (val) => {
+                                return !val.toString().includes(',') &&
+                                  !val.toString().includes('.')
+                                  ? val
+                                  : '';
+                              }
+                            },
+                            title: {
+                              display: true,
+                              color: 'black',
+                              text: 'Abstimmungen je Antwortmöglichkeit'
+                            }
+                          }
+                        }
+                      }}
+                      data={{
+                        labels: props.hourSpanVotings.hours,
+                        datasets: hourSpanVotingsDatasets
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>

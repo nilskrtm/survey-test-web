@@ -17,7 +17,12 @@ import TimePicker from '../../components/layout/time/TimePicker';
 import VotingService from '../../data/services/voting.service';
 import VotingsQuestionCard from '../../components/votings/VotingsQuestionCard';
 import { getUserTimezone } from '../../utils/time/time.util';
-import { DaySpanVotingsResponse, DayVotings } from '../../data/types/voting.types';
+import {
+  DaySpanVotingsResponse,
+  DayVotings,
+  HourSpanVotingsResponse,
+  HourVotings
+} from '../../data/types/voting.types';
 
 export type AbsoluteVotingsData = {
   loading: boolean;
@@ -32,6 +37,14 @@ export type DaySpanVotingsData = Pick<DaySpanVotingsResponse, 'days'> & {
   error: boolean;
   votesByAnswerOption: {
     [answerOptionId: string]: Array<DayVotings>;
+  };
+};
+
+export type HourSpanVotingsData = Pick<HourSpanVotingsResponse, 'hours'> & {
+  loading: boolean;
+  error: boolean;
+  votesByAnswerOption: {
+    [answerOptionId: string]: Array<HourVotings>;
   };
 };
 
@@ -104,6 +117,13 @@ const Votings: () => React.JSX.Element = () => {
     error: false,
     votesByAnswerOption: {},
     days: []
+  });
+
+  const [hourSpanVotings, setHourSpanVotings] = useState<HourSpanVotingsData>({
+    loading: false,
+    error: false,
+    votesByAnswerOption: {},
+    hours: []
   });
 
   const loadSurveys: (keyword?: string) => void = (keyword) => {
@@ -192,7 +212,42 @@ const Votings: () => React.JSX.Element = () => {
   };
 
   const loadHourSpanVotings: () => void = () => {
-    //
+    if (!survey) return;
+
+    setHourSpanVotings({ loading: true, error: false, votesByAnswerOption: {}, hours: [] });
+
+    VotingService.getVotingsHourSpanOfSurvey(
+      survey._id,
+      getUserTimezone(),
+      hourSpanDates.dayDate,
+      hourSpanDates.startDate,
+      hourSpanDates.endDate
+    ).then((response) => {
+      if (response.success) {
+        const votes = response.data.votes;
+        const hours = response.data.hours;
+        const votesByAnswerOption: {
+          [answerOptionId: string]: Array<HourVotings>;
+        } = {};
+
+        survey.questions.forEach((question) => {
+          question.answerOptions.forEach((answerOption) => {
+            votesByAnswerOption[answerOption._id] = [
+              ...votes.filter((vote) => vote.answerOptionId === answerOption._id)
+            ];
+          });
+        });
+
+        setHourSpanVotings({
+          loading: false,
+          error: false,
+          votesByAnswerOption: votesByAnswerOption,
+          hours: hours
+        });
+      } else {
+        setHourSpanVotings({ loading: false, error: true, votesByAnswerOption: {}, hours: [] });
+      }
+    });
   };
 
   useGroupClickOutside([searchBarRef, searchCompletionRef], () => {
@@ -276,7 +331,7 @@ const Votings: () => React.JSX.Element = () => {
       setHourSpanDates({
         dayDate: survey.startDate,
         startDate: new Date(0, 0, 0, 0, 0, 0).toISOString(),
-        endDate: new Date(0, 0, 0, 23, 59, 0).toISOString()
+        endDate: new Date(0, 0, 0, 23, 59, 59, 999).toISOString()
       });
     }
   }, [survey]);
@@ -649,8 +704,13 @@ const Votings: () => React.JSX.Element = () => {
                         className="absolute z-10 top-8"
                         value={new Date(hourSpanDates.startDate)}
                         ref={hourSpanStartDatePickerRef}
+                        minDate={new Date(survey.startDate)}
+                        maxDate={new Date(hourSpanDates.endDate)}
                         onChange={(date) => {
-                          setHourSpanDates((prev) => ({ ...prev, startDate: date.toISOString() }));
+                          setHourSpanDates((prev) => ({
+                            ...prev,
+                            startDate: date.toISOString()
+                          }));
                         }}
                       />
                     )}
@@ -678,8 +738,19 @@ const Votings: () => React.JSX.Element = () => {
                         className="absolute z-10 top-8"
                         value={new Date(hourSpanDates.endDate)}
                         ref={hourSpanEndDatePickerRef}
+                        minDate={new Date(hourSpanDates.startDate)}
+                        maxDate={new Date(survey.endDate)}
                         onChange={(date) => {
-                          setHourSpanDates((prev) => ({ ...prev, endDate: date.toISOString() }));
+                          console.log('change');
+                          const correctedDate = new Date(date);
+
+                          // TimePicker only details down to minutes, also set smaller values to max, to include all votes to this specific hour and minute
+                          correctedDate.setSeconds(59, 999);
+
+                          setHourSpanDates((prev) => ({
+                            ...prev,
+                            endDate: correctedDate.toISOString()
+                          }));
                         }}
                       />
                     )}
@@ -725,7 +796,8 @@ const Votings: () => React.JSX.Element = () => {
                       question={question}
                       displayOptions={displayOptions}
                       absoluteVotings={absoluteVotings}
-                      daySpanVotings={daySpanVotings}></VotingsQuestionCard>
+                      daySpanVotings={daySpanVotings}
+                      hourSpanVotings={hourSpanVotings}></VotingsQuestionCard>
                   );
                 })}
               </div>
