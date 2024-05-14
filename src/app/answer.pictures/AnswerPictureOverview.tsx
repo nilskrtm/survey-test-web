@@ -230,6 +230,9 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
               <span className="text-lg font-normal text-red-500">Noch kein Bild</span>
             )}
           </div>
+          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+            Das Bild kann nur geändert werden, wenn es derzeit in keiner Umfrage genutzt wird.
+          </span>
           <button
             onClick={() => {
               fileInputRef.current?.click();
