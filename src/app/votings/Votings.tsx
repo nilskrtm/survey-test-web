@@ -125,7 +125,7 @@ const Votings: () => React.JSX.Element = () => {
       if (response.success) {
         setSurveys(response.data.surveys);
       } else {
-        toaster.sendToast('error', 'Fehler beim Abrufen der Umfragen');
+        toaster.sendToast('error', 'Fehler beim Abrufen der Umfragen.');
 
         setSurveys([]);
       }
