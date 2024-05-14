@@ -2,7 +2,7 @@ import React from 'react';
 import { Survey } from '../../data/types/survey.types';
 import useCollapse from '../../utils/hooks/use.collapse.hook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faExclamation } from '@fortawesome/free-solid-svg-icons';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,8 +17,34 @@ import { Bar } from 'react-chartjs-2';
 import { Question } from '../../data/types/question.types';
 import { AbsoluteVotingsData, DaySpanVotingsData } from '../../app/votings/Votings';
 import moment from 'moment/moment';
+import { BounceLoader } from 'react-spinners';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
+
+type ChartPlaceholderProps = {
+  loading: boolean;
+  error: boolean;
+  height: string;
+};
+
+const ChartPlaceholder: (props: ChartPlaceholderProps) => React.JSX.Element = (props) => {
+  if (!props.loading && !props.error) return <></>;
+
+  return (
+    <div
+      className="w-full flex flex-col items-center justify-center space-y-4"
+      style={{ height: props.height }}>
+      {props.loading ? (
+        <BounceLoader color="rgb(126 34 206)" size={70} />
+      ) : (
+        <>
+          <FontAwesomeIcon icon={faExclamation} size="1x" className="text-3xl text-red-500" />
+          <p className="text-medium font-medium text-gray-700">Abruf der Daten fehlgeschlagen</p>
+        </>
+      )}
+    </div>
+  );
+};
 
 type VotingsQuestionCardProps = {
   survey: Survey;
@@ -27,6 +53,8 @@ type VotingsQuestionCardProps = {
   absoluteVotings: AbsoluteVotingsData;
   daySpanVotings: DaySpanVotingsData;
 };
+
+const CHART_HEIGHT = '250px';
 
 const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Element = (props) => {
   const [collapsed, collapser] = useCollapse(true);
@@ -83,14 +111,19 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Gesamter Zeitraum
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
+                  <ChartPlaceholder
+                    loading={props.absoluteVotings.loading}
+                    error={props.absoluteVotings.error}
+                    height={CHART_HEIGHT}
+                  />
                   {!props.absoluteVotings.loading && !props.absoluteVotings.error && (
                     <Bar
                       width="100%"
-                      height="250px"
+                      height={CHART_HEIGHT}
                       options={{
                         responsive: true,
                         maintainAspectRatio: false,
-                        backgroundColor: 'white',
+                        backgroundColor: 'transparent',
                         plugins: {
                           legend: { display: false },
                           tooltip: {
@@ -168,14 +201,19 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Zeitraum (Tage)
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
+                  <ChartPlaceholder
+                    loading={props.daySpanVotings.loading}
+                    error={props.daySpanVotings.error}
+                    height={CHART_HEIGHT}
+                  />
                   {!props.daySpanVotings.loading && !props.daySpanVotings.error && (
                     <Bar
                       width="100%"
-                      height="250px"
+                      height={CHART_HEIGHT}
                       options={{
                         responsive: true,
                         maintainAspectRatio: false,
-                        backgroundColor: 'white',
+                        backgroundColor: 'transparent',
                         plugins: {
                           legend: { display: false },
                           tooltip: {

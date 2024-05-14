@@ -217,23 +217,30 @@ const Votings: () => React.JSX.Element = () => {
   }, []);
 
   useEffect(() => {
-    if (displayOptions.daySpan && daySpanCollapsed) {
-      daySpanCollapser();
-    }
-    if (displayOptions.hourSpan && hourSpanCollapsed) {
-      hourSpanCollapser();
-    }
-
     if (displayOptions.absolute) {
       loadAbsoluteVotings();
     }
+  }, [displayOptions.absolute]);
+
+  useEffect(() => {
     if (displayOptions.daySpan) {
+      if (daySpanCollapsed) {
+        daySpanCollapser();
+      }
+
       loadDaySpanVotings();
     }
+  }, [displayOptions.daySpan]);
+
+  useEffect(() => {
     if (displayOptions.hourSpan) {
+      if (hourSpanCollapsed) {
+        hourSpanCollapser();
+      }
+
       loadHourSpanVotings();
     }
-  }, [displayOptions]);
+  }, [displayOptions.hourSpan]);
 
   useGroupClickOutside(
     [daySpanStartDateRef, daySpanEndDateRef, daySpanStartDatePickerRef, daySpanEndDatePickerRef],
