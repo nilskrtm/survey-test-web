@@ -114,9 +114,9 @@ const Settings: () => React.JSX.Element = () => {
     setUserDataFieldErrors({});
 
     const newUserData: UpdateUserValues = {
-      email: updatedUserData.email,
-      firstname: updatedUserData.firstname,
-      lastname: updatedUserData.lastname
+      email: updatedUserData.email.trim(),
+      firstname: updatedUserData.firstname.trim(),
+      lastname: updatedUserData.lastname.trim()
     };
 
     UserService.updateUser(userId, newUserData)

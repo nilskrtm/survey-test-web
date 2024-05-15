@@ -72,7 +72,7 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
     setAnswerPictureFileErrorMessage('');
 
     AnswerPictureService.createAnswerPicture({
-      name: answerPictureName,
+      name: answerPictureName.trim(),
       file: answerPictureFile as File
     })
       .then((response) => {

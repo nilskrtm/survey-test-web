@@ -105,7 +105,7 @@ const ChangePasswordModal: ForwardRefRenderFunction<
             value={password}
             onChange={(event) => {
               setPasswordValidation('');
-              setPassword(event.target.value);
+              setPassword(event.target.value.trim());
             }}
             className="form-input w-full rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
           />

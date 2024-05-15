@@ -53,7 +53,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
     setCreating(true);
     setErrorMessage('');
 
-    SurveyService.createSurvey(surveyName ? { name: surveyName } : {})
+    SurveyService.createSurvey(surveyName ? { name: surveyName.trim() } : {})
       .then((response) => {
         if (response.success) {
           const surveyId = response.data.id;

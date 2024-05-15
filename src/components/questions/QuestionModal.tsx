@@ -334,7 +334,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             disabled={!props.survey.draft || updating}
             html={updatedQuestion.question}
             onBlur={(event) => {
-              updateQuestion({ question: event.target.innerHTML });
+              updateQuestion({ question: event.target.innerHTML.trim() });
             }}
             onChange={(event) => {
               updateQuestionInternal({ question: event.target.value });
@@ -370,10 +370,10 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             disabled={!props.survey.draft || updating}
             html={updatedQuestion.timeout.toString()}
             onBlur={(event) => {
-              updateQuestion({ timeout: parseInt(event.target.innerHTML || '0') });
+              updateQuestion({ timeout: parseInt(event.target.innerHTML.trim() || '0') });
             }}
             onChange={(event) => {
-              updateQuestionInternal({ timeout: parseInt(event.target.value || '0') });
+              updateQuestionInternal({ timeout: parseInt(event.target.value.trim() || '0') });
             }}
             onClick={() => {
               if (questionTimeoutRef.current != document.activeElement) {
