@@ -142,9 +142,9 @@ class API {
                 for (const field in errors as {
                   [field: string]: { msg: string };
                 }) {
-                  const error = (errors as { [field: string]: { msg: string } })[field];
+                  const fieldError = (errors as { [field: string]: { msg: string } })[field];
 
-                  apiError.fieldErrors[field] = error.msg;
+                  apiError.fieldErrors[field] = fieldError.msg;
 
                   if (!apiError.hasFieldErrors) {
                     apiError.hasFieldErrors = true;
