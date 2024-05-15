@@ -1,4 +1,4 @@
-@import url("https://rsms.me/inter/inter.css");
+@import url('https://rsms.me/inter/inter.css');
 
 @tailwind base;
 
@@ -6,7 +6,6 @@
   html {
     @apply h-full;
     @apply w-full;
-    @apply font-inter;
   }
   body {
     @apply h-full;
@@ -17,6 +16,7 @@
     @apply h-full;
     @apply w-full;
     @apply m-0;
+    @apply font-inter;
   }
   h1 {
     @apply text-4xl;
@@ -38,7 +38,7 @@
   }
   /* Works on Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
-    width: 16px;
+    @apply w-[16px];
   }
   *::-webkit-scrollbar-track {
     background: rgb(249 250 251);
@@ -53,9 +53,6 @@
 @tailwind components;
 
 @layer components {
-  .loading-button {
-    animation: loading-button 2s linear infinite;
-  }
   @keyframes loading-button {
     0% {
       @apply opacity-100;
@@ -67,28 +64,46 @@
       @apply opacity-100;
     }
   }
+  .loading-button {
+    @apply animate-[loading-button_2s_linear_infinite];
+  }
   @keyframes loading-dots {
     0% {
-      content: '';
+      @apply content-[''];
     }
     25% {
-      content: '.';
+      @apply content-['.'];
     }
     50% {
-      content: '..';
+      @apply content-['..'];
     }
     75% {
-      content: '...';
+      @apply content-['...'];
     }
     100% {
-      content: '';
+      @apply content-[''];
     }
   }
   .loading-dots::after {
-    display: inline-block;
-    animation: loading-dots steps(1, end) 1s infinite;
-    content: '';
+    @apply inline-block;
+    @apply animate-[loading-dots_steps(1,end)_1s_infinite];
+    @apply content-[''];
   }
 }
 
 @tailwind utilities;
+
+@layer utilities {
+  /* supports normal inputs */
+  input:checked {
+    @apply bg-input-checked;
+    @apply bg-origin-content;
+    @apply p-[1.5px];
+  }
+  /* supports inputs styled with @tailwindcss/forms */
+  .form-checkbox:checked {
+    @apply bg-input-checked;
+    @apply bg-origin-content;
+    @apply p-[1.5px];
+  }
+}

@@ -26,18 +26,39 @@ import CreateSurveyModal, {
 interface SurveyListQueryParams extends QuerySearchParams {
   page: number;
   keyword: string;
-  sortingType: string;
-  sortingOption: string;
+  archived: string;
+  draft: string;
+  sortingType: '' | 'asc' | 'ascending' | 'desc' | 'descending';
+  sortingOption: '' | 'name' | 'edited' | 'created';
 }
+
+type SurveyFilterOptions = {
+  keyword: string;
+  archived?: boolean;
+  draft?: boolean;
+};
 
 const SurveyList: () => React.JSX.Element = () => {
   useDashboardTitle('Meine Umfragen');
 
-  const [queryParams, setQueryParams] = useQueryParams({ page: 1, search: '' });
+  const [queryParams, setQueryParams] = useQueryParams({
+    page: 1,
+    keyword: '',
+    archived: '',
+    draft: '',
+    sortingOption: '',
+    sortingType: ''
+  });
 
-  const [searchText, setSearchText] = useState<string>('');
-  const [sortingType, setSortingType] = useState<string>('');
-  const [sortingOption, setSortingOption] = useState<string>('');
+  const [filterOptions, setFilterOptions] = useState<SurveyFilterOptions>({
+    keyword: '',
+    archived: undefined,
+    draft: undefined
+  });
+  const [sortingType, setSortingType] =
+    useState<Pick<SurveyListQueryParams, 'sortingType'>['sortingType']>('');
+  const [sortingOption, setSortingOption] =
+    useState<Pick<SurveyListQueryParams, 'sortingOption'>['sortingOption']>('');
 
   const loader = useLoader();
   const pagination = usePagination(10);
@@ -46,25 +67,30 @@ const SurveyList: () => React.JSX.Element = () => {
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
   useEffect(() => {
-    const { page, keyword, sortingOption, sortingType } =
+    const { page, keyword, archived, draft, sortingOption, sortingType } =
       parseQuerySearchParams<SurveyListQueryParams>(queryParams);
+    const newFilterOptions: SurveyFilterOptions = {
+      keyword: keyword ? keyword : '',
+      archived: archived ? JSON.parse(archived) : undefined,
+      draft: draft ? JSON.parse(draft) : undefined
+    };
 
-    setSearchText(keyword);
+    setFilterOptions(newFilterOptions);
     setSortingOption(sortingOption);
     setSortingType(sortingType);
-    loadSurveys(page, keyword, sortingOption, sortingType);
+    loadSurveys(page, newFilterOptions, sortingOption, sortingType);
   }, [queryParams]);
 
   const loadSurveys = (
     requestedPage: number,
-    search: string,
+    filterOptions: SurveyFilterOptions,
     searchSortingOption: string,
     searchSortingType: string
   ) => {
     loader.set(LoadingOption.LOADING);
 
     SurveyService.getSurveys(requestedPage, pagination.perPage, {
-      keyword: search,
+      ...filterOptions,
       sortingOption: searchSortingOption,
       sortingType: searchSortingType
     }).then((response) => {
@@ -116,14 +142,16 @@ const SurveyList: () => React.JSX.Element = () => {
                   <input
                     className="form-input w-full pl-11 rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500 peer"
                     placeholder="Suchen..."
-                    value={searchText || ''}
-                    onChange={(event) => setSearchText(event.target.value)}
+                    value={filterOptions.keyword}
+                    onChange={(event) =>
+                      setFilterOptions((prev) => ({ ...prev, keyword: event.target.value }))
+                    }
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        updateQuery('keyword', searchText);
+                        updateQuery('keyword', filterOptions.keyword);
                       }
                     }}
-                    onBlur={() => updateQuery('keyword', searchText)}
+                    onBlur={() => updateQuery('keyword', filterOptions.keyword)}
                   />
                   <FontAwesomeIcon
                     icon={faMagnifyingGlass}
@@ -182,7 +210,63 @@ const SurveyList: () => React.JSX.Element = () => {
                 </select>
               </div>
             </div>
-            <div className="w-full flex flex-row items-center justify-end">
+            <div className="w-full flex flex-wrap flex-row items-center justify-between gap-x-2 gap-y-2 lg:gap-y-4">
+              <div className="flex flex-row items-center justify-start gap-x-4">
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={filterOptions.draft !== undefined}
+                    readOnly
+                    onClick={() => {
+                      const current = filterOptions.draft;
+
+                      updateQuery('draft', current === undefined ? 'false' : current ? 'true' : '');
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:!accent-purple-800 checked:!bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      filterOptions.draft === true ? '!bg-input-crossed' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      const current = filterOptions.draft;
+
+                      updateQuery('draft', current === undefined ? 'false' : current ? 'true' : '');
+                    }}>
+                    Bereit
+                  </p>
+                </div>
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={filterOptions.archived !== undefined}
+                    readOnly
+                    onClick={() => {
+                      const current = filterOptions.archived;
+
+                      updateQuery(
+                        'archived',
+                        current === undefined ? 'true' : current ? 'false' : ''
+                      );
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:!accent-purple-800 checked:!bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      filterOptions.archived === false ? '!bg-input-crossed' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      const current = filterOptions.archived;
+
+                      updateQuery(
+                        'archived',
+                        current === undefined ? 'true' : current ? 'false' : ''
+                      );
+                    }}>
+                    Archiviert
+                  </p>
+                </div>
+              </div>
               <button
                 onClick={createSurvey}
                 className="max-lg:w-full flex items-center justify-center space-x-1 px-3 py-[9px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500"

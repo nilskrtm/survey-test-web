@@ -6,6 +6,10 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    container: {
+      center: true,
+      padding: '15px'
+    },
     screens: {
       '2xl': { 'max': '1535px' },
       // => @media (max-width: 1535px) { ... }
@@ -18,11 +22,11 @@ module.exports = {
       'sm': { 'max': '639px' },
       ...defaultTheme.screens
     },
-    container: {
-      center: true,
-      padding: '15px'
-    },
     extend: {
+      backgroundImage: {
+        'input-checked': "url('src/resources/icons/input_faCheckSolid.svg')",
+        'input-crossed': "url('src/resources/icons/input_faCrossSolid.svg')"
+      },
       fontFamily: {
         inter: ['Inter', 'sans-serif']
       }
