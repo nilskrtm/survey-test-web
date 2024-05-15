@@ -98,12 +98,14 @@
   input:checked {
     @apply bg-input-checked;
     @apply bg-origin-content;
+    @apply bg-center;
     @apply p-[1.5px];
   }
   /* supports inputs styled with @tailwindcss/forms */
   .form-checkbox:checked {
     @apply bg-input-checked;
     @apply bg-origin-content;
+    @apply bg-center;
     @apply p-[1.5px];
   }
 }
