@@ -22,6 +22,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
+import { selectPermissionLevel } from '../../../store/features/authentication.slice';
+import { PermissionLevel } from '../../../utils/enums/permissionlevel.enum';
 
 type DashboardLayoutProps = {
   //
@@ -32,6 +34,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
 ) => {
   const dashboardTitle = useAppSelector(selectDashboardTitle);
   const fullName = useAppSelector(selectFullName);
+  const permissionLevel = useAppSelector(selectPermissionLevel);
 
   const location = useLocation();
 
@@ -122,13 +125,15 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   path="/answer-pictures"
                   type={DashboardNavigationEntryType.MOBILE}
                 />
-                <DashboardNavigationEntry
-                  icon={faUserGroup}
-                  matchPathPattern={['/users', '/users/:userId']}
-                  name="Nutzerverwaltung"
-                  path="/users"
-                  type={DashboardNavigationEntryType.MOBILE}
-                />
+                {permissionLevel === PermissionLevel.ADMIN && (
+                  <DashboardNavigationEntry
+                    icon={faUserGroup}
+                    matchPathPattern={['/users', '/users/:userId']}
+                    name="Nutzerverwaltung"
+                    path="/users"
+                    type={DashboardNavigationEntryType.MOBILE}
+                  />
+                )}
                 <DashboardNavigationEntry
                   icon={faGears}
                   name="Einstellungen"
@@ -183,13 +188,15 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   path="/answer-pictures"
                   type={DashboardNavigationEntryType.DESKTOP}
                 />
-                <DashboardNavigationEntry
-                  icon={faUserGroup}
-                  matchPathPattern={['/users', '/users/:userId']}
-                  name="Nutzerverwaltung"
-                  path="/users"
-                  type={DashboardNavigationEntryType.DESKTOP}
-                />
+                {permissionLevel === PermissionLevel.ADMIN && (
+                  <DashboardNavigationEntry
+                    icon={faUserGroup}
+                    matchPathPattern={['/users', '/users/:userId']}
+                    name="Nutzerverwaltung"
+                    path="/users"
+                    type={DashboardNavigationEntryType.DESKTOP}
+                  />
+                )}
                 <DashboardNavigationEntry
                   icon={faGears}
                   name="Einstellungen"

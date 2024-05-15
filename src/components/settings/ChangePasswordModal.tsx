@@ -58,7 +58,7 @@ const ChangePasswordModal: ForwardRefRenderFunction<
     setUpdating(true);
     setPasswordValidation('');
 
-    UserService.updateUser(userId, { password: btoa(password) })
+    UserService.updateUser(userId, { password: password })
       .then((response) => {
         if (response.success) {
           toaster.sendToast('success', 'Das Passwort wurde erfolgreich geändert.');
@@ -136,7 +136,7 @@ const ChangePasswordModal: ForwardRefRenderFunction<
             </span>
           )}
         </div>
-        <div className="flex flex-row items-center justify-end">
+        <div className="w-full flex flex-row items-center justify-end mt-2">
           <button
             className={`px-3 py-[8px] rounded-md text-base text-white font-medium bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed ${updating ? 'loading-button' : ''}`}
             onClick={changePassword}

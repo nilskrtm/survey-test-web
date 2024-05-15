@@ -5,7 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { persistedStore, store } from './store/store';
 import GlobalNavigationProvider from './components/navigation/GlobalNavigationProvider';
-import LiveUserDataProvider from './components/user/LiveUserDataProvider';
+import LiveUserDataProvider from './components/users/LiveUserDataProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RedirectRoute from './components/navigation/RedirectRoute';
 import Logout from './app/authentication/Logout';

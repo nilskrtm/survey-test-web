@@ -117,7 +117,7 @@ const CreateSurveyModal: ForwardRefRenderFunction<
             value={surveyName}
           />
           {errorMessage && (
-            <p className="p-1 pt-2 text-sm text-red-500 font-medium">{errorMessage}</p>
+            <span className="p-1 pt-2 text-sm text-red-500 font-medium">{errorMessage}</span>
           )}
         </div>
         <div className="w-full flex flex-row items-center justify-end mt-4">
