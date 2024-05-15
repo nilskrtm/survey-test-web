@@ -8,6 +8,7 @@ export type ModalProps = Pick<React.JSX.IntrinsicElements['div'], 'className'> &
   childModals?: RefObject<HTMLDivElement>[];
   closeable?: boolean;
   containerRef?: LegacyRef<HTMLDivElement>;
+  level?: number;
   onRequestClose?: () => void;
   title: string;
   visible?: boolean;
@@ -34,7 +35,8 @@ const Modal: (props: PropsWithChildren<ModalProps>) => React.JSX.Element = (prop
     <>
       {!!props.visible && (
         <div
-          className="absolute top-0 left-0 right-0 bottom-0 z-30 h-full w-full flex items-center justify-center bg-slate-200/50"
+          className={`absolute top-0 left-0 right-0 bottom-0 h-full w-full flex items-center justify-center bg-slate-200/50 ${props.level ? '' : 'z-30'}`}
+          style={props.level ? { zIndex: 30 + props.level } : {}}
           ref={props.containerRef}>
           <div
             className={`modal max-h-[95vh] rounded-lg border border-gray-300 bg-white ${

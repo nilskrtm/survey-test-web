@@ -40,7 +40,7 @@ type QuestionModalProps = {
 };
 
 export type QuestionModalRefAttributes = {
-  open: (question: Question) => void;
+  open: (questionId: string) => void;
 };
 
 const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, QuestionModalProps> = (
@@ -51,6 +51,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
   const answerPictureUrlsLoader = useLoader();
 
   const [visible, setVisible] = useState<boolean>(false);
+  const [questionId, setQuestionId] = useState<string>('');
   const [question, setQuestion] = useState<Question>(dummyQuestion());
   const [updatedQuestion, setUpdatedQuestion] = useState<Question>(dummyQuestion());
   const [answerPictureUrls, setAnswerPictureUrls] = useState<AnswerPictureUrls>({});
@@ -71,11 +72,19 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
   useImperativeHandle<QuestionModalRefAttributes, QuestionModalRefAttributes>(
     ref,
     () => ({
-      open: (question) => {
+      open: (questionId) => {
         if (!visible) {
+          setQuestionId(questionId);
+
+          const searchQuestion = props.survey.questions.find(
+            (question) => question._id === questionId
+          );
+
+          if (!searchQuestion) return;
+
           answerPictureUrlsLoader.set(LoadingOption.RESET);
-          setQuestion(question);
-          setUpdatedQuestion(question);
+          setQuestion(searchQuestion);
+          setUpdatedQuestion(searchQuestion);
           setAnswerPictureUrls({});
           setUpdating(false);
           setUpdatingValues([]);
@@ -85,6 +94,15 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
     }),
     [visible]
   );
+
+  useEffect(() => {
+    const searchQuestion = props.survey.questions.find((question) => question._id === questionId);
+
+    if (!searchQuestion) return;
+
+    setQuestion(searchQuestion);
+    setUpdatedQuestion(searchQuestion);
+  }, [props.survey]);
 
   useEffect(() => {
     answerPictureUrlsLoader.set(LoadingOption.LOADING);
@@ -124,6 +142,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
       setVisible(false);
       setUpdating(false);
       setUpdatingValues([]);
+      setQuestionId('');
       setQuestion(dummyQuestion());
       setUpdatedQuestion(dummyQuestion());
       setAnswerPictureUrls({});
@@ -180,7 +199,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
     if (!props.survey || !props.survey.draft) return;
 
     if (changeAnswerOptionPictureModalRef.current) {
-      changeAnswerOptionPictureModalRef.current.open(answerOption);
+      changeAnswerOptionPictureModalRef.current.open(answerOption._id);
     }
   };
 
@@ -188,7 +207,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
     if (!props.survey || !props.survey.draft) return;
 
     if (changeAnswerOptionColorModalRef.current) {
-      changeAnswerOptionColorModalRef.current.open(answerOption);
+      changeAnswerOptionColorModalRef.current.open(answerOption._id);
     }
   };
 

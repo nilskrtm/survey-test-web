@@ -152,7 +152,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
   const openQuestion: (question: Question) => void = (question) => {
     if (!survey) return;
 
-    questionModalRef.current?.open(question);
+    questionModalRef.current?.open(question._id);
   };
 
   const removeQuestion: (question: Question) => void = (question) => {

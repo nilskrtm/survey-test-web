@@ -27,7 +27,7 @@ type AnswerOptionColorModalProps = Pick<ModalProps, 'containerRef'> & {
 };
 
 export type AnswerOptionColorModalRefAttributes = {
-  open: (answerOption: AnswerOption) => void;
+  open: (answerOptionId: string) => void;
 };
 
 const AnswerOptionColorModal: ForwardRefRenderFunction<
@@ -37,6 +37,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
   const toaster = useToasts();
 
   const [visible, setVisible] = useState<boolean>(false);
+  const [answerOptionId, setAnswerOptionId] = useState<string>('');
   const [answerOption, setAnswerOption] = useState<AnswerOption>(dummyAnswerOption());
   const [updateAnswerOption, setUpdateAnswerOption] = useState<AnswerOption>(dummyAnswerOption());
 
@@ -49,20 +50,39 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
   useImperativeHandle<AnswerOptionColorModalRefAttributes, AnswerOptionColorModalRefAttributes>(
     ref,
     () => ({
-      open: (answerOption) => {
+      open: (answerOptionId) => {
         if (!visible && props.survey.draft) {
+          setAnswerOptionId(answerOptionId);
+
+          const searchAnswerOption = props.question.answerOptions.find(
+            (answerOption) => answerOption._id === answerOptionId
+          );
+
+          if (!searchAnswerOption) return;
+
           setVisible(true);
           setUpdating(false);
           setColorPickerType('field');
           answerPictureUrlLoader.set(LoadingOption.RESET);
           setAnswerPictureUrl('');
-          setAnswerOption(answerOption);
-          setUpdateAnswerOption(answerOption);
+          setAnswerOption(searchAnswerOption);
+          setUpdateAnswerOption(searchAnswerOption);
         }
       }
     }),
     [visible]
   );
+
+  useEffect(() => {
+    const searchAnswerOption = props.question.answerOptions.find(
+      (answerOption) => answerOption._id === answerOptionId
+    );
+
+    if (!searchAnswerOption) return;
+
+    setAnswerOption(searchAnswerOption);
+    setUpdateAnswerOption(searchAnswerOption);
+  }, [props.question]);
 
   useEffect(() => {
     if (visible) {
@@ -95,6 +115,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
     if (visible && !updating) {
       setVisible(false);
       setUpdating(false);
+      setAnswerOptionId('');
       setAnswerOption(dummyAnswerOption());
       setUpdateAnswerOption(dummyAnswerOption());
       setAnswerPictureUrl('');
@@ -135,6 +156,7 @@ const AnswerOptionColorModal: ForwardRefRenderFunction<
     <Modal
       containerRef={props.containerRef}
       closeable={!updating}
+      level={1}
       onRequestClose={onClose}
       title="Farbe der Antwortmöglichkeit"
       visible={visible}>

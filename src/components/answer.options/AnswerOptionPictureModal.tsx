@@ -1,4 +1,10 @@
-import React, { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useEffect,
+  useImperativeHandle,
+  useState
+} from 'react';
 import Modal, { ModalProps } from '../layout/modal/Modal';
 import { Question } from '../../data/types/question.types';
 import { Survey } from '../../data/types/survey.types';
@@ -20,7 +26,7 @@ type AnswerOptionPictureModalProps = Pick<ModalProps, 'containerRef'> & {
 };
 
 export type AnswerOptionPictureModalRefAttributes = {
-  open: (answerOption: AnswerOption) => void;
+  open: (answerOptionId: string) => void;
 };
 
 const AnswerOptionPictureModal: ForwardRefRenderFunction<
@@ -28,6 +34,7 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
   AnswerOptionPictureModalProps
 > = (props, ref) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [answerOptionId, setAnswerOptionId] = useState<string>('');
   const [answerOption, setAnswerOption] = useState<AnswerOption>(dummyAnswerOption());
   const [updateAnswerOption, setUpdateAnswerOption] = useState<AnswerOption>(dummyAnswerOption());
   const [updating, setUpdating] = useState<boolean>(false);
@@ -41,12 +48,20 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
   useImperativeHandle<AnswerOptionPictureModalRefAttributes, AnswerOptionPictureModalRefAttributes>(
     ref,
     () => ({
-      open: (answerOption) => {
+      open: (answerOptionId) => {
         if (!visible && props.survey.draft) {
+          setAnswerOptionId(answerOptionId);
+
+          const searchAnswerOption = props.question.answerOptions.find(
+            (answerOption) => answerOption._id === answerOptionId
+          );
+
+          if (!searchAnswerOption) return;
+
           setVisible(true);
           setUpdating(false);
-          setAnswerOption(answerOption);
-          setUpdateAnswerOption(answerOption);
+          setAnswerOption(searchAnswerOption);
+          setUpdateAnswerOption(searchAnswerOption);
           setSearchText('');
           pagination.reset();
           loader.set(LoadingOption.RESET);
@@ -57,10 +72,22 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
     [visible]
   );
 
+  useEffect(() => {
+    const searchAnswerOption = props.question.answerOptions.find(
+      (answerOption) => answerOption._id === answerOptionId
+    );
+
+    if (!searchAnswerOption) return;
+
+    setAnswerOption(searchAnswerOption);
+    setUpdateAnswerOption(searchAnswerOption);
+  }, [props.question]);
+
   const onClose = () => {
     if (visible && !updating) {
       setVisible(false);
       setUpdating(false);
+      setAnswerOptionId('');
       setAnswerOption(dummyAnswerOption());
       setUpdateAnswerOption(dummyAnswerOption());
       setSearchText('');
@@ -145,6 +172,7 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
       className="w-full"
       containerRef={props.containerRef}
       closeable={!updating}
+      level={1}
       onRequestClose={onClose}
       title="Bild der Antwortmöglichkeit"
       visible={visible}>
@@ -157,7 +185,7 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
             Name des Bildes
           </label>
           <input
-            autoFocus={true}
+            autoFocus={false}
             className="form-input rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
             id="answerPicture_search"
             onChange={(event) => {
@@ -175,15 +203,15 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
             value={searchText}
           />
         </div>
-        <div className="w-full max-h-72 lg:max-h-96 pt-2 overflow-y-scroll">
+        <div className="w-full max-h-72 lg:max-h-96 pt-2 overflow-y-auto">
           {loader.loading && (
-            <div className="flex flex-col items-center justify-center space-y-6">
+            <div className="w-full h-72 flex flex-col items-center justify-center space-y-6">
               <BounceLoader color="rgb(126 34 206)" size={70} />
               <p className="text-medium font-medium text-gray-700">Abruf der Bilder</p>
             </div>
           )}
           {loader.error && (
-            <div className="flex flex-col items-center justify-center space-y-6">
+            <div className="w-full h-72 flex flex-col items-center justify-center space-y-6">
               <FontAwesomeIcon icon={faExclamation} size="1x" className="text-4xl text-red-500" />
               <p className="text-medium font-medium text-gray-700">
                 Abruf der Bilder fehlgeschlagen
@@ -191,7 +219,7 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
             </div>
           )}
           {!loader.loading && !loader.error && answerPictures.length === 0 && (
-            <div className="flex flex-col items-center justify-center space-y-6">
+            <div className="w-full h-72 flex flex-col items-center justify-center space-y-6">
               <FontAwesomeIcon
                 icon={faFaceFrownOpen}
                 size="1x"
