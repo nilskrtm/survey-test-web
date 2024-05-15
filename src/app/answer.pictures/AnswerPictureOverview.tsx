@@ -175,7 +175,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
                   disabled={loader.loading || isUsed || updating}
                   html={updatedAnswerPicture.name}
                   onBlur={(event) => {
-                    updateAnswerPicture({ name: event.target.innerHTML.trim() });
+                    updateAnswerPicture({ name: event.target.innerHTML });
                   }}
                   onChange={(event) => {
                     updateAnswerPictureInternal({ name: event.target.value });

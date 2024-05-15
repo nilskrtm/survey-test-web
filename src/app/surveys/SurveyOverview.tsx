@@ -344,7 +344,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   disabled={loader.loading || !updatedSurvey.draft || updating}
                   html={updatedSurvey.name}
                   onBlur={(event) => {
-                    updateSurvey({ name: event.target.innerHTML.trim() });
+                    updateSurvey({ name: event.target.innerHTML });
                   }}
                   onChange={(event) => {
                     updateSurveyInternal({ name: event.target.value });
@@ -383,7 +383,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   disabled={loader.loading || !updatedSurvey.draft || updating}
                   html={updatedSurvey.description}
                   onBlur={(event) => {
-                    updateSurvey({ description: event.target.innerHTML.trim() });
+                    updateSurvey({ description: event.target.innerHTML });
                   }}
                   onChange={(event) => {
                     updateSurveyInternal({ description: event.target.value });

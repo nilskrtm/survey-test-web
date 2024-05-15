@@ -334,7 +334,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             disabled={!props.survey.draft || updating}
             html={updatedQuestion.question}
             onBlur={(event) => {
-              updateQuestion({ question: event.target.innerHTML.trim() });
+              updateQuestion({ question: event.target.innerHTML });
             }}
             onChange={(event) => {
               updateQuestionInternal({ question: event.target.value });
