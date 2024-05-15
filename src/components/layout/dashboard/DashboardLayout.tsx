@@ -17,7 +17,8 @@ import {
   faImage,
   faPlus,
   faRightFromBracket,
-  faSquarePollVertical
+  faSquarePollVertical,
+  faUserGroup
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
@@ -74,7 +75,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
   return (
     <>
       <div className="w-full h-full flex max-lg:flex-col lg:flex-row bg-white">
-        <div className="lg:h-full lg:w-[250px] max-lg:sticky max-lg:z-20 max-lg:top-0 max-lg:h-[56px] max-lg:flex max-lg:flex-col max-lg:bg-white select-none">
+        <div className="lg:h-full lg:w-[270px] max-lg:sticky max-lg:z-20 max-lg:top-0 max-lg:h-[56px] max-lg:flex max-lg:flex-col max-lg:bg-white select-none">
           <div className="w-full lg:h-[60px] max-lg:h-full flex flex-row max-lg:justify-between lg:justify-center items-center max-lg:px-6">
             <NavLink
               to="/"
@@ -119,6 +120,13 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   icon={faImage}
                   name="Bilder"
                   path="/answer-pictures"
+                  type={DashboardNavigationEntryType.MOBILE}
+                />
+                <DashboardNavigationEntry
+                  icon={faUserGroup}
+                  matchPathPattern={['/users', '/users/:userId']}
+                  name="Nutzerverwaltung"
+                  path="/users"
                   type={DashboardNavigationEntryType.MOBILE}
                 />
                 <DashboardNavigationEntry
@@ -176,6 +184,13 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   type={DashboardNavigationEntryType.DESKTOP}
                 />
                 <DashboardNavigationEntry
+                  icon={faUserGroup}
+                  matchPathPattern={['/users', '/users/:userId']}
+                  name="Nutzerverwaltung"
+                  path="/users"
+                  type={DashboardNavigationEntryType.DESKTOP}
+                />
+                <DashboardNavigationEntry
                   icon={faGears}
                   name="Einstellungen"
                   path="/settings"
@@ -199,7 +214,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             </NavLink>
           </nav>
         </div>
-        <div className="lg:w-[calc(100%-250px)] max-lg:w-full max-lg:h-[calc(100%-56px)]">
+        <div className="lg:w-[calc(100%-270px)] max-lg:w-full max-lg:h-[calc(100%-56px)]">
           <header className="h-[60px] grow max-lg:hidden lg:flex flex-row items-center justify-between py-4 px-8 select-none">
             <p className="text-3xl text-black font-semibold">{dashboardTitle}</p>
             <div className="relative" ref={profileDropdownRef}>

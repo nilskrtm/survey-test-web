@@ -22,6 +22,7 @@ import Votings from './app/votings/Votings';
 import ToastProvider from './components/layout/toasts/ToastProvider';
 import PasswordReset from './app/authentication/PasswordReset';
 import AnswerPictureOverview from './app/answer.pictures/AnswerPictureOverview';
+import UserList from './app/users/UserList';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -30,6 +31,7 @@ const imprintRoute = <Imprint />;
 const loginRoute = <Login />;
 const passwordResetRoute = <PasswordReset />;
 const logoutRoute = <Logout />;
+const userListRoute = layoutRoute(<UserList />);
 const dashboardRoute = layoutRoute(<Dashboard />);
 const surveyListRoute = layoutRoute(<SurveyList />);
 const surveyOverviewRoute = layoutRoute(<SurveyOverview />);
@@ -53,6 +55,7 @@ root.render(
           <Route path="/login" element={loginRoute} />
           <Route path="/reset-password" element={passwordResetRoute} />
           <Route path="/logout" element={logoutRoute} />
+          <Route path="/users" element={protectRoute(userListRoute, true)} />
           <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
           <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
           <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
