@@ -11,8 +11,6 @@ import UserService from '../../data/services/user.service';
 import { parseQuerySearchParams } from '../../utils/query/query.params.util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCirclePlus,
-  faClockRotateLeft,
   faExclamation,
   faFaceFrownOpen,
   faMagnifyingGlass,
@@ -20,7 +18,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BounceLoader } from 'react-spinners';
 import PagingBox from '../../components/paging/PagingBox';
-import moment from 'moment/moment';
 import { NavLink } from 'react-router-dom';
 
 interface UserListQueryParams extends QuerySearchParams {
@@ -170,7 +167,7 @@ const UserList: () => React.JSX.Element = () => {
                 <option value="edited">Bearbeitungsdatum</option>
                 <option value="created">Erstelldatum</option>
                 */}
-                </select>{' '}
+                </select>
                 <select
                   value={sortingType}
                   disabled={!sortingOption}
