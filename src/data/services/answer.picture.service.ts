@@ -7,7 +7,11 @@ import {
 import { APIPaging } from '../types/common.types';
 import { AnswerPictureUrls } from '../types/answer.picture.types';
 
-const getAnswerPictures = (page: number, perPage: number, filter?: { [key: string]: string }) => {
+const getAnswerPictures = (
+  page: number,
+  perPage: number,
+  filter?: { [key: string]: string | number | boolean }
+) => {
   return API.get<{ answerPictures: Array<AnswerPicture>; paging: APIPaging }>('/answer-pictures', {
     params: { page: page, perPage: perPage, ...filter }
   });

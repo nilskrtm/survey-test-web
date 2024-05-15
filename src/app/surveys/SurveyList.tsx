@@ -28,8 +28,8 @@ interface SurveyListQueryParams extends QuerySearchParams {
   keyword: string;
   archived: string;
   draft: string;
-  sortingType: '' | 'asc' | 'ascending' | 'desc' | 'descending';
-  sortingOption: '' | 'name' | 'edited' | 'created';
+  sortingType: string;
+  sortingOption: string;
 }
 
 type SurveyFilterOptions = {

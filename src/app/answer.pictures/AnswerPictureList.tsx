@@ -26,16 +26,25 @@ import CreateAnswerPictureModal, {
 interface AnswerPictureListQueryParams extends QuerySearchParams {
   page: number;
   keyword: string;
+  used: string;
   sortingType: string;
   sortingOption: string;
 }
+
+type AnswerPictureFilterOptions = {
+  keyword: string;
+  used?: boolean;
+};
 
 const AnswerPictureList: () => React.JSX.Element = () => {
   useDashboardTitle('Meine Bilder');
 
   const [queryParams, setQueryParams] = useQueryParams({ page: 1, search: '' });
 
-  const [searchText, setSearchText] = useState<string>('');
+  const [filterOptions, setFilterOptions] = useState<AnswerPictureFilterOptions>({
+    keyword: '',
+    used: undefined
+  });
   const [sortingType, setSortingType] = useState<string>('');
   const [sortingOption, setSortingOption] = useState<string>('');
 
@@ -47,25 +56,29 @@ const AnswerPictureList: () => React.JSX.Element = () => {
   const createAnswerPictureModalRef = createRef<CreateAnswerPictureModalRefAttributes>();
 
   useEffect(() => {
-    const { page, keyword, sortingOption, sortingType } =
+    const { page, keyword, used, sortingOption, sortingType } =
       parseQuerySearchParams<AnswerPictureListQueryParams>(queryParams);
+    const newFilterOptions: AnswerPictureFilterOptions = {
+      keyword: keyword ? keyword : '',
+      used: used ? JSON.parse(used) : undefined
+    };
 
-    setSearchText(keyword);
+    setFilterOptions(newFilterOptions);
     setSortingOption(sortingOption);
     setSortingType(sortingType);
-    loadAnswerPictures(page, keyword, sortingOption, sortingType);
+    loadAnswerPictures(page, newFilterOptions, sortingOption, sortingType);
   }, [queryParams]);
 
   const loadAnswerPictures = (
     requestedPage: number,
-    search: string,
+    filterOptions: AnswerPictureFilterOptions,
     searchSortingOption: string,
     searchSortingType: string
   ) => {
     loader.set(LoadingOption.LOADING);
 
     AnswerPictureService.getAnswerPictures(requestedPage, pagination.perPage, {
-      keyword: search,
+      ...filterOptions,
       sortingOption: searchSortingOption,
       sortingType: searchSortingType
     }).then((response) => {
@@ -116,14 +129,16 @@ const AnswerPictureList: () => React.JSX.Element = () => {
                   <input
                     className="form-input w-full pl-11 rounded-md font-normal text-base text-black placeholder-shown:text-gray-600 focus:text-black focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500 peer"
                     placeholder="Suchen..."
-                    value={searchText || ''}
-                    onChange={(event) => setSearchText(event.target.value)}
+                    value={filterOptions.keyword}
+                    onChange={(event) =>
+                      setFilterOptions((prev) => ({ ...prev, keyword: event.target.value }))
+                    }
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        updateQuery('keyword', searchText);
+                        updateQuery('keyword', filterOptions.keyword);
                       }
                     }}
-                    onBlur={() => updateQuery('keyword', searchText)}
+                    onBlur={() => updateQuery('keyword', filterOptions.keyword)}
                   />
                   <FontAwesomeIcon
                     icon={faMagnifyingGlass}
@@ -182,7 +197,33 @@ const AnswerPictureList: () => React.JSX.Element = () => {
                 </select>
               </div>
             </div>
-            <div className="w-full flex flex-row items-center justify-end">
+            <div className="w-full flex flex-wrap flex-row items-center justify-between gap-x-2 gap-y-2 lg:gap-y-4">
+              <div className="flex flex-row items-center justify-start gap-x-4">
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={filterOptions.used !== undefined}
+                    readOnly
+                    onClick={() => {
+                      const current = filterOptions.used;
+
+                      updateQuery('used', current === undefined ? 'true' : current ? 'false' : '');
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:!accent-purple-800 checked:!bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
+                      filterOptions.used === false ? '!bg-input-crossed' : ''
+                    }`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      const current = filterOptions.used;
+
+                      updateQuery('used', current === undefined ? 'true' : current ? 'false' : '');
+                    }}>
+                    Genutzt
+                  </p>
+                </div>
+              </div>
               <button
                 onClick={createAnswerPicture}
                 className="max-lg:w-full flex items-center justify-center space-x-1 px-3 py-[9px] rounded-md bg-purple-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
