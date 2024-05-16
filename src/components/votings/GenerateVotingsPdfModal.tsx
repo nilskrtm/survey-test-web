@@ -214,8 +214,8 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
               width: '100%',
               paddingTop: '0.8cm',
               paddingBottom: '0.8cm',
-              paddingLeft: '0.5cm',
-              paddingRight: '0.5cm',
+              paddingLeft: '0.8cm',
+              paddingRight: '0.8cm',
               fontFamily: 'Inter',
               fontWeight: 'normal',
               fontSize: 12
