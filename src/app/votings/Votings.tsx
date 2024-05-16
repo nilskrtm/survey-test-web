@@ -414,9 +414,7 @@ const Votings: () => React.JSX.Element = () => {
 
         {survey && (
           <div className="w-full flex flex-col items-start justify-center rounded-lg bg-white border border-gray-200 gap-2 p-6">
-            <span className="text-xl font-semibold whitespace-nowrap truncate">
-              Darstellung(-en)
-            </span>
+            <span className="text-xl font-semibold whitespace-nowrap truncate">Darstellung</span>
             <div className="w-full flex flex-row flex-wrap justify-start items-center gap-x-4">
               <div className="flex flex-row items-center justify-start gap-2">
                 <input
