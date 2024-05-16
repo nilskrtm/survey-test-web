@@ -2,7 +2,7 @@ import React from 'react';
 import { Survey } from '../../data/types/survey.types';
 import useCollapse from '../../utils/hooks/use.collapse.hook';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,50 +13,20 @@ import {
   Legend
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Bar } from 'react-chartjs-2';
 import { Question } from '../../data/types/question.types';
-import {
-  AbsoluteVotingsData,
-  DaySpanVotingsData,
-  HourSpanVotingsData
-} from '../../app/votings/Votings';
-import moment from 'moment/moment';
-import { BounceLoader } from 'react-spinners';
+import AbsoluteVotingsChart, { AbsoluteVotingsChartData } from './charts/AbsoluteVotingsChart';
+import DaySpanVotingsChart, { DaySpanVotingsChartData } from './charts/DaySpanVotingsChart';
+import HourSpanVotingsChart, { HourSpanVotingsChartData } from './charts/HourSpanVotingsChart';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
-
-type ChartPlaceholderProps = {
-  loading: boolean;
-  error: boolean;
-  height: string;
-};
-
-const ChartPlaceholder: (props: ChartPlaceholderProps) => React.JSX.Element = (props) => {
-  if (!props.loading && !props.error) return <></>;
-
-  return (
-    <div
-      className="w-full flex flex-col items-center justify-center space-y-4"
-      style={{ height: props.height }}>
-      {props.loading ? (
-        <BounceLoader color="rgb(126 34 206)" size={70} />
-      ) : (
-        <>
-          <FontAwesomeIcon icon={faExclamation} size="1x" className="text-3xl text-red-500" />
-          <p className="text-medium font-medium text-gray-700">Abruf der Daten fehlgeschlagen</p>
-        </>
-      )}
-    </div>
-  );
-};
 
 type VotingsQuestionCardProps = {
   survey: Survey;
   question: Question;
   displayOptions: { absolute: boolean; daySpan: boolean; hourSpan: boolean };
-  absoluteVotings: AbsoluteVotingsData;
-  daySpanVotings: DaySpanVotingsData;
-  hourSpanVotings: HourSpanVotingsData;
+  absoluteVotings: AbsoluteVotingsChartData;
+  daySpanVotings: DaySpanVotingsChartData;
+  hourSpanVotings: HourSpanVotingsChartData;
 };
 
 const CHART_HEIGHT = '250px';
@@ -67,42 +37,6 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
   const orderedAnswerOptions = props.question.answerOptions.sort(
     (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
   );
-
-  const absoluteVotingsLabels = orderedAnswerOptions.map((answerOption) => {
-    return answerOption.order;
-  });
-  const absoluteVotingsBackgroundColors = orderedAnswerOptions.map(
-    (answerOption) => answerOption.color
-  );
-  const absoluteVotingsData = orderedAnswerOptions.map((answerOption) => {
-    return props.absoluteVotings.votesByAnswerOption[answerOption._id];
-  });
-
-  const daySpanVotingsDatasets = orderedAnswerOptions.map((answerOption) => {
-    return {
-      label: 'Antwortmöglichkeit ' + answerOption.order,
-      stack: 'stack',
-      backgroundColor: answerOption.color,
-      data: props.daySpanVotings.votesByAnswerOption[answerOption._id],
-      parsing: {
-        xAxisKey: 'date',
-        yAxisKey: 'votes'
-      }
-    };
-  });
-
-  const hourSpanVotingsDatasets = orderedAnswerOptions.map((answerOption) => {
-    return {
-      label: 'Antwortmöglichkeit ' + answerOption.order,
-      stack: 'stack',
-      backgroundColor: answerOption.color,
-      data: props.hourSpanVotings.votesByAnswerOption[answerOption._id],
-      parsing: {
-        xAxisKey: 'hour',
-        yAxisKey: 'votes'
-      }
-    };
-  });
 
   return (
     <div className="w-full flex flex-col items-center justify-center rounded-lg border border-gray-200 py-2">
@@ -150,81 +84,11 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Gesamter Zeitraum
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
-                  <ChartPlaceholder
-                    loading={props.absoluteVotings.loading}
-                    error={props.absoluteVotings.error}
+                  <AbsoluteVotingsChart
+                    absoluteVotings={props.absoluteVotings}
+                    orderedAnswerOptions={orderedAnswerOptions}
                     height={CHART_HEIGHT}
                   />
-                  {!props.absoluteVotings.loading && !props.absoluteVotings.error && (
-                    <Bar
-                      width="100%"
-                      height={CHART_HEIGHT}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        backgroundColor: 'transparent',
-                        plugins: {
-                          legend: { display: false },
-                          tooltip: {
-                            enabled: true,
-                            callbacks: {
-                              title: function (this, item) {
-                                return 'Antwortmöglichkeit ' + (Number(item[0].dataIndex) + 1);
-                              },
-                              label: function (this, item) {
-                                const votes = Number(item.dataset.data[item.dataIndex]);
-
-                                return (
-                                  ' ' +
-                                  votes +
-                                  ' Abstimmung' +
-                                  (votes !== 0 && votes > 1 ? 'en' : '')
-                                );
-                              }
-                            },
-                            position: 'nearest'
-                          },
-                          datalabels: {
-                            color: 'white',
-                            font: {
-                              weight: 'bold'
-                            }
-                          }
-                        },
-                        scales: {
-                          x: {
-                            display: true,
-                            type: 'category',
-                            title: { display: true, color: 'black', text: 'Antwortmöglichkeit' }
-                          },
-                          y: {
-                            beginAtZero: true,
-                            display: true,
-                            type: 'linear',
-                            title: { display: true, color: 'black', text: 'Abstimmungen' },
-                            ticks: {
-                              callback: (val) => {
-                                return !val.toString().includes(',') &&
-                                  !val.toString().includes('.')
-                                  ? val
-                                  : '';
-                              }
-                            }
-                          }
-                        }
-                      }}
-                      data={{
-                        labels: absoluteVotingsLabels,
-                        datasets: [
-                          {
-                            label: 'Abstimmungen',
-                            backgroundColor: absoluteVotingsBackgroundColors,
-                            data: absoluteVotingsData
-                          }
-                        ]
-                      }}
-                    />
-                  )}
                 </div>
               </div>
             )}
@@ -234,106 +98,11 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Zeitraum (Tage)
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
-                  <ChartPlaceholder
-                    loading={props.daySpanVotings.loading}
-                    error={props.daySpanVotings.error}
+                  <DaySpanVotingsChart
+                    daySpanVotings={props.daySpanVotings}
+                    orderedAnswerOptions={orderedAnswerOptions}
                     height={CHART_HEIGHT}
                   />
-                  {!props.daySpanVotings.loading && !props.daySpanVotings.error && (
-                    <Bar
-                      width="100%"
-                      height={CHART_HEIGHT}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        backgroundColor: 'transparent',
-                        plugins: {
-                          legend: { display: false },
-                          tooltip: {
-                            enabled: true,
-                            callbacks: {
-                              title: function (this, item) {
-                                return [
-                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-ignore
-                                  moment(item[0].dataset.data[item[0].dataIndex].date).format(
-                                    'DD.MM.YYYY'
-                                  ),
-                                  'Antwortmöglichkeit ' + (Number(item[0].datasetIndex) + 1)
-                                ];
-                              },
-                              label: function (this, item) {
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                const votes = Number(item.dataset.data[item.dataIndex].votes | 0);
-
-                                return (
-                                  ' ' +
-                                  votes +
-                                  ' Abstimmung' +
-                                  (votes !== 0 && votes > 1 ? 'en' : '')
-                                );
-                              }
-                            },
-                            position: 'nearest'
-                          },
-                          datalabels: {
-                            formatter: function (_value, context) {
-                              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                              // @ts-ignore
-                              const votes = context.dataset.data[context.dataIndex].votes | 0;
-
-                              return votes === 0 ? '' : votes;
-                            },
-                            color: 'white',
-                            font: {
-                              weight: 'bold'
-                            }
-                          }
-                        },
-                        scales: {
-                          x: {
-                            display: true,
-                            type: 'category',
-                            grid: {
-                              offset: true
-                            },
-                            ticks: {
-                              callback: (value, index) => {
-                                const day = props.daySpanVotings.days.at(index);
-
-                                return day ? moment(new Date(day)).format('DD.MM.YYYY') : value;
-                              }
-                            },
-                            title: { display: true, color: 'black', text: 'Tag der Abstimmung' }
-                          },
-                          y: {
-                            display: true,
-                            beginAtZero: true,
-                            type: 'linear',
-                            stacked: true,
-                            ticks: {
-                              callback: (val) => {
-                                return !val.toString().includes(',') &&
-                                  !val.toString().includes('.')
-                                  ? val
-                                  : '';
-                              }
-                            },
-                            title: {
-                              display: true,
-                              color: 'black',
-                              text: 'Abstimmungen je Antwortmöglichkeit'
-                            }
-                          }
-                        }
-                      }}
-                      data={{
-                        labels: props.daySpanVotings.days,
-                        datasets: daySpanVotingsDatasets
-                      }}
-                    />
-                  )}
                 </div>
               </div>
             )}
@@ -343,105 +112,11 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                   Zeitraum (Stunden)
                 </span>
                 <div className="w-full flex flex-row items-center justify-center">
-                  <ChartPlaceholder
-                    loading={props.hourSpanVotings.loading}
-                    error={props.hourSpanVotings.error}
+                  <HourSpanVotingsChart
+                    hourSpanVotings={props.hourSpanVotings}
+                    orderedAnswerOptions={orderedAnswerOptions}
                     height={CHART_HEIGHT}
                   />
-                  {!props.hourSpanVotings.loading && !props.hourSpanVotings.error && (
-                    <Bar
-                      width="100%"
-                      height={CHART_HEIGHT}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        backgroundColor: 'transparent',
-                        plugins: {
-                          legend: { display: false },
-                          tooltip: {
-                            enabled: true,
-                            callbacks: {
-                              title: function (this, item) {
-                                return [
-                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-ignore
-                                  item[0].dataset.data[item[0].dataIndex].hour + ':00 Uhr',
-                                  'Antwortmöglichkeit ' + (Number(item[0].datasetIndex) + 1)
-                                ];
-                              },
-                              label: function (this, item) {
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                const votes = Number(item.dataset.data[item.dataIndex].votes | 0);
-
-                                return (
-                                  ' ' +
-                                  votes +
-                                  ' Abstimmung' +
-                                  (votes !== 0 && votes > 1 ? 'en' : '')
-                                );
-                              }
-                            },
-                            position: 'nearest'
-                          },
-                          datalabels: {
-                            formatter: function (_value, context) {
-                              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                              // @ts-ignore
-                              const votes = context.dataset.data[context.dataIndex].votes | 0;
-
-                              return votes === 0 ? '' : votes;
-                            },
-                            color: 'white',
-                            font: {
-                              weight: 'bold'
-                            }
-                          }
-                        },
-                        scales: {
-                          x: {
-                            display: true,
-                            type: 'category',
-                            grid: {
-                              offset: true
-                            },
-                            ticks: {
-                              align: 'end',
-                              callback: (value, index) => {
-                                const hour = props.hourSpanVotings.hours.at(index);
-
-                                return hour ? hour + ':00 Uhr' : value;
-                              }
-                            },
-                            title: { display: true, color: 'black', text: 'Stunde der Abstimmung' }
-                          },
-                          y: {
-                            display: true,
-                            beginAtZero: true,
-                            type: 'linear',
-                            stacked: true,
-                            ticks: {
-                              callback: (val) => {
-                                return !val.toString().includes(',') &&
-                                  !val.toString().includes('.')
-                                  ? val
-                                  : '';
-                              }
-                            },
-                            title: {
-                              display: true,
-                              color: 'black',
-                              text: 'Abstimmungen je Antwortmöglichkeit'
-                            }
-                          }
-                        }
-                      }}
-                      data={{
-                        labels: props.hourSpanVotings.hours,
-                        datasets: hourSpanVotingsDatasets
-                      }}
-                    />
-                  )}
                 </div>
               </div>
             )}

@@ -11,37 +11,11 @@ import TimePicker from '../../components/layout/time/TimePicker';
 import VotingService from '../../data/services/voting.service';
 import VotingsQuestionCard from '../../components/votings/VotingsQuestionCard';
 import { getUserTimezone } from '../../utils/time/time.util';
-import {
-  DaySpanVotingsResponse,
-  DayVotings,
-  HourSpanVotingsResponse,
-  HourVotings
-} from '../../data/types/voting.types';
+import { DayVotings, HourVotings } from '../../data/types/voting.types';
 import useToasts from '../../utils/hooks/use.toasts.hook';
-
-export type AbsoluteVotingsData = {
-  loading: boolean;
-  error: boolean;
-  votesByAnswerOption: {
-    [answerOptionId: string]: number;
-  };
-};
-
-export type DaySpanVotingsData = Pick<DaySpanVotingsResponse, 'days'> & {
-  loading: boolean;
-  error: boolean;
-  votesByAnswerOption: {
-    [answerOptionId: string]: Array<DayVotings>;
-  };
-};
-
-export type HourSpanVotingsData = Pick<HourSpanVotingsResponse, 'hours'> & {
-  loading: boolean;
-  error: boolean;
-  votesByAnswerOption: {
-    [answerOptionId: string]: Array<HourVotings>;
-  };
-};
+import { AbsoluteVotingsChartData } from '../../components/votings/charts/AbsoluteVotingsChart';
+import { HourSpanVotingsChartData } from '../../components/votings/charts/HourSpanVotingsChart';
+import { DaySpanVotingsChartData } from '../../components/votings/charts/DaySpanVotingsChart';
 
 const Votings: () => React.JSX.Element = () => {
   useDashboardTitle('Auswertung');
@@ -98,19 +72,19 @@ const Votings: () => React.JSX.Element = () => {
     endDate: new Date().toISOString()
   });
 
-  const [absoluteVotings, setAbsoluteVotings] = useState<AbsoluteVotingsData>({
+  const [absoluteVotings, setAbsoluteVotings] = useState<AbsoluteVotingsChartData>({
     loading: false,
     error: false,
     votesByAnswerOption: {}
   });
-  const [daySpanVotings, setDaySpanVotings] = useState<DaySpanVotingsData>({
+  const [daySpanVotings, setDaySpanVotings] = useState<DaySpanVotingsChartData>({
     loading: false,
     error: false,
     votesByAnswerOption: {},
     days: []
   });
 
-  const [hourSpanVotings, setHourSpanVotings] = useState<HourSpanVotingsData>({
+  const [hourSpanVotings, setHourSpanVotings] = useState<HourSpanVotingsChartData>({
     loading: false,
     error: false,
     votesByAnswerOption: {},
