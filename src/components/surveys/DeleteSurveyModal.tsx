@@ -96,14 +96,18 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
       title="Umfrage löschen"
       visible={visible}>
       <div className="w-full flex flex-col">
-        <span className="text-base text-red-500 font-normal">
+        <span className="text-base text-black font-normal">
           Mit dem Löschen der Umfrage werden alle Daten zu dieser, inklusive aller bereits
           gespeicherten Abstimmungen gelöscht.
-          <br />
-          Dieser Vorgang kann nicht rückgängig gemacht werden.
-          <br />
+        </span>
+        <span className="text-base text-black font-normal">
           Die genutzten Antwort-Bilder bleiben erhalten.
         </span>
+        <br />
+        <span className="text-base text-red-500 font-normal">
+          Dieser Vorgang kann nicht rückgängig gemacht werden.
+        </span>
+        <br />
         <span className="text-base font-normal mt-4">
           Anzahl der Abstimmungen der Umfrage:{' '}
           <span
@@ -111,7 +115,7 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
               votingCount === -1
                 ? 'loading-dots'
                 : votingCount === 0
-                  ? 'font-semibold'
+                  ? 'font-semibold text-green-500'
                   : 'font-semibold text-red-500'
             }>
             {votingCount === -1 ? '' : votingCount}
