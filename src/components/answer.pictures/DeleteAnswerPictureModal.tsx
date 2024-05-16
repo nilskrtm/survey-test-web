@@ -96,11 +96,11 @@ const DeleteAnswerPictureModal: ForwardRefRenderFunction<
       onRequestClose={onClose}
       title="Bild löschen"
       visible={visible}>
-      <div className="w-full flex flex-col">
-        <span className="text-base font-normal">
+      <div className="w-full flex flex-col items-start justify-center">
+        <span className="text-base text-black font-normal">
           Das Bild kann nur gelöscht werden, wenn es derzeit in keiner Umfrage genutzt wird.
         </span>
-        <span className="text-base font-semibold mt-2">
+        <span className="text-base text-red-500 font-semibold mt-2">
           {isUsed
             ? 'Das Bild kann nicht gelöscht werden, da es derzeit in einer Umfrage genutzt wird.'
             : 'Das Bild kann gelöscht werden.'}

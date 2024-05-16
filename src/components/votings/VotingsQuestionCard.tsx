@@ -17,13 +17,14 @@ import { Question } from '../../data/types/question.types';
 import AbsoluteVotingsChart, { AbsoluteVotingsChartData } from './charts/AbsoluteVotingsChart';
 import DaySpanVotingsChart, { DaySpanVotingsChartData } from './charts/DaySpanVotingsChart';
 import HourSpanVotingsChart, { HourSpanVotingsChartData } from './charts/HourSpanVotingsChart';
+import { VotingsDisplayOptions } from '../../app/votings/Votings';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 type VotingsQuestionCardProps = {
   survey: Survey;
   question: Question;
-  displayOptions: { absolute: boolean; daySpan: boolean; hourSpan: boolean };
+  displayOptions: VotingsDisplayOptions;
   absoluteVotings: AbsoluteVotingsChartData;
   daySpanVotings: DaySpanVotingsChartData;
   hourSpanVotings: HourSpanVotingsChartData;
@@ -48,7 +49,7 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
           <span className="text-xl font-medium text-purple-700">{props.question.order}</span>
         </div>
         <div className="flex-grow flex flex-col items-start justify-center">
-          <span className="text-lg font-medium">{props.question.question}</span>
+          <span className="w-full text-lg font-medium text-left">{props.question.question}</span>
         </div>
         <div className="w-10 h-full flex flex-col items-center justify-center px-6">
           {!collapsed ? (
@@ -83,11 +84,13 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                 <span className="w-full text-center text-lg text-black font-medium">
                   Gesamter Zeitraum
                 </span>
-                <div className="w-full flex flex-row items-center justify-center">
+                <div
+                  className="w-full flex flex-row items-center justify-center"
+                  style={{ height: CHART_HEIGHT }}>
                   <AbsoluteVotingsChart
                     absoluteVotings={props.absoluteVotings}
                     orderedAnswerOptions={orderedAnswerOptions}
-                    height={CHART_HEIGHT}
+                    placeHolderHeight={CHART_HEIGHT}
                   />
                 </div>
               </div>
@@ -97,11 +100,13 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                 <span className="w-full text-center text-lg text-black font-medium">
                   Zeitraum (Tage)
                 </span>
-                <div className="w-full flex flex-row items-center justify-center">
+                <div
+                  className="w-full flex flex-row items-center justify-center"
+                  style={{ height: CHART_HEIGHT }}>
                   <DaySpanVotingsChart
                     daySpanVotings={props.daySpanVotings}
                     orderedAnswerOptions={orderedAnswerOptions}
-                    height={CHART_HEIGHT}
+                    placeHolderHeight={CHART_HEIGHT}
                   />
                 </div>
               </div>
@@ -111,11 +116,13 @@ const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Elemen
                 <span className="w-full text-center text-lg text-black font-medium">
                   Zeitraum (Stunden)
                 </span>
-                <div className="w-full flex flex-row items-center justify-center">
+                <div
+                  className="w-full flex flex-row items-center justify-center"
+                  style={{ height: CHART_HEIGHT }}>
                   <HourSpanVotingsChart
                     hourSpanVotings={props.hourSpanVotings}
                     orderedAnswerOptions={orderedAnswerOptions}
-                    height={CHART_HEIGHT}
+                    placeHolderHeight={CHART_HEIGHT}
                   />
                 </div>
               </div>

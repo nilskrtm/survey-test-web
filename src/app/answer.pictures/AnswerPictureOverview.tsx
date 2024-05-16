@@ -167,7 +167,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
             <div className="w-[calc(100%-56px)]">
               <div className="w-full inline-block">
                 <ContentEditable
-                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
                     !loader.loading && !isUsed && !updating
                       ? 'hover:ring-gray-200 hover:ring-1'
                       : ''
@@ -215,7 +215,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center rounded-lg gap-2 bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Bild</span>
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">Bild</span>
           <div className="w-full max-h-56 flex flex-row items-center justify-start">
             {answerPicture?.fileName && 'url' in answerPicture ? (
               <img
@@ -230,7 +230,7 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
               <span className="text-lg font-normal text-red-500">Noch kein Bild</span>
             )}
           </div>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Das Bild kann nur geändert werden, wenn es derzeit in keiner Umfrage genutzt wird.
           </span>
           <button
@@ -266,8 +266,10 @@ const AnswerPictureOverview: () => React.JSX.Element = () => {
           </button>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Löschen
+          </span>
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Das Bild kann nur gelöscht werden, wenn es derzeit in keiner Umfrage genutzt wird.
           </span>
           <button

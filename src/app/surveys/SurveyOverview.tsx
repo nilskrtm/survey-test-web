@@ -336,7 +336,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
             <div className="w-[calc(100%-56px)]">
               <div className="w-full inline-block">
                 <ContentEditable
-                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
+                  className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-2xl text-black font-semibold whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
                     !loader.loading && updatedSurvey.draft && !updating
                       ? 'hover:ring-gray-200 hover:ring-1'
                       : ''
@@ -438,10 +438,14 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Zeitraum</span>
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Zeitraum
+          </span>
           <div className="w-full flex flex-col lg:flex-row gap-x-2">
             <div className="w-full lg:w-fit flex flex-row items-center justify-start">
-              <span className="text-lg font-semibold whitespace-nowrap truncate">Start:&nbsp;</span>
+              <span className="text-lg text-black font-semibold whitespace-nowrap truncate">
+                Start:&nbsp;
+              </span>
               <div className="relative flex flex-col">
                 <span
                   onClick={() => {
@@ -484,7 +488,9 @@ const SurveyOverview: () => React.JSX.Element = () => {
               </div>
             </div>
             <div className="w-full lg:w-fit flex flex-crow items-center justify-start">
-              <span className="text-lg font-semibold whitespace-nowrap truncate">Ende:&nbsp;</span>
+              <span className="text-lg text-black font-semibold whitespace-nowrap truncate">
+                Ende:&nbsp;
+              </span>
               <div className="relative flex flex-col">
                 <span
                   onClick={() => {
@@ -529,7 +535,9 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Begrüßung</span>
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Begrüßung
+          </span>
           <div className="w-full inline-block">
             <ContentEditable
               className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
@@ -571,14 +579,16 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </div>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Fragen</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Fragen
+          </span>
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             {updatedSurvey.draft
               ? 'Doppelklick auf eine Frage um diese zu Bearbeiten.'
               : 'Doppelklick auf eine Frage um Details zu sehen.'}
           </span>
           {survey?.questions.length === 0 && (
-            <span className="text-base font-normal text-red-500">Noch keine Fragen</span>
+            <span className="text-base text-red-500 font-normal">Noch keine Fragen</span>
           )}
           <div className="w-full flex flex-col items-center justify-center gap-2 overflow-y-hidden">
             {updatedSurvey.questions
@@ -604,8 +614,8 @@ const SurveyOverview: () => React.JSX.Element = () => {
                       <span className="text-3xl font-medium text-purple-700">{question.order}</span>
                     </div>
                     <div className="flex-grow flex flex-col items-start justify-center gap-2">
-                      <span className="text-lg font-medium">{question.question}</span>
-                      <span className="text-base">
+                      <span className="text-lg text-black font-medium">{question.question}</span>
+                      <span className="text-base text-black">
                         {question.answerOptions.length} Antwortmöglichkeit
                         {question.answerOptions.length !== 1 ? 'en' : ''}
                       </span>
@@ -664,8 +674,10 @@ const SurveyOverview: () => React.JSX.Element = () => {
           )}
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Finalisierung</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Finalisierung
+          </span>
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Nach dem Finalisieren der Umfrage können an dieser keine Änderungen mehr vorgenommen
             werden.
           </span>
@@ -686,8 +698,10 @@ const SurveyOverview: () => React.JSX.Element = () => {
           )}
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Archivieren</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Archivieren
+          </span>
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             {survey?.archived
               ? 'Die Umfrage ist bereits archiviert.'
               : 'Die Umfrage als archiviert markieren.'}
@@ -704,8 +718,10 @@ const SurveyOverview: () => React.JSX.Element = () => {
           </button>
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
-          <span className="text-xl font-semibold whitespace-nowrap truncate">Löschen</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-xl text-black font-semibold whitespace-nowrap truncate">
+            Löschen
+          </span>
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Mit dem Löschen der Umfrage werden alle Daten zu dieser, inklusive aller bereits
             gespeicherten Abstimmungen gelöscht. Dieser Vorgang kann nicht rückgängig gemacht
             werden.

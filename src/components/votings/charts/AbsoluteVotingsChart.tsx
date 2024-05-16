@@ -4,6 +4,7 @@ import { AnswerOption } from '../../../data/types/answer.option.types';
 import {
   BarElement,
   CategoryScale,
+  type Chart,
   Chart as ChartJS,
   Legend,
   LinearScale,
@@ -24,9 +25,10 @@ export type AbsoluteVotingsChartData = {
 };
 
 type AbsoluteVotingsChartProps = {
+  renderCallback?: (chart: Chart<'bar', (number | [number, number] | null)[], unknown>) => void;
   absoluteVotings: AbsoluteVotingsChartData;
   orderedAnswerOptions: Array<AnswerOption>;
-  height: string;
+  placeHolderHeight: string;
 };
 
 const AbsoluteVotingsChart: (props: AbsoluteVotingsChartProps) => React.JSX.Element = (props) => {
@@ -37,7 +39,7 @@ const AbsoluteVotingsChart: (props: AbsoluteVotingsChartProps) => React.JSX.Elem
       <ChartPlaceholder
         loading={props.absoluteVotings.loading}
         error={props.absoluteVotings.error}
-        height={props.height}
+        height={props.placeHolderHeight}
       />
     );
   }
@@ -52,8 +54,16 @@ const AbsoluteVotingsChart: (props: AbsoluteVotingsChartProps) => React.JSX.Elem
 
   return (
     <Bar
-      width="100%"
-      height={props.height}
+      plugins={[
+        {
+          id: 'canvasCallback',
+          afterRender: (chart) => {
+            if (props.renderCallback) {
+              props.renderCallback(chart);
+            }
+          }
+        }
+      ]}
       options={{
         responsive: true,
         maintainAspectRatio: false,
@@ -91,10 +101,25 @@ const AbsoluteVotingsChart: (props: AbsoluteVotingsChartProps) => React.JSX.Elem
             beginAtZero: true,
             display: true,
             type: 'linear',
+            position: 'left',
             title: { display: true, color: 'black', text: 'Abstimmungen' },
             ticks: {
               callback: (val) => {
                 return !val.toString().includes(',') && !val.toString().includes('.') ? val : '';
+              }
+            }
+          },
+          yFake: {
+            display: true,
+            type: 'linear',
+            position: 'right',
+            grid: {
+              drawOnChartArea: false
+            },
+            title: { display: true, color: 'black', text: 'Abstimmungen' },
+            ticks: {
+              callback: () => {
+                return '';
               }
             }
           }

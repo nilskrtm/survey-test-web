@@ -4,6 +4,7 @@ import { AnswerOption } from '../../../data/types/answer.option.types';
 import {
   BarElement,
   CategoryScale,
+  type Chart,
   Chart as ChartJS,
   Legend,
   LinearScale,
@@ -25,9 +26,10 @@ export type HourSpanVotingsChartData = Pick<HourSpanVotingsResponse, 'hours'> & 
 };
 
 type HourSpanVotingsChartProps = {
+  renderCallback?: (chart: Chart<'bar', (number | [number, number] | null)[], unknown>) => void;
   hourSpanVotings: HourSpanVotingsChartData;
   orderedAnswerOptions: Array<AnswerOption>;
-  height: string;
+  placeHolderHeight: string;
 };
 
 const HourSpanVotingsChart: (props: HourSpanVotingsChartProps) => React.JSX.Element = (props) => {
@@ -38,7 +40,7 @@ const HourSpanVotingsChart: (props: HourSpanVotingsChartProps) => React.JSX.Elem
       <ChartPlaceholder
         loading={votingsData.loading}
         error={votingsData.error}
-        height={props.height}
+        height={props.placeHolderHeight}
       />
     );
   }
@@ -59,8 +61,16 @@ const HourSpanVotingsChart: (props: HourSpanVotingsChartProps) => React.JSX.Elem
 
   return (
     <Bar
-      width="100%"
-      height={props.height}
+      plugins={[
+        {
+          id: 'canvasCallback',
+          afterRender: (chart) => {
+            if (props.renderCallback) {
+              props.renderCallback(chart);
+            }
+          }
+        }
+      ]}
       options={{
         responsive: true,
         maintainAspectRatio: false,
@@ -123,6 +133,7 @@ const HourSpanVotingsChart: (props: HourSpanVotingsChartProps) => React.JSX.Elem
             display: true,
             beginAtZero: true,
             type: 'linear',
+            position: 'left',
             stacked: true,
             ticks: {
               callback: (val) => {
@@ -134,6 +145,21 @@ const HourSpanVotingsChart: (props: HourSpanVotingsChartProps) => React.JSX.Elem
               color: 'black',
               text: 'Abstimmungen je Antwortmöglichkeit'
             }
+          },
+          yFake: {
+            display: true,
+            beginAtZero: true,
+            type: 'linear',
+            position: 'right',
+            grid: {
+              drawOnChartArea: false
+            },
+            ticks: {
+              callback: () => {
+                return '';
+              }
+            },
+            title: { display: true, color: 'black', text: 'Abstimmungen je Antwortmöglichkeit' }
           }
         }
       }}
