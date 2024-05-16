@@ -100,11 +100,16 @@ const DeleteAnswerPictureModal: ForwardRefRenderFunction<
         <span className="text-base text-black font-normal">
           Das Bild kann nur gelöscht werden, wenn es derzeit in keiner Umfrage genutzt wird.
         </span>
-        <span className="text-base text-red-500 font-semibold mt-2">
-          {isUsed
-            ? 'Das Bild kann nicht gelöscht werden, da es derzeit in einer Umfrage genutzt wird.'
-            : 'Das Bild kann gelöscht werden.'}
-        </span>
+        <br />
+        {isUsed ? (
+          <span className="text-base text-red-500 font-semibold mt-2">
+            Das Bild kann nicht gelöscht werden, da es derzeit in einer Umfrage genutzt wird.
+          </span>
+        ) : (
+          <span className="text-base text-green-500 font-semibold mt-2">
+            Das Bild kann gelöscht werden.
+          </span>
+        )}
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className="px-3 py-[8px] rounded-md text-base text-white font-medium bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed"
