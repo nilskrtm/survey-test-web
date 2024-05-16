@@ -119,10 +119,26 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
           paddingLeft: '0.5cm',
           paddingRight: '0.5cm',
           fontFamily: 'Inter',
-          fontWeight: 'normal'
+          fontWeight: 'normal',
+          fontSize: 12
         }}
         id="cover"
-        wrap={true}></Page>
+        wrap={true}>
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+          <Text style={{ fontSize: 22, fontWeight: 'semibold' }}>Auswertung der Umfrage</Text>
+          <Text style={{ marginTop: '5mm', fontSize: 22, fontWeight: 'normal' }}>
+            {props.survey.name}
+          </Text>
+        </View>
+      </Page>
     );
   };
 
@@ -144,9 +160,9 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
               color: 'rgb(126 34 206)',
               paddingHorizontal: '2mm'
             }}>
-            {props.question.order}.
+            {props.question.order}. Frage
           </Text>
-          <Text style={{ flex: 1, fontWeight: 'normal' }}>{props.question.question}</Text>
+          <Text style={{ flex: 1, fontWeight: 'semibold' }}>{props.question.question}</Text>
         </View>
         <View
           style={{
@@ -160,7 +176,9 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
     );
   };
 
-  const PdfFooter: (props: { survey: Survey }) => React.JSX.Element = (props) => {
+  const PdfFooter: (props: { survey: Survey; question: Question }) => React.JSX.Element = (
+    props
+  ) => {
     return (
       <View style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         <View
@@ -177,7 +195,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
             gap: '1mm'
           }}>
           <Text
@@ -187,7 +205,14 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
             }}>
             Umfrage:
           </Text>
-          <Text style={{ flex: 1, fontWeight: 'normal' }}>{props.survey.name}</Text>
+          <Text style={{ flex: 1, fontWeight: 'semibold' }}>{props.survey.name}</Text>
+          <Text
+            style={{
+              fontWeight: 'normal',
+              color: 'black'
+            }}>
+            Seite {props.question.order + 1}/{props.survey.questions.length + 1}
+          </Text>
         </View>
       </View>
     );
@@ -239,7 +264,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
                   style={{
                     width: '100%',
                     textAlign: 'center',
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: 'normal'
                   }}>
                   {props.displayOptions.absolute
@@ -258,7 +283,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
                 )}
               </View>
             </View>
-            <PdfFooter survey={props.survey} />
+            <PdfFooter survey={props.survey} question={question} />
           </Page>
         );
       })}
