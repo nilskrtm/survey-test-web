@@ -316,7 +316,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
         props.displayOptions.absolute &&
         !props.absoluteVotings.loading &&
         !props.absoluteVotings.error && (
-          <div className="absolute top-0 left-0 w-[10000px] h-[20000px] z-[-1]">
+          <div className="absolute top-0 left-0 w-[1px] h-[2px] z-[-1] overflow-hidden">
             {orderedQuestions.map((question) => {
               const orderedAnswerOptions = question.answerOptions.sort(
                 (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
@@ -346,7 +346,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
         props.displayOptions.daySpan &&
         !props.daySpanVotings.loading &&
         !props.daySpanVotings.error && (
-          <div className="absolute top-0 left-0 w-[10000px] h-[20000px] z-[-1]">
+          <div className="absolute top-0 left-0 w-[1px] h-[2px] z-[-1] overflow-hidden">
             {orderedQuestions.map((question) => {
               const orderedAnswerOptions = question.answerOptions.sort(
                 (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
@@ -376,7 +376,7 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
         props.displayOptions.hourSpan &&
         !props.hourSpanVotings.loading &&
         !props.hourSpanVotings.error && (
-          <div className="absolute top-0 left-0 w-[10000px] h-[20000px] z-[-1]">
+          <div className="absolute top-0 left-0 w-[1px] h-[2px] z-[-1] overflow-hidden">
             {orderedQuestions.map((question) => {
               const orderedAnswerOptions = question.answerOptions.sort(
                 (answerOptionA, answerOptionB) => answerOptionA.order - answerOptionB.order
