@@ -284,7 +284,7 @@ const Settings: () => React.JSX.Element = () => {
         </div>
         <div className="w-full flex flex-col items-start justify-center gap-2 rounded-lg bg-white border border-gray-200 p-6">
           <span className="text-xl font-semibold whitespace-nowrap truncate">Passwort</span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Eine Änderung Ihres Passwortes hat keinen Einfluss auf die Authentifizierung ihrer
             Geräte mit dem Server. Dafür ist der extra Zugangsschlüssel verantwortlich.
           </span>
@@ -299,7 +299,7 @@ const Settings: () => React.JSX.Element = () => {
           <span className="text-xl font-semibold whitespace-nowrap truncate">
             App-Zugangsschlüssel
           </span>
-          <span className="text-base italic whitespace-break-spaces text-ellipsis">
+          <span className="text-base text-black font-normal whitespace-break-spaces text-ellipsis">
             Durch das Neu-Generieren des Zugangsschlüssels wird es nötig, diesen ebenfalls in den
             Einstellungen in Ihren Geräten anzupassen.
           </span>

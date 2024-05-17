@@ -243,6 +243,7 @@ const AnswerOptionPictureModal: ForwardRefRenderFunction<
                     onClick={() => {
                       setUpdateAnswerOption({ ...updateAnswerOption, picture: answerPicture });
                     }}
+                    title={answerPicture.name}
                     className={`w-full h-32 flex items-center justify-center rounded-lg bg-white disabled:cursor-not-allowed ${updateAnswerOption?.picture?._id === answerPicture._id ? 'border-2 border-purple-700' : 'border border-gray-200 hover:ring-1 hover:ring-purple-500'}`}>
                     {answerPicture.fileName && answerPicture.fileName in answerPictureUrls ? (
                       <img

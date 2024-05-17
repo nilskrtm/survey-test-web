@@ -46,7 +46,7 @@ const GenerateAccessKeyModal: ForwardRefRenderFunction<
           Geräte welche noch den alten Zugangsschlüssel hinterlegt haben Daten mit dem Server
           synchronisieren können.
         </span>
-        <div className="flex flex-row items-center justify-end mt-4">
+        <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className="px-3 py-[8px] rounded-md text-base text-white font-medium bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
             onClick={() => {

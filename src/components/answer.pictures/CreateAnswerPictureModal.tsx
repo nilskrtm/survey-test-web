@@ -47,6 +47,7 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
         if (!visible) {
           setVisible(true);
           setCreating(false);
+          setAnswerPictureName('');
           setAnswerPictureFile(undefined);
           setAnswerPictureNameErrorMessage('');
           setAnswerPictureFileErrorMessage('');
@@ -60,6 +61,7 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
     if (visible && !creating) {
       setVisible(false);
       setCreating(false);
+      setAnswerPictureName('');
       setAnswerPictureFile(undefined);
       setAnswerPictureNameErrorMessage('');
       setAnswerPictureFileErrorMessage('');
@@ -71,10 +73,16 @@ const CreateAnswerPictureModal: ForwardRefRenderFunction<
     setAnswerPictureNameErrorMessage('');
     setAnswerPictureFileErrorMessage('');
 
-    AnswerPictureService.createAnswerPicture({
-      name: answerPictureName.trim(),
-      file: answerPictureFile as File
-    })
+    AnswerPictureService.createAnswerPicture(
+      answerPictureName && answerPictureName.trim()
+        ? {
+            name: answerPictureName.trim(),
+            file: answerPictureFile as File
+          }
+        : {
+            file: answerPictureFile as File
+          }
+    )
       .then((response) => {
         if (response.success) {
           const answerPictureId = response.data.id;

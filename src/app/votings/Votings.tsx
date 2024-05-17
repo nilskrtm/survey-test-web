@@ -39,6 +39,7 @@ const Votings: () => React.JSX.Element = () => {
 
   const [surveys, setSurveys] = useState<Array<Survey>>([]);
   const [survey, setSurvey] = useState<Survey>();
+  const [surveyVoteCount, setSurveyVoteCount] = useState<number>(0);
 
   const [displayOptions, setDisplayOptions] = useState<VotingsDisplayOptions>({
     absolute: false,
@@ -112,7 +113,7 @@ const Votings: () => React.JSX.Element = () => {
 
   const loadSurveys: (keyword?: string) => void = (keyword) => {
     SurveyService.getSurveys(1, 10, {
-      keyword: keyword || searchText,
+      keyword: keyword !== undefined ? keyword : searchText,
       draft: false
     }).then((response) => {
       if (response.success) {
@@ -262,6 +263,21 @@ const Votings: () => React.JSX.Element = () => {
   }, []);
 
   useEffect(() => {
+    if (survey) {
+      VotingService.getVotingCount(survey._id).then((response) => {
+        if (response.success) {
+          setSurveyVoteCount(response.data.count);
+        } else {
+          setSurveyVoteCount(-1);
+        }
+      });
+      //
+    } else {
+      setSurveyVoteCount(0);
+    }
+  }, [survey]);
+
+  useEffect(() => {
     if (displayOptions.absolute) {
       loadAbsoluteVotings();
     }
@@ -402,12 +418,22 @@ const Votings: () => React.JSX.Element = () => {
               )}
             </div>
             {survey && (
-              <span className="text-lg text-black font-normal whitespace-break-spaces mt-2">
-                <span className="font-semibold">Von: </span>
-                {moment(survey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
-                <span className="font-semibold ml-4">Bis: </span>
-                {moment(survey.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
-              </span>
+              <>
+                <div className="w-full flex flex-col items-start justify-center mt-2">
+                  <span className="text-lg text-black font-normal whitespace-break-spaces">
+                    <span className="font-semibold">Von: </span>
+                    {moment(survey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+                    <span className="font-semibold ml-4">Bis: </span>
+                    {moment(survey.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
+                  </span>
+                </div>
+                <div className="w-full flex flex-col items-start justify-center">
+                  <span className="text-lg text-black font-normal whitespace-break-spaces">
+                    <span className="font-semibold">Abstimmungen: </span>
+                    {surveyVoteCount >= 0 ? surveyVoteCount : '?'}
+                  </span>
+                </div>
+              </>
             )}
           </div>
         </div>

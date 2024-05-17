@@ -220,7 +220,10 @@ const SurveyList: () => React.JSX.Element = () => {
                     onClick={() => {
                       const current = filterOptions.draft;
 
-                      updateQuery('draft', current === undefined ? 'false' : current ? 'true' : '');
+                      updateQuery(
+                        'draft',
+                        current === undefined ? 'false' : !current ? 'true' : ''
+                      );
                     }}
                     className={`form-checkbox pr-2 rounded-md border-gray-300 checked:!accent-purple-800 checked:!bg-purple-800 focus:ring-1 focus:ring-purple-800 ${
                       filterOptions.draft === true ? '!bg-input-crossed' : ''
@@ -231,7 +234,10 @@ const SurveyList: () => React.JSX.Element = () => {
                     onClick={() => {
                       const current = filterOptions.draft;
 
-                      updateQuery('draft', current === undefined ? 'false' : current ? 'true' : '');
+                      updateQuery(
+                        'draft',
+                        current === undefined ? 'false' : !current ? 'true' : ''
+                      );
                     }}>
                     Bereit
                   </p>

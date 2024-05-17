@@ -362,7 +362,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             height={1}
             loading={updating && updatingValues.includes('question')}
           />
-          <span className="py-2 text-lg font-medium">Timeout (in Sekunden)</span>
+          <span className="py-2 text-lg font-medium">Zeitbegrenzung (in Sekunden)</span>
           <ContentEditable
             className={`max-w-full rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-none text-lg text-black font-normal whitespace-pre-wrap truncate overflow-hidden after:px-2 ${
               props.survey.draft && !updating ? 'hover:ring-gray-200 hover:ring-1' : ''

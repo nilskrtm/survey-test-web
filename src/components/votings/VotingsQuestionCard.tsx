@@ -30,7 +30,7 @@ type VotingsQuestionCardProps = {
   hourSpanVotings: HourSpanVotingsChartData;
 };
 
-const CHART_HEIGHT = '250px';
+const CHART_HEIGHT = '300px';
 
 const VotingsQuestionCard: (props: VotingsQuestionCardProps) => React.JSX.Element = (props) => {
   const [collapsed, collapser] = useCollapse(true);
