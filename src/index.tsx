@@ -58,7 +58,7 @@ root.render(
           <Route path="/reset-password" element={passwordResetRoute} />
           <Route path="/logout" element={logoutRoute} />
           <Route path="/users" element={protectRoute(userListRoute, true)} />
-          <Route path="/users/:userId" element={protectRoute(userOverviewRoute, false)} />
+          <Route path="/users/:userId" element={protectRoute(userOverviewRoute, true)} />
           <Route path="/dashboard" element={protectRoute(dashboardRoute, false)} />
           <Route path="/surveys" element={protectRoute(surveyListRoute, false)} />
           <Route path="/surveys/:surveyId" element={protectRoute(surveyOverviewRoute, false)} />
