@@ -76,7 +76,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-orange-200"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.pictureCount}
-        text="Bilder für Anworten"
+        text="Bilder"
       />
       {permissionLevel === PermissionLevel.ADMIN && metrics.userCount && (
         <DashboardMetricBox
