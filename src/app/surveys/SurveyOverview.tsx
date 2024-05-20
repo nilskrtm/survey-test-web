@@ -465,7 +465,7 @@ const SurveyOverview: () => React.JSX.Element = () => {
                   } ${
                     updatedSurvey.draft &&
                     new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
-                      ? '!text-red-500'
+                      ? '!text-orange-500'
                       : ''
                   }`}>
                   {moment(updatedSurvey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}

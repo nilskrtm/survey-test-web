@@ -11,7 +11,6 @@ import { APIError } from '../../data/types/common.types';
 import SurveyService from '../../data/services/survey.service';
 import useToasts from '../../utils/hooks/use.toasts.hook';
 import { isSurveyFinalizeable } from '../../utils/surveys/surveys.util';
-import moment from 'moment/moment';
 
 type FinalizeSurveyModalProps = {
   survey: Survey;
@@ -109,12 +108,8 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
               </span>
             </span>
           ) : (
-            <span className="text-base text-green-500 font-normal">
-              Die Umfrage kann bis zu dem{' '}
-              <span className="font-medium">
-                {moment(props.survey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr'}
-              </span>{' '}
-              finalisiert werden.
+            <span className="text-base text-green-500 font-semibold">
+              Die Umfrage kann finalisiert werden.
             </span>
           )}
         </div>
