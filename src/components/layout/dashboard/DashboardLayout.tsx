@@ -129,7 +129,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   <DashboardNavigationEntry
                     icon={faUserGroup}
                     matchPathPattern={['/users', '/users/:userId']}
-                    name="Nutzerverwaltung"
+                    name="Nutzer"
                     path="/users"
                     type={DashboardNavigationEntryType.MOBILE}
                   />
@@ -192,7 +192,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
                   <DashboardNavigationEntry
                     icon={faUserGroup}
                     matchPathPattern={['/users', '/users/:userId']}
-                    name="Nutzerverwaltung"
+                    name="Nutzer"
                     path="/users"
                     type={DashboardNavigationEntryType.DESKTOP}
                   />
