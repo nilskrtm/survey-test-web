@@ -370,10 +370,22 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
             disabled={!props.survey.draft || updating}
             html={updatedQuestion.timeout.toString()}
             onBlur={(event) => {
-              updateQuestion({ timeout: parseInt(event.target.innerHTML.trim() || '0') });
+              let newTimeout = parseInt(event.target.innerHTML.trim() || '0');
+
+              if (isNaN(newTimeout)) {
+                newTimeout = 0;
+              }
+
+              updateQuestion({ timeout: newTimeout });
             }}
             onChange={(event) => {
-              updateQuestionInternal({ timeout: parseInt(event.target.value.trim() || '0') });
+              let newTimeout = parseInt(event.target.value.trim() || '0');
+
+              if (isNaN(newTimeout)) {
+                newTimeout = 0;
+              }
+
+              updateQuestionInternal({ timeout: newTimeout });
             }}
             onClick={() => {
               if (questionTimeoutRef.current != document.activeElement) {
@@ -446,7 +458,7 @@ const QuestionModal: ForwardRefRenderFunction<QuestionModalRefAttributes, Questi
                       )}
                     </div>
                     {props.survey.draft && (
-                      <div className="h-12 flex flex-row items-center justify-evenly gap-1 px-1">
+                      <div className="h-12 flex flex-col items-center justify-center md:flex-row md:justify-evenly gap-1 px-1 max-sm:pr-3">
                         <button
                           className="flex items-center justify-center rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-600 px-1 py-2 disabled:cursor-not-allowed"
                           disabled={updating || !props.survey.draft}
