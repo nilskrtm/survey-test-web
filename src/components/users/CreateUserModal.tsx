@@ -257,6 +257,9 @@ const CreateUserModal: ForwardRefRenderFunction<
             </span>
           )}
         </div>
+        {errorMessage && (
+          <span className="p-1 pt-2 text-sm text-red-500 font-medium">{errorMessage}</span>
+        )}
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className="px-3 py-[8px] rounded-md text-base text-white font-medium bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:loading-button"
