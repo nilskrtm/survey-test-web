@@ -455,6 +455,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
                       }
                     }
                   }}
+                  title={
+                    updatedSurvey.draft &&
+                    new Date(updatedSurvey.startDate).getTime() + 60000 < new Date().getTime()
+                      ? 'Das Startdatum liegt in der Vergangenheit.'
+                      : undefined
+                  }
                   ref={surveyStartDateRef}
                   className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
                     editingSurveyDate === 'startDate' ? '!ring-2 !ring-black' : ''
@@ -500,6 +506,12 @@ const SurveyOverview: () => React.JSX.Element = () => {
                       }
                     }
                   }}
+                  title={
+                    updatedSurvey.draft &&
+                    new Date(updatedSurvey.endDate).getTime() < new Date().getTime()
+                      ? 'Das Enddatum muss in der Zukunft liegen.'
+                      : undefined
+                  }
                   ref={surveyEndDateRef}
                   className={`rounded-md text-lg text-black font-normal whitespace-nowrap truncate after:px-2 ${
                     editingSurveyDate === 'endDate' ? '!ring-2 !ring-black' : ''
