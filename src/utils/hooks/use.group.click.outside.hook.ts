@@ -6,19 +6,13 @@ const useGroupClickOutside: (refs: RefObject<HTMLElement>[], callback: () => voi
 ) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target instanceof Node)) return;
-
-      let found = 0;
-
-      for (const ref of refs) {
-        if (ref.current && ref.current.contains(event.target)) {
-          found++;
-        }
-      }
-
-      if (found === 0) {
+      if (
+        event.target instanceof Node &&
+        !refs.some((ref) => {
+          return ref.current && ref.current.contains(event.target as Node);
+        })
+      )
         callback();
-      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
