@@ -104,7 +104,7 @@ const DeleteSurveyModal: ForwardRefRenderFunction<
           Die genutzten Antwort-Bilder bleiben erhalten.
         </span>
         <br />
-        <span className="text-base text-red-500 font-normal">
+        <span className="text-base text-red-500 font-semibold">
           Dieser Vorgang kann nicht rückgängig gemacht werden.
         </span>
         <br />
