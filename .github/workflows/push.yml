@@ -18,3 +18,5 @@ jobs:
         run: npm ci --no-fund
       - name: Build React App
         run: npm run build
+      - name: Test React App
+        run: npm run test
