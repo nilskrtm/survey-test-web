@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 
-const useTraceUpdate: (props: any) => void = (props) => {
+const useTraceUpdate: <P extends { [key: string]: any } = { [key: string]: any }>(
+  props: P
+) => void = (props) => {
   const prev = useRef(props);
 
   useEffect(() => {
@@ -13,7 +15,7 @@ const useTraceUpdate: (props: any) => void = (props) => {
     }, {});
 
     if (Object.keys(changedProps).length > 0) {
-      console.log('Changed props:', changedProps);
+      console.log('Changed props: ', changedProps);
     }
 
     prev.current = props;
