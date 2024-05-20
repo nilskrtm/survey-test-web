@@ -58,7 +58,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-purple-200"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.surveyCount}
-        text="Umfragen"
+        text={'Umfrage' + (metrics.surveyCount === 1 ? '' : 'n')}
       />
       <DashboardMetricBox
         className=""
@@ -67,7 +67,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-cyan-100"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.votingCount}
-        text="Abstimmungen"
+        text={'Abstimmung' + (metrics.votingCount === 1 ? '' : 'en')}
       />
       <DashboardMetricBox
         className=""
@@ -76,7 +76,7 @@ const Dashboard: () => React.JSX.Element = () => {
         iconBackgroundColor="bg-orange-200"
         loading={metricsLoader.loading}
         metric={metricsLoader.error ? '?' : metrics.pictureCount}
-        text="Bilder"
+        text={'Bild' + (metrics.pictureCount === 1 ? '' : 'er')}
       />
       {permissionLevel === PermissionLevel.ADMIN && metrics.userCount && (
         <DashboardMetricBox
