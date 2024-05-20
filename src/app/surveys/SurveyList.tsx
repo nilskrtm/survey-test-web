@@ -27,6 +27,7 @@ interface SurveyListQueryParams extends QuerySearchParams {
   page: number;
   keyword: string;
   archived: string;
+  active: string;
   draft: string;
   sortingType: string;
   sortingOption: string;
@@ -35,6 +36,7 @@ interface SurveyListQueryParams extends QuerySearchParams {
 type SurveyFilterOptions = {
   keyword: string;
   archived?: boolean;
+  active?: boolean;
   draft?: boolean;
 };
 
@@ -45,6 +47,7 @@ const SurveyList: () => React.JSX.Element = () => {
     page: 1,
     keyword: '',
     archived: '',
+    active: '',
     draft: '',
     sortingOption: '',
     sortingType: ''
@@ -53,6 +56,7 @@ const SurveyList: () => React.JSX.Element = () => {
   const [filterOptions, setFilterOptions] = useState<SurveyFilterOptions>({
     keyword: '',
     archived: undefined,
+    active: undefined,
     draft: undefined
   });
   const [sortingType, setSortingType] =
@@ -67,11 +71,12 @@ const SurveyList: () => React.JSX.Element = () => {
   const createSurveyModalRef = createRef<CreateSurveyModalRefAttributes>();
 
   useEffect(() => {
-    const { page, keyword, archived, draft, sortingOption, sortingType } =
+    const { page, keyword, archived, active, draft, sortingOption, sortingType } =
       parseQuerySearchParams<SurveyListQueryParams>(queryParams);
     const newFilterOptions: SurveyFilterOptions = {
       keyword: keyword ? keyword : '',
       archived: archived ? JSON.parse(archived) : undefined,
+      active: active ? JSON.parse(active) : undefined,
       draft: draft ? JSON.parse(draft) : undefined
     };
 
@@ -110,6 +115,10 @@ const SurveyList: () => React.JSX.Element = () => {
   ) => {
     if (value != undefined) {
       setQueryParams((prev) => {
+        if (param === 'active' && 'draft' in prev && prev.draft != undefined) {
+          return { ...prev, draft: '', [param]: value };
+        }
+
         return { ...prev, [param]: value };
       });
     }
@@ -212,6 +221,28 @@ const SurveyList: () => React.JSX.Element = () => {
             </div>
             <div className="w-full flex flex-wrap flex-row items-center justify-between gap-x-2 gap-y-2 lg:gap-y-4">
               <div className="flex flex-row items-center justify-start gap-x-4">
+                <div className="flex flex-row items-center justify-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={filterOptions.active === true}
+                    readOnly
+                    onClick={() => {
+                      const current = filterOptions.active;
+
+                      updateQuery('active', current === undefined ? 'true' : '');
+                    }}
+                    className={`form-checkbox pr-2 rounded-md border-gray-300 checked:!accent-purple-800 checked:!bg-purple-800 focus:ring-1 focus:ring-purple-800`}
+                  />
+                  <p
+                    className="font-normal text-lg cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      const current = filterOptions.active;
+
+                      updateQuery('active', current === undefined ? 'true' : '');
+                    }}>
+                    Aktiv
+                  </p>
+                </div>
                 <div className="flex flex-row items-center justify-start gap-2">
                   <input
                     type="checkbox"
