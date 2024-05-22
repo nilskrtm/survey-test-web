@@ -4,6 +4,7 @@ import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { persistedStore, store } from './store/store';
+import { Helmet } from 'react-helmet';
 import GlobalNavigationProvider from './components/navigation/GlobalNavigationProvider';
 import LiveUserDataProvider from './components/users/LiveUserDataProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -46,6 +47,14 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistedStore}>
       <BrowserRouter>
+        <Helmet>
+          <meta
+            name="description"
+            content={import.meta.env.VITE_HTML_DESCRIPTION || 'env.VITE_HTML_DESCRIPTION missing'}
+          />
+          <title>{import.meta.env.VITE_HTML_TITLE || 'env.VITE_HTML_TITLE missing'}</title>
+        </Helmet>
+
         <GlobalNavigationProvider />
         <LiveUserDataProvider />
         <ToastProvider />

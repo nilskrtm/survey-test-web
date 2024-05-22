@@ -13,7 +13,7 @@ import { APIError, APIResponse } from './types/common.types';
 import { globalNavigate } from '../components/navigation/GlobalNavigationProvider';
 
 const baseUrl: string = import.meta.env.VITE_API_ENDPOINT || 'http://127.0.0.1:5000';
-const timeout: number = parseInt(import.meta.env.VITE_API_TIMEOUT || '10000');
+const timeout: number = parseInt(import.meta.env.VITE_API_TIMEOUT || '5000');
 
 export const defaultClient: AxiosInstance = axios.create({
   timeout: timeout,

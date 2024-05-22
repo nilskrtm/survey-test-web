@@ -25,13 +25,7 @@ import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys
 import { selectPermissionLevel } from '../../../store/features/authentication.slice';
 import { PermissionLevel } from '../../../utils/enums/permissionlevel.enum';
 
-type DashboardLayoutProps = {
-  //
-};
-
-const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React.JSX.Element = (
-  props
-) => {
+const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props) => {
   const dashboardTitle = useAppSelector(selectDashboardTitle);
   const fullName = useAppSelector(selectFullName);
   const permissionLevel = useAppSelector(selectPermissionLevel);
@@ -83,7 +77,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
             <NavLink
               to="/"
               className="lg:text-3xl max-lg:text-xl text-purple-700 font-medium tracking-tight">
-              GBU-SmartData
+              {import.meta.env.VITE_HTML_TITLE}
             </NavLink>
             <button
               className="lg:hidden max-lg:flex justify-center items-center text-xl"
@@ -209,7 +203,7 @@ const DashboardLayout: (props: PropsWithChildren<DashboardLayoutProps>) => React
               className="flex flex-col items-center justify-center space-y-5 rounded-lg p-6 mb-10 bg-violet-200 border border-gray-300 group"
               target="_blank"
               rel="noopener noreferrer"
-              to="/cdn/gbu-smartdata.apk">
+              to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}>
               <span className="text-lg text-gray-700 font-semibold group-hover:text-black">
                 App herunterladen
               </span>
