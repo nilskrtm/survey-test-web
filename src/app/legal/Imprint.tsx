@@ -6,7 +6,7 @@ const Imprint: () => React.JSX.Element = () => {
       <div className="w-[420px] p-8 rounded-lg bg-white border-2 border-gray-200">
         <div className="text-left">
           <p className="text-lg lg:text-xl xl:text-2xl font-semibold text-purple-700">
-            GBU-SmartData
+            {import.meta.env.VITE_HTML_TITLE || 'env.VITE_HTML_TITLE missing'}
           </p>
         </div>
 
