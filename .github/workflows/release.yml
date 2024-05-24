@@ -67,11 +67,9 @@ jobs:
     name: Deploy Webhook Call
     runs-on: ubuntu-20.04
     needs: [build, docker]
-    env:
-      REPO: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}
     steps:
       - name: Deploy Docker Container Webhook
         uses: joelwmale/webhook-action@master
         with:
           url: ${{ secrets.DEPLOY_WEBHOOK_URL }}
-          body: '{"service": "${{ secrets.DEPLOY_SERVICE_NAME  }}", "repository": "$REPO", "tag": "release-${{ github.event.release.tag_name }}"}'
+          body: '{"service": "${{ secrets.DEPLOY_SERVICE_NAME  }}", "repository": "${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}", "tag": "release-${{ github.event.release.tag_name }}"}'
