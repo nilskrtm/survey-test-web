@@ -55,14 +55,6 @@ jobs:
         run: |
           docker push $REPO:release-${{ github.event.release.tag_name }}
           docker push $REPO:latest
-      - name: Save Docker Image
-        run: docker save $REPO:release-${{ github.event.release.tag_name }} | gzip > docker-image.tar.gz
-      - name: Upload Docker Image Asset
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-docker-image
-          path: docker-image.tar.gz
-          retention-days: 90
   deploy:
     name: Deploy Webhook Call
     runs-on: ubuntu-20.04
@@ -72,4 +64,4 @@ jobs:
         uses: joelwmale/webhook-action@master
         with:
           url: ${{ secrets.DEPLOY_WEBHOOK_URL }}
-          body: '{"service": "${{ secrets.DEPLOY_SERVICE_NAME  }}", "repository": "${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}", "tag": "release-${{ github.event.release.tag_name }}"}'
+          body: '{"repository": "${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_REPOSITORY }}", "tag": "release-${{ github.event.release.tag_name }}"}'
