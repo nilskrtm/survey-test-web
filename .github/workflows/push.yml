@@ -22,5 +22,11 @@ jobs:
         run: npm ci --no-fund
       - name: Build React App
         run: npm run build
+      - name: Upload Build Assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: build
+          retention-days: 3
       - name: Test React App
         run: npm run test
