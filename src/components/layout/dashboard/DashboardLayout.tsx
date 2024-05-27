@@ -199,20 +199,27 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
                 />
               </div>
             </div>
-            <NavLink
-              className="flex flex-col items-center justify-center space-y-5 rounded-lg p-6 mb-10 bg-violet-200 border border-gray-300 group"
-              target="_blank"
-              rel="noopener noreferrer"
-              to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}>
-              <span className="text-lg text-gray-700 font-semibold group-hover:text-black">
-                App herunterladen
-              </span>
-              <FontAwesomeIcon
-                icon={faAndroid}
-                size="2x"
-                className="w-12 py-2 text-black rounded-full bg-white group-hover:text-green-600"
-              />
-            </NavLink>
+            <div className="mb-8 flex flex-col items-center justify-center space-y-4">
+              <NavLink
+                className="flex flex-col items-center justify-center space-y-5 rounded-lg p-6 bg-violet-200 border border-gray-300 group"
+                target="_blank"
+                rel="noopener noreferrer"
+                to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}>
+                <span className="text-lg text-gray-700 font-semibold group-hover:text-black">
+                  App herunterladen
+                </span>
+                <FontAwesomeIcon
+                  icon={faAndroid}
+                  size="2x"
+                  className="w-12 py-2 text-black rounded-full bg-white group-hover:text-green-600"
+                />
+              </NavLink>
+              <NavLink to="/imprint" className="w-full text-center">
+                <p className="text-sm py-1 font-medium text-gray-600 cursor-pointer decoration-gray-600">
+                  Impressum
+                </p>
+              </NavLink>
+            </div>
           </nav>
         </div>
         <div className="lg:w-[calc(100%-270px)] max-lg:w-full max-lg:h-[calc(100%-56px)]">

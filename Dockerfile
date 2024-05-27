@@ -2,6 +2,8 @@ FROM node:18-alpine
 
 ARG VITE_HTML_TITLE="Dummy Title"
 ARG VITE_HTML_DESCRIPTION="Dummy Description"
+ARG VITE_IMPRINT_ADDRESS="Address Line 1;Address Line 2; Address Line 3"
+ARG VITE_IMPRINT_CONTACT="Contact Line 1;Contact Line 2; Contact Line 3"
 ARG VITE_APP_DOWNLOAD_URL="http://static.test.local/app.apk"
 ARG VITE_API_ENDPOINT="http://api.test.local"
 ARG VITE_API_TIMEOUT=5000
@@ -47,6 +49,8 @@ COPY --chown=node:node . ./
 RUN touch .env \
     && echo "VITE_HTML_TILE=$VITE_HTML_TITLE" >> .env \
     && echo "VITE_HTML_DESCRIPTION=$VITE_HTML_DESCRIPTION" >> .env \
+    && echo "VITE_IMPRINT_ADDRESS=$VITE_IMPRINT_ADDRESS" >> .env \
+    && echo "VITE_IMPRINT_CONTACT=$VITE_IMPRINT_CONTACT" >> .env \
     && echo "VITE_APP_DOWNLOAD_URL=$VITE_APP_DOWNLOAD_URL" >> .env \
     && echo "VITE_API_ENDPOINT=$VITE_API_ENDPOINT" >> .env \
     && echo "VITE_API_TIMEOUT=$VITE_API_TIMEOUT" >> .env \

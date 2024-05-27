@@ -10,12 +10,38 @@ const Imprint: () => React.JSX.Element = () => {
           </p>
         </div>
 
-        <div className="text-left mt-4 lg:mt-6">
+        <div className="flex flex-col justify-center items-start text-left mt-4 lg:mt-6">
           <span className="text-xl lg:text-2xl xl:text-4xl font-light">Impressum</span>
+          <div className="mt-6 lg:mt-10"></div>
+          {import.meta.env.VITE_IMPRINT_ADDRESS ? (
+            import.meta.env.VITE_IMPRINT_ADDRESS?.split(';').map((line: string, index: number) => {
+              return (
+                <span
+                  key={'imprint_contact_line_' + index}
+                  className="text-base font-light"
+                  dangerouslySetInnerHTML={{ __html: line }}></span>
+              );
+            })
+          ) : (
+            <span className="text-base font-light">env.VITE_IMPRINT_ADDRESS missing</span>
+          )}
         </div>
 
-        <div className="mt-6 lg:mt-10">
-          <span>Impressum</span>
+        <div className="flex flex-col justify-center items-start text-left mt-4 lg:mt-6">
+          <span className="text-xl lg:text-2xl xl:text-4xl font-light">Kontakt</span>
+          <div className="mt-6 lg:mt-10"></div>
+          {import.meta.env.VITE_IMPRINT_CONTACT ? (
+            import.meta.env.VITE_IMPRINT_CONTACT?.split(';').map((line: string, index: number) => {
+              return (
+                <span
+                  key={'imprint_contact_line_' + index}
+                  className="text-base font-light"
+                  dangerouslySetInnerHTML={{ __html: line }}></span>
+              );
+            })
+          ) : (
+            <span className="text-base font-light">env.VITE_IMPRINT_CONTACT missing</span>
+          )}
         </div>
       </div>
     </div>

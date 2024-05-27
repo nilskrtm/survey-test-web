@@ -164,6 +164,13 @@ const Login: () => React.JSX.Element = () => {
               </p>
             </NavLink>
           </div>
+          <div className="w-full mt-2 text-center">
+            <NavLink to="/imprint" className="w-full text-center">
+              <p className="py-1 text-sm font-medium text-gray-600 cursor-pointer focus:underline decoration-gray-600">
+                Impressum
+              </p>
+            </NavLink>
+          </div>
         </form>
       </div>
     </div>

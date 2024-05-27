@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import AuthenticationButton from '../../components/authentication/AuthenticationButton';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -105,7 +105,7 @@ const PasswordReset: () => React.JSX.Element = () => {
                   className="w-full"
                   disabled={resetting}
                   loading={resetting}>
-                  Zurücksetzen
+                  Passwort Zurücksetzen
                 </AuthenticationButton>
                 <AuthenticationButton
                   type="button"
@@ -126,6 +126,14 @@ const PasswordReset: () => React.JSX.Element = () => {
             </p>
           </div>
         )}
+
+        <div className="w-full mt-2 text-center">
+          <NavLink to="/imprint" className="w-full text-center">
+            <p className="py-1 text-sm font-medium text-gray-600 cursor-pointer focus:underline decoration-gray-600">
+              Impressum
+            </p>
+          </NavLink>
+        </div>
       </div>
     </div>
   );
