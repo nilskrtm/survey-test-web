@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateSurveyModal, { CreateSurveyModalRefAttributes } from '../../surveys/CreateSurveyModal';
 import { selectPermissionLevel } from '../../../store/features/authentication.slice';
 import { PermissionLevel } from '../../../utils/enums/permissionlevel.enum';
+import useGroupClickOutside from '../../../utils/hooks/use.group.click.outside.hook';
 
 const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props) => {
   const dashboardTitle = useAppSelector(selectDashboardTitle);
@@ -35,6 +36,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<boolean>(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
 
+  const mobileDropdownHandlerRef = createRef<HTMLButtonElement>();
   const mobileDropdownRef = createRef<HTMLDivElement>();
   const profileDropdownRef = createRef<HTMLDivElement>();
 
@@ -52,8 +54,8 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
     if (profileDropdownOpen) toggleProfileDropdown();
   });
 
-  useClickOutside(mobileDropdownRef, () => {
-    if (mobileDropdownOpen) toggleProfileDropdown();
+  useGroupClickOutside([mobileDropdownHandlerRef, mobileDropdownRef], () => {
+    if (mobileDropdownOpen) toggleMobileDropdown();
   });
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
               {import.meta.env.VITE_HTML_TITLE}
             </NavLink>
             <button
+              ref={mobileDropdownHandlerRef}
               className="lg:hidden max-lg:flex justify-center items-center text-xl"
               onClick={toggleMobileDropdown}>
               <FontAwesomeIcon
@@ -134,6 +137,22 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
                   path="/settings"
                   type={DashboardNavigationEntryType.MOBILE}
                 />
+              </div>
+              <div className="w-full flex flex-row items-center justify-evenly px-6 py-2 border-t-2 border-gray-300">
+                <NavLink
+                  to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-center">
+                  <p className="text-sm py-1 font-medium text-gray-600 cursor-pointer decoration-gray-600 hover:text-black hover:decoration-black">
+                    App-Download
+                  </p>
+                </NavLink>
+                <NavLink to="/imprint" className="text-center">
+                  <p className="text-sm py-1 font-medium text-gray-600 cursor-pointer decoration-gray-600 hover:text-black hover:decoration-black">
+                    Impressum
+                  </p>
+                </NavLink>
               </div>
               <div className="w-full flex flex-row items-center justify-between px-6 py-2 border-t-2 border-gray-300">
                 <span className="text-gray-600 font-normal">{fullName}</span>
@@ -215,7 +234,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
                 />
               </NavLink>
               <NavLink to="/imprint" className="w-full text-center">
-                <p className="text-sm py-1 font-medium text-gray-600 cursor-pointer decoration-gray-600">
+                <p className="text-sm py-1 font-medium text-gray-600 cursor-pointer decoration-gray-600 hover:text-black hover:decoration-black">
                   Impressum
                 </p>
               </NavLink>

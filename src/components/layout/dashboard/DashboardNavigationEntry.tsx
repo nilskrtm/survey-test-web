@@ -29,48 +29,44 @@ const DashboardNavigationEntry: (props: DashboardNavigationEntryProps) => React.
   const active =
     matchPatterns.filter((pattern) => !!matchPath(pattern, location.pathname)).length > 0;
 
-  return (
-    <>
-      {props.type == DashboardNavigationEntryType.DESKTOP ? (
-        <NavLink
-          className={`relative w-full py-3 px-6 flex grow flex-row items-center justify-start rounded-lg text-gray-600 hover:text-purple-700 ${
-            active ? 'cursor-default' : ''
-          }`}
-          to={props.path}>
+  if (props.type === DashboardNavigationEntryType.MOBILE) {
+    return (
+      <NavLink
+        className="relative w-full flex grow flex-row items-center justify-start py-2 text-lg group"
+        to={props.path}>
+        <div className="h-6 w-6 flex items-center justify-center">
           <FontAwesomeIcon
             icon={props.icon}
-            size="lg"
-            className={`pointer-events-none text-inherit ${active ? '!text-purple-700' : ''}`}
+            size="1x"
+            className={`pointer-events-none text-gray-600 group-hover:text-purple-700 ${active ? '!text-purple-700' : ''}`}
           />
-          <span
-            className={`absolute left-[74px] text-lg font-medium ${
-              active ? '!text-black' : '!text-gray-600'
-            }`}>
-            {props.name}
-          </span>
-        </NavLink>
-      ) : (
-        <NavLink
-          className={`relative w-full flex grow flex-row items-center justify-start py-2 text-lg text-gray-600 hover:text-purple-700 ${
-            active ? 'cursor-default' : ''
-          }`}
-          to={props.path}>
-          <div className="h-6 w-6 flex items-center justify-center">
-            <FontAwesomeIcon
-              icon={props.icon}
-              size="1x"
-              className={`pointer-events-none text-inherit ${active ? '!text-purple-700' : ''}`}
-            />
-          </div>
-          <span
-            className={`absolute left-[37px] text-lg font-normal ${
-              active ? '!text-black' : '!text-gray-600'
-            }`}>
-            {props.name}
-          </span>
-        </NavLink>
-      )}
-    </>
+        </div>
+        <span
+          className={`absolute left-[37px] text-lg text-gray-600 group-hover:text-black font-normal ${
+            active ? '!text-black' : ''
+          }`}>
+          {props.name}
+        </span>
+      </NavLink>
+    );
+  }
+
+  return (
+    <NavLink
+      className="relative w-full py-3 px-6 flex grow flex-row items-center justify-start rounded-lg group"
+      to={props.path}>
+      <FontAwesomeIcon
+        icon={props.icon}
+        size="1x"
+        className={`pointer-events-none text-xl text-gray-600 group-hover:text-purple-700 ${active ? '!text-purple-700' : ''}`}
+      />
+      <span
+        className={`absolute left-[74px] text-lg text-gray-600 group-hover:text-black font-medium ${
+          active ? '!text-black' : ''
+        }`}>
+        {props.name}
+      </span>
+    </NavLink>
   );
 };
 
