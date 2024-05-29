@@ -21,6 +21,7 @@ import AnswerPictureList from './app/answer.pictures/AnswerPictureList';
 import Settings from './app/settings/Settings';
 import Votings from './app/votings/Votings';
 import ToastProvider from './components/layout/toasts/ToastProvider';
+import PasswordResetRequest from './app/authentication/PasswordResetRequest';
 import PasswordReset from './app/authentication/PasswordReset';
 import AnswerPictureOverview from './app/answer.pictures/AnswerPictureOverview';
 import UserList from './app/users/UserList';
@@ -31,6 +32,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const defaultRoute = <RedirectRoute redirectPath="/dashboard" />;
 const imprintRoute = <Imprint />;
 const loginRoute = <Login />;
+const passwordResetRequestRoute = <PasswordResetRequest />;
 const passwordResetRoute = <PasswordReset />;
 const logoutRoute = <Logout />;
 const userListRoute = layoutRoute(<UserList />);
@@ -64,7 +66,8 @@ root.render(
           <Route path="/imprint" element={imprintRoute} />
           <Route path="/impressum" element={imprintRoute} />
           <Route path="/login" element={loginRoute} />
-          <Route path="/reset-password" element={passwordResetRoute} />
+          <Route path="/reset-password" element={passwordResetRequestRoute} />
+          <Route path="/reset-password/:passwordRequestId" element={passwordResetRoute} />
           <Route path="/logout" element={logoutRoute} />
           <Route path="/users" element={protectRoute(userListRoute, true)} />
           <Route path="/users/:userId" element={protectRoute(userOverviewRoute, true)} />

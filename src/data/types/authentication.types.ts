@@ -15,4 +15,19 @@ type PasswordResetRequestData = {
   email: string;
 };
 
-export type { AuthRequestData, AuthResponseData, PasswordResetRequestData };
+type PasswordResetValidateData = {
+  passwordRequestId: string;
+};
+
+type PasswordResetSubmitData = {
+  passwordRequestId: string;
+  password: string;
+};
+
+export type {
+  AuthRequestData,
+  AuthResponseData,
+  PasswordResetRequestData,
+  PasswordResetValidateData,
+  PasswordResetSubmitData
+};

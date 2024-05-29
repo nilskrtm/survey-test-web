@@ -1,52 +1,93 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import AuthenticationButton from '../../components/authentication/AuthenticationButton';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faExclamation } from '@fortawesome/free-solid-svg-icons';
 import AuthenticationService from '../../data/services/authentication.service';
 import { APIError } from '../../data/types/common.types';
 import { selectLoggedIn } from '../../store/features/authentication.slice';
+import { BounceLoader } from 'react-spinners';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useToasts from '../../utils/hooks/use.toasts.hook';
+
+interface PasswordResetPathParams extends Record<string, string> {
+  passwordRequestId: string;
+}
 
 const PasswordReset: () => React.JSX.Element = () => {
   const isLoggedIn = useAppSelector(selectLoggedIn);
   const navigate = useNavigate();
+  const toaster = useToasts();
+
+  const { passwordRequestId } = useParams<PasswordResetPathParams>();
+
+  const [validated, setValidated] = useState(false);
+  const [validationError, setValidationError] = useState<string>('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [passwordValidation, setPasswordValidation] = useState<string>('');
+  const [generalValidation, setGeneralValidation] = useState('');
+
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/');
+      navigate('/settings');
     }
   }, []);
 
-  const [resetting, setResetting] = useState(false);
-  const [reset, setReset] = useState(false);
-  const [email, setEmail] = useState('');
-  const [generalValidation, setGeneralValidation] = useState('');
-  const [emailValidation, setEmailValidation] = useState('');
+  useEffect(() => {
+    validateRequestPassword();
+  }, [passwordRequestId]);
 
-  const resetPassword = (event: FormEvent) => {
+  const validateRequestPassword = () => {
+    setValidated(false);
+    setValidationError('');
+
+    if (!passwordRequestId) {
+      return navigate('/');
+    }
+
+    AuthenticationService.validatePasswordReset(passwordRequestId).then((response) => {
+      if (response.success) {
+        setValidated(true);
+      } else {
+        setValidationError(response.error?.errorMessage || 'Der Passwort-Link ist fehlerhaft.');
+      }
+    });
+  };
+
+  const submitPassword = (event: FormEvent) => {
     event.preventDefault();
 
+    if (!passwordRequestId) return;
+
     setGeneralValidation('');
-    setEmailValidation('');
+    setPasswordValidation('');
     setResetting(true);
 
-    AuthenticationService.resetPassword(email)
+    AuthenticationService.resetPassword(passwordRequestId, password)
       .then((response) => {
         if (response.success) {
           setGeneralValidation('');
-          setEmailValidation('');
-          setReset(true);
+          setPasswordValidation('');
+          setSubmitted(true);
+
+          toaster.sendToast('success', 'Ihr Passwort wurde erfolgreich geändert.');
+          navigate('/login');
         } else {
-          setReset(false);
+          setSubmitted(false);
 
           const error = response.error as APIError;
 
           if (!error.hasFieldErrors) {
             setGeneralValidation(error.errorMessage || 'Ein unbekannter Fehler ist aufgetreten.');
           } else {
-            if ('email' in error.fieldErrors) {
-              setEmailValidation(error.fieldErrors.email);
+            if ('password' in error.fieldErrors) {
+              setPasswordValidation(error.fieldErrors.password);
             }
           }
         }
@@ -54,6 +95,10 @@ const PasswordReset: () => React.JSX.Element = () => {
       .finally(() => {
         setResetting(false);
       });
+  };
+
+  const passwordsMatch: () => boolean = () => {
+    return password.localeCompare(confirmPassword) === 0;
   };
 
   return (
@@ -69,64 +114,88 @@ const PasswordReset: () => React.JSX.Element = () => {
           <span className="text-xl lg:text-2xl xl:text-4xl font-light">Passwort zurücksetzen</span>
         </div>
 
-        {!reset ? (
-          <>
-            <div className="text-left mt-2">
-              <p className="font-light">
-                Geben Sie Ihre E-Mail Adresse an. Wenn ein Konto unter dieser existiert, wird Ihnen
-                ihr neues Passwort per E-Mail zugeschickt.
-              </p>
-            </div>
-
-            <form id="loginForm" onSubmit={(e) => resetPassword(e)} className="mt-2 lg:mt-4">
-              <AuthenticationInput
-                autoComplete="email"
-                icon={faEnvelope}
-                label="E-Mail Adresse"
-                onChange={(e) => {
-                  setEmail((e.target as HTMLInputElement).value);
-                  setGeneralValidation('');
-                  setEmailValidation('');
-                }}
-                placeholder="E-Mail Adresse"
-                type="email"
-                validationMessage={emailValidation}
-                value={email}
-              />
-              {generalValidation ? (
-                <div className="w-full mt-2 text-left">
-                  <p className="text-sm text-red-500 font-medium">{generalValidation}</p>
-                </div>
-              ) : (
-                <></>
-              )}
-              <div className="w-full mt-4 py-2 flex flex-col space-y-2">
-                <AuthenticationButton
-                  type="submit"
-                  containerClassName="w-full"
-                  className="w-full"
-                  disabled={resetting}
-                  loading={resetting}>
-                  Passwort Zurücksetzen
-                </AuthenticationButton>
-                <AuthenticationButton
-                  type="button"
-                  containerClassName="w-full"
-                  className="w-full"
-                  disabled={resetting}
-                  onClick={() => navigate('/login')}>
-                  Zurück zum Login
-                </AuthenticationButton>
-              </div>
-            </form>
-          </>
-        ) : (
-          <div className="text-left mt-2 lg:mt-4">
-            <p className="font-light">
-              Wenn ein Konto unter der E-Mail Adresse <span className="font-semibold">{email}</span>{' '}
-              existiert, wird Ihnen nun ein neues Passwort an diese zugesendet.
-            </p>
+        {!validated || validationError ? (
+          <div className="w-full flex flex-col items-center justify-center space-y-6 py-4 mt-4 lg:mt-6">
+            {!validationError ? (
+              <>
+                <BounceLoader color="rgb(126 34 206)" size={70} />
+                <p className="text-base font-medium text-gray-700">
+                  Überprüfung des Passwort-Links
+                </p>
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faExclamation} size="1x" className="text-4xl text-red-500" />
+                <p className="text-base font-normal text-gray-700">{validationError}</p>
+              </>
+            )}
           </div>
+        ) : (
+          <>
+            {!submitted ? (
+              <>
+                <div className="text-left mt-2">
+                  <p className="font-light">Geben Sie ein neues Passwort ein.</p>
+                </div>
+
+                <form
+                  id="resetPasswordForm"
+                  onSubmit={(e) => submitPassword(e)}
+                  className="mt-2 lg:mt-4">
+                  <AuthenticationInput
+                    autoComplete="new-password"
+                    icon={faEnvelope}
+                    label="Neues Passwort"
+                    onChange={(e) => {
+                      setPassword((e.target as HTMLInputElement).value.trim());
+                      setGeneralValidation('');
+                      setPasswordValidation('');
+                    }}
+                    placeholder="Neues Passwort"
+                    type="password"
+                    validationMessage={passwordValidation}
+                    value={password}
+                  />
+                  <AuthenticationInput
+                    autoComplete="new-password"
+                    icon={faEnvelope}
+                    label="Neues Passwort bestätigen"
+                    onChange={(e) => {
+                      setConfirmPassword((e.target as HTMLInputElement).value.trim());
+                      setGeneralValidation('');
+                    }}
+                    placeholder="Neues Passwort bestätigen"
+                    type="password"
+                    validationMessage={
+                      passwordsMatch() ? undefined : 'Die beiden Passwörter stimmen nicht überein.'
+                    }
+                    value={confirmPassword}
+                  />
+                  {generalValidation ? (
+                    <div className="w-full mt-2 text-left">
+                      <p className="text-sm text-red-500 font-medium">{generalValidation}</p>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  <div className="w-full mt-4 py-2 flex flex-col">
+                    <AuthenticationButton
+                      type="submit"
+                      containerClassName="w-full"
+                      className="w-full"
+                      disabled={resetting || !passwordsMatch()}
+                      loading={resetting}>
+                      Passwort Zurücksetzen
+                    </AuthenticationButton>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <div className="text-left mt-2 lg:mt-4">
+                <p className="font-light">Ihr Passwort wurde erfolgreich geändert.</p>
+              </div>
+            )}
+          </>
         )}
 
         <div className="w-full mt-2 text-center">
