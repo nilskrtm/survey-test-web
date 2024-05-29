@@ -27,6 +27,8 @@ const PasswordReset: () => React.JSX.Element = () => {
   const resetPassword = (event: FormEvent) => {
     event.preventDefault();
 
+    setGeneralValidation('');
+    setEmailValidation('');
     setResetting(true);
 
     AuthenticationService.resetPassword(email)
