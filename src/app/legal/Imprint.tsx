@@ -3,7 +3,7 @@ import React from 'react';
 const Imprint: () => React.JSX.Element = () => {
   return (
     <div className="h-full w-full flex justify-center items-center bg-gray-100 select-none">
-      <div className="w-[420px] p-8 rounded-lg bg-white border-2 border-gray-200">
+      <div className="w-80 md:w-96 p-8 rounded-lg bg-white border-2 border-gray-200">
         <div className="text-left">
           <p className="text-lg lg:text-xl xl:text-2xl font-semibold text-purple-700">
             {import.meta.env.VITE_HTML_TITLE || 'env.VITE_HTML_TITLE missing'}
