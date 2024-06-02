@@ -3,7 +3,7 @@ import { useAppSelector } from '../../store/hooks';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import AuthenticationButton from '../../components/authentication/AuthenticationButton';
 import AuthenticationInput from '../../components/authentication/AuthenticationInput';
-import { faEnvelope, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faExclamation, faKey } from '@fortawesome/free-solid-svg-icons';
 import AuthenticationService from '../../data/services/authentication.service';
 import { APIError } from '../../data/types/common.types';
 import { selectLoggedIn } from '../../store/features/authentication.slice';
@@ -144,7 +144,7 @@ const PasswordReset: () => React.JSX.Element = () => {
                   className="mt-2 lg:mt-4">
                   <AuthenticationInput
                     autoComplete="new-password"
-                    icon={faEnvelope}
+                    icon={faKey}
                     label="Neues Passwort"
                     onChange={(e) => {
                       setPassword((e.target as HTMLInputElement).value.trim());
@@ -158,7 +158,7 @@ const PasswordReset: () => React.JSX.Element = () => {
                   />
                   <AuthenticationInput
                     autoComplete="new-password"
-                    icon={faEnvelope}
+                    icon={faKey}
                     label="Neues Passwort bestätigen"
                     onChange={(e) => {
                       setConfirmPassword((e.target as HTMLInputElement).value.trim());
