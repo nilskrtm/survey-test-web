@@ -36,8 +36,9 @@
   },
   "scripts": {
     "start": "vite --host 0.0.0.0 --port 3000",
-    "build": "vite build && import-meta-env -x .env -p build/index.html",
-    "serve": "vite preview",
+    "build": "vite build",
+    "inject-env": "import-meta-env -x .env -p build/index.html",
+    "serve": "npm run inject-env && vite preview",
     "test": "vitest run",
     "test-watch": "vitest watch",
     "coverage": "vitest run --coverage"
