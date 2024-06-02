@@ -35,7 +35,7 @@ const Imprint: () => React.JSX.Element = () => {
               <span className="text-base font-light">
                 Telefon:{' '}
                 <a
-                  href={'tel:' + import.meta.env.IMPRINT_CONTACT_PHONE}
+                  href={'tel:' + import.meta.env.IMPRINT_CONTACT_PHONE.replace(/[^0-9+]/g, '')}
                   className="hover:font-normal">
                   {import.meta.env.IMPRINT_CONTACT_PHONE}
                 </a>
