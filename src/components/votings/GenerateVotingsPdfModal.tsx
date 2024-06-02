@@ -133,9 +133,12 @@ const GenerateVotingsPdfModal: ForwardRefRenderFunction<
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-          <Text style={{ fontSize: 22, fontWeight: 'semibold' }}>Auswertung der Umfrage</Text>
-          <Text style={{ marginTop: '5mm', fontSize: 22, fontWeight: 'normal' }}>
+          <Text style={{ fontSize: 22, fontWeight: 'normal' }}>Auswertung der Umfrage</Text>
+          <Text style={{ marginTop: '3mm', fontSize: 22, fontWeight: 'semibold' }}>
             {props.survey.name}
+          </Text>
+          <Text style={{ marginTop: '3mm', fontSize: 16, color: 'gray', fontWeight: 'normal' }}>
+            {props.survey.description}
           </Text>
         </View>
       </Page>
