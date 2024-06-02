@@ -4,7 +4,7 @@ import { Toast } from '../../components/layout/toasts/ToastProvider';
 
 export interface PassthroughState {
   dashboardTitle: string;
-  toasts: Toast[];
+  toasts: Array<Toast>;
 }
 
 const initialState: PassthroughState = {

@@ -13,12 +13,12 @@ const RawReorderAnswerOptionList: (props: ReorderAnswerOptionListProps) => React
 ) => {
   return (
     <div className="w-full max-h-72 lg:max-h-96 flex flex-col items-center justify-start gap-2 overflow-y-auto">
-      {props.answerOptions.map((answeroption, index) => {
+      {props.answerOptions.map((answerOption, index) => {
         return (
           <ReorderAnswerOptionItem
             key={'answerOption_' + index}
             index={index}
-            answerOption={answeroption}
+            answerOption={answerOption}
             disabled={props.disabled}
           />
         );
