@@ -41,18 +41,7 @@ jobs:
         run: docker login ${{ secrets.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }}
           -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
-        run: |
-          echo VITE_HTML_TITLE="${{ secrets.VITE_HTML_TITLE }}" >> .env
-          echo VITE_HTML_DESCRIPTION="${{ secrets.VITE_HTML_DESCRIPTION }}" >> .env
-          echo VITE_IMPRINT_ADDRESS="${{ secrets.VITE_IMPRINT_ADDRESS }}" >> .env
-          echo VITE_IMPRINT_CONTACT="${{ secrets.VITE_IMPRINT_CONTACT }}" >> .env
-          echo VITE_APP_DOWNLOAD_URL=${{ secrets.VITE_APP_DOWNLOAD_URL }} >> .env
-          echo VITE_API_ENDPOINT=${{ secrets.VITE_API_ENDPOINT}} >> .env
-          echo VITE_API_TIMEOUT=${{ secrets.VITE_API_TIMEOUT}} >> .env
-          echo VITE_WS_ENDPOINT=${{ secrets.VITE_WS_ENDPOINT}} >> .env
-          echo VITE_WS_RECONNECT_TIMEOUT=${{ secrets.VITE_WS_RECONNECT_TIMEOUT}} >> .env
-          docker build -t $REPO:release-${{ github.event.release.tag_name }} -t $REPO:latest .
-          rm .env
+        run: docker build -t $REPO:release-${{ github.event.release.tag_name }} -t $REPO:latest .
       - name: Publish Docker Image
         run: |
           docker push $REPO:release-${{ github.event.release.tag_name }}

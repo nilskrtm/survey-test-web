@@ -38,5 +38,11 @@ COPY --chown=node:node . ./
 # build app
 RUN npm run build
 
-# set supervisor entrypoint
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+# expose nginx port
+EXPOSE 80
+
+# copy entrypoint
+COPY deployment/docker/entrypoint.sh ./
+
+# inject environment vars and set supervisor as entrypoint
+ENTRYPOINT ["sh", "./entrypoint.sh"]

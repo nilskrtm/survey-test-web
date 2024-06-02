@@ -18,7 +18,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "include": ["vite.config.ts", "src", "./setupTests.ts"],
-    "types": ["vite/client", "vite-plugin-svgr/client", "vitest/globals"]
+    "include": [
+      "./vite.config.ts",
+      "./vitest.config.ts",
+      "./src",
+      "./tests"],
+    "types": [
+      "vite/client",
+      "vite-plugin-svgr/client",
+      "vitest/globals"
+    ]
   }
 }

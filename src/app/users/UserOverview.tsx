@@ -24,7 +24,9 @@ const UserOverview: () => React.JSX.Element = () => {
 
   // refs:
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updating, setUpdating] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updatingValues, setUpdatingValues] = useState<Array<string>>([]);
   const [updatedUser, setUpdatedUser] = useState<User>(dummyUser());
 
@@ -60,6 +62,7 @@ const UserOverview: () => React.JSX.Element = () => {
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateUserInternal: (values: Partial<User>) => void = (values) => {
     if (!updatedUser) return;
 
@@ -69,6 +72,7 @@ const UserOverview: () => React.JSX.Element = () => {
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateUser: (values: Partial<User>) => void = (values) => {
     if (!user || !hasChanged(user, values)) return;
 

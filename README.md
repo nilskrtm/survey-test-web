@@ -19,11 +19,11 @@ The project also involves the following two repositories:
 
 ## Configuration
 
-There are some properties that have to be set to build the WebApp, like the endpoint of the Rest API. For this, there is a set of environment variables that can be set. The best way is to just use a _.env_ file.
+There are some properties that have to be set to when running the WebApp, like the endpoint of the Rest API. For this, there is a set of environment variables that can be set. The best way is to just use a _.env_ file.
 
 ### List of Properties
 
-<b>TODO</b> (or see .env.template [.env.template](https://github.com/nilskrtm/survey-test-web/blob/master/.env.template))
+<b>TODO</b> (or see .env.example [.env.example](https://github.com/nilskrtm/survey-test-web/blob/master/.env.example))
 
 ## Running the App
 

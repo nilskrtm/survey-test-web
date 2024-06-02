@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "vite --host 0.0.0.0 --port 3000",
-    "build": "vite build",
+    "build": "vite build && import-meta-env -x .env -p build/index.html",
     "serve": "vite preview",
     "test": "vitest run",
     "test-watch": "vitest watch",
@@ -64,6 +64,8 @@
     ]
   },
   "devDependencies": {
+    "@import-meta-env/cli": "^0.6.8",
+    "@import-meta-env/unplugin": "^0.5.1",
     "@tailwindcss/forms": "^0.5.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -78,6 +80,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "autoprefixer": "^10.4.16",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",

@@ -52,9 +52,9 @@ root.render(
         <Helmet>
           <meta
             name="description"
-            content={import.meta.env.VITE_HTML_DESCRIPTION || 'env.VITE_HTML_DESCRIPTION missing'}
+            content={import.meta.env.HTML_DESCRIPTION || 'env.HTML_DESCRIPTION missing'}
           />
-          <title>{import.meta.env.VITE_HTML_TITLE || 'env.VITE_HTML_TITLE missing'}</title>
+          <title>{import.meta.env.HTML_TITLE || 'env.HTML_TITLE missing'}</title>
         </Helmet>
 
         <GlobalNavigationProvider />

@@ -79,7 +79,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
             <NavLink
               to="/"
               className="lg:text-3xl max-lg:text-xl text-purple-700 font-medium tracking-tight">
-              {import.meta.env.VITE_HTML_TITLE}
+              {import.meta.env.HTML_TITLE}
             </NavLink>
             <button
               ref={mobileDropdownHandlerRef}
@@ -140,7 +140,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
               </div>
               <div className="w-full flex flex-row items-center justify-evenly px-6 py-2 border-t-2 border-gray-300">
                 <NavLink
-                  to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}
+                  to={import.meta.env.APP_DOWNLOAD_URL || '/#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-center">
@@ -223,7 +223,7 @@ const DashboardLayout: (props: PropsWithChildren) => React.JSX.Element = (props)
                 className="flex flex-col items-center justify-center space-y-5 rounded-lg p-6 bg-violet-200 border border-gray-300 group"
                 target="_blank"
                 rel="noopener noreferrer"
-                to={import.meta.env.VITE_APP_DOWNLOAD_URL || '/#'}>
+                to={import.meta.env.APP_DOWNLOAD_URL || '/#'}>
                 <span className="text-lg text-gray-700 font-semibold group-hover:text-black">
                   App herunterladen
                 </span>
