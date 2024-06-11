@@ -12,7 +12,7 @@ import useLoader, { LoadingOption } from '../../utils/hooks/use.loader.hook';
 import { BounceLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation } from '@fortawesome/free-solid-svg-icons';
-import { dummyUser } from '../../utils/users.util';
+import { dummyUser } from '../../utils/users/users.util';
 import { hasChanged } from '../../utils/data/update.util';
 import { setUserData as setStoreUserData } from '../../store/features/user.slice';
 import { APIError } from '../../data/types/common.types';

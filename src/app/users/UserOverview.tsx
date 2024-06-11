@@ -7,7 +7,7 @@ import { User } from '../../data/types/user.types';
 import { hasChanged } from '../../utils/data/update.util';
 import { APIError } from '../../data/types/common.types';
 import UserService from '../../data/services/user.service';
-import { dummyUser } from '../../utils/users.util';
+import { dummyUser } from '../../utils/users/users.util';
 
 interface UserOverviewPathParams extends Record<string, string> {
   userId: string;

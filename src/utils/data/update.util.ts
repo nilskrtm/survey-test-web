@@ -5,6 +5,7 @@ export const hasChanged: (originalObject: object, updateValues: object) => boole
   return !halfCompare(originalObject, updateValues);
 };
 
+// check if two objects are equal, but only the keys of the second object are checked
 const halfCompare: (originalObject: object, updateValues: object) => boolean = (
   originalObject,
   updateValues

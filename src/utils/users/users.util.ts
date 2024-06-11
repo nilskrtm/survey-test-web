@@ -1,4 +1,4 @@
-import { User } from '../data/types/user.types';
+import { User } from '../../data/types/user.types';
 
 export const dummyUser: () => User = () => {
   return {
