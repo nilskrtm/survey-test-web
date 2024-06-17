@@ -24,8 +24,8 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'input-checked': "url('../public/resources/icons/input_faCheckSolid.svg')",
-        'input-crossed': "url('../public/resources/icons/input_faCrossSolid.svg')"
+        'input-checked': "url('../resources/icons/input_faCheckSolid.svg')",
+        'input-crossed': "url('../resources/icons/input_faCrossSolid.svg')"
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif']
