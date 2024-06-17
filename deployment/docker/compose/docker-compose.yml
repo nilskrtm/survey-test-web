@@ -1,0 +1,12 @@
+name: survey-test-frontend
+services:
+  web-app:
+    image: survey-test-web:latest
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:80"
+    volumes:
+      - ../../../.env:/home/www/node/.env
