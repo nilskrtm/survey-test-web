@@ -5,7 +5,7 @@ import { selectLoggedIn, selectPermissionLevel } from '../../store/features/auth
 import { PermissionLevel } from '../../utils/enums/permissionlevel.enum';
 
 type ProtectedRouteProps = {
-  redirectPath: string;
+  redirectPath?: string;
   requiresAdmin?: boolean;
 };
 
@@ -14,10 +14,11 @@ const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.J
 ) => {
   const isLoggedIn = useAppSelector(selectLoggedIn);
   const permissionLevel: PermissionLevel = useAppSelector(selectPermissionLevel);
+  const redirectPath = props.redirectPath || '/';
   const location = useLocation();
 
   if (!isLoggedIn) {
-    return <Navigate to={props.redirectPath} state={{ from: location }} replace />;
+    return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
   if (
@@ -25,7 +26,7 @@ const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.J
     props.requiresAdmin &&
     permissionLevel !== PermissionLevel.ADMIN
   ) {
-    return <Navigate to={props.redirectPath} state={{ from: location }} replace />;
+    return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
   return props.children;
