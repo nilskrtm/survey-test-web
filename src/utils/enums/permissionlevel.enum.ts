@@ -5,8 +5,6 @@ enum PermissionLevel {
 
 const getPermissionLevelName: (permissionLevel: PermissionLevel) => string = (permissionLevel) => {
   switch (permissionLevel) {
-    case PermissionLevel.USER:
-      return 'Nutzer';
     case PermissionLevel.ADMIN:
       return 'Admin';
     default:
