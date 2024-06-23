@@ -152,6 +152,32 @@ const ColorPicker: (props: ColorPickerProps) => React.JSX.Element = (props) => {
     }
   };
 
+  const onClick: (event: MouseEvent<HTMLCanvasElement>) => void = (event) => {
+    if (canvas.current) {
+      const canvasContext = canvas.current.getContext('2d');
+
+      if (canvasContext) {
+        const imgData = canvasContext.getImageData(
+          (event.nativeEvent.offsetX / canvas.current.clientWidth) * canvas.current.width,
+          (event.nativeEvent.offsetY / canvas.current.clientHeight) * canvas.current.height,
+          1,
+          1
+        );
+        const rgba = imgData.data;
+        const colorRGBA =
+          'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
+
+        props.onPickColor(rgba2hex(colorRGBA));
+
+        drawImage({
+          ...pickerCircleCoordinates,
+          x: (event.nativeEvent.offsetX / canvas.current.clientWidth) * canvas.current.width,
+          y: (event.nativeEvent.offsetY / canvas.current.clientHeight) * canvas.current.height
+        });
+      }
+    }
+  };
+
   return (
     <canvas
       className={props.className}
@@ -163,6 +189,7 @@ const ColorPicker: (props: ColorPickerProps) => React.JSX.Element = (props) => {
         setMouseDown(false);
       }}
       onMouseMove={onMouseMove}
+      onClick={onClick}
       width={500}
       height={500}
     />
