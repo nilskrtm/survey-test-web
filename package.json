@@ -1,6 +1,8 @@
 {
   "name": "survey-test-web",
   "version": "1.0.0",
+  "description": "",
+  "author": "nils.krtm",
   "private": true,
   "type": "module",
   "scripts": {
