@@ -29,7 +29,7 @@ const ProtectedRoute: (props: PropsWithChildren<ProtectedRouteProps>) => React.J
     return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
-  return props.children;
+  return props.children ? (props.children as React.JSX.Element) : <></>;
 };
 
 export default ProtectedRoute;
