@@ -8,7 +8,7 @@ type AuthenticationInputProps = {
   icon?: IconProp;
   id?: string;
   label: string;
-  onChange?: ChangeEventHandler;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   type: HTMLInputTypeAttribute;
   validationMessage?: string;

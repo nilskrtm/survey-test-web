@@ -111,7 +111,7 @@ const Login: () => React.JSX.Element = () => {
             icon={faUser}
             label="Nutzername oder E-Mail"
             onChange={(e) => {
-              setUsername((e.target as HTMLInputElement).value);
+              setUsername(e.target.value);
               setGeneralValidation('');
               setUsernameValidation('');
             }}
@@ -125,7 +125,7 @@ const Login: () => React.JSX.Element = () => {
             icon={faKey}
             label="Passwort"
             onChange={(e) => {
-              setPassword((e.target as HTMLInputElement).value);
+              setPassword(e.target.value);
               setGeneralValidation('');
               setPasswordValidation('');
             }}
