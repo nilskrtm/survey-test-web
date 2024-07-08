@@ -125,7 +125,7 @@ const SurveyList: () => React.JSX.Element = () => {
   };
 
   const surveyActive: (survey: Survey) => boolean = (survey) => {
-    if (!survey || survey?.draft) return false;
+    if (!survey || survey.draft) return false;
 
     const currentDate = new Date();
     const startDate = new Date(survey.startDate);
@@ -133,6 +133,18 @@ const SurveyList: () => React.JSX.Element = () => {
 
     return (
       startDate.getTime() <= currentDate.getTime() && currentDate.getTime() < endDate.getTime()
+    );
+  };
+
+  const surveyEnded: (survey: Survey) => boolean = (survey) => {
+    if (!survey || survey.draft) return false;
+
+    const currentDate = new Date();
+    const startDate = new Date(survey.startDate);
+    const endDate = new Date(survey.endDate);
+
+    return (
+      startDate.getTime() < currentDate.getTime() && endDate.getTime() <= currentDate.getTime()
     );
   };
 
@@ -371,14 +383,21 @@ const SurveyList: () => React.JSX.Element = () => {
                           </span>
                         </div>
                       )}
-                      {!survey.draft && !surveyActive(survey) && (
+                      {!survey.draft && !surveyActive(survey) && !surveyEnded(survey) && (
                         <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
                           <span className="text-xs text-white font-semibold no-select">Bereit</span>
                         </div>
                       )}
-                      {!survey.draft && surveyActive(survey) && (
+                      {!survey.draft && surveyActive(survey) && !surveyEnded(survey) && (
                         <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-green-400">
                           <span className="text-xs text-white font-semibold no-select">Aktiv</span>
+                        </div>
+                      )}
+                      {!survey.draft && !surveyActive(survey) && surveyEnded(survey) && (
+                        <div className="w-16 h-6 flex flex-row items-center justify-center rounded-lg bg-red-500">
+                          <span className="text-xs text-white font-semibold no-select">
+                            Beendet
+                          </span>
                         </div>
                       )}
                       {survey.archived && (
