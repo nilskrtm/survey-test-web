@@ -354,6 +354,9 @@ const SurveyList: () => React.JSX.Element = () => {
         {!loader.loading && !loader.error && surveys.length > 0 && (
           <div className="w-full flex-auto grid auto-rows-min grid-cols-1 md:grid-cols-2 gap-4 gap-y-4">
             {surveys.map((survey) => {
+              const startDateString =
+                moment(survey.startDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
+              const endDateString = moment(survey.endDate).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
               const editedDateString =
                 moment(survey.edited).format('DD.MM.YYYY HH:mm') + '\u00A0Uhr';
               const createdDateString =
@@ -364,7 +367,7 @@ const SurveyList: () => React.JSX.Element = () => {
                   className="w-full rounded-lg bg-white border border-gray-200 hover:ring-1 hover:ring-purple-500"
                   key={'survey-card-' + survey._id}
                   to={'/surveys/' + survey._id}>
-                  <div className="w-full flex flex-row items-start justify-between py-6 px-6">
+                  <div className="w-full flex flex-row items-start justify-between pt-6 px-6">
                     <div className="w-full flex flex-col items-center justify-start">
                       <span
                         className="w-full font-semibold text-xl text-black whitespace-break-spaces truncate"
@@ -406,6 +409,14 @@ const SurveyList: () => React.JSX.Element = () => {
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div className="w-full flex-row items-center justify-center py-2 px-6">
+                    <span className="w-full block font-medium text-lg text-right whitespace-nowrap truncate">
+                      {startDateString}
+                    </span>
+                    <span className="w-full block font-medium text-lg text-right whitespace-nowrap truncate">
+                      <span className="font-normal">bis</span> {endDateString}
+                    </span>
                   </div>
                   <hr className="w-full h-[1px] bg-gray-200" />
                   <div className="w-full flex flex-row items-center justify-center gap-2 py-2 px-8">
