@@ -1,9 +1,8 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+import tailwindForms from '@tailwindcss/forms';
+
 /** @type {import('tailwindcss').Config} */
-/** @type {Partial<CustomThemeConfig & {extend: Partial<CustomThemeConfig>}> & DefaultTheme} */
-
-const defaultTheme = require('tailwindcss/defaultTheme');
-
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     container: {
@@ -11,15 +10,15 @@ module.exports = {
       padding: '15px'
     },
     screens: {
-      '2xl': { 'max': '1535px' },
+      '2xl': { max: '1535px' },
       // => @media (max-width: 1535px) { ... }
-      'xl': { 'max': '1279px' },
+      xl: { max: '1279px' },
       // => @media (max-width: 1279px) { ... }
-      'lg': { 'max': '1023px' },
+      lg: { max: '1023px' },
       // => @media (max-width: 1023px) { ... }
-      'md': { 'max': '767px' },
+      md: { max: '767px' },
       // => @media (max-width: 767px) { ... }
-      'sm': { 'max': '639px' },
+      sm: { max: '639px' },
       ...defaultTheme.screens
     },
     extend: {
@@ -33,8 +32,8 @@ module.exports = {
     }
   },
   plugins: [
-    require('@tailwindcss/forms')({
-      /* strategy: 'base', */ // only generate global styles
+    tailwindForms({
+      /* strategy: 'base', */ // -> only generate global styles
       strategy: 'class' // only generate classes
     }),
     function ({ addComponents }) {
