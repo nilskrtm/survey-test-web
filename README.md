@@ -52,6 +52,6 @@ npm run build && npm run serve
   - maybe use context or redux (which I already used in some other cases)
 - improve PDF generation
   - the current implementation I use to get the charts into a pdf-file are very dirty and more a workaround than a solution
-- finish user-management section
+- finish user management section
 - finish imprint page and add possibility to edit content dynamically
 - ...
