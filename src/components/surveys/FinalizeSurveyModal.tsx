@@ -10,7 +10,7 @@ import { Survey } from '../../data/types/survey.types';
 import { APIError } from '../../data/types/common.types';
 import SurveyService from '../../data/services/survey.service';
 import useToasts from '../../utils/hooks/use.toasts.hook';
-import { isSurveyFinalizeable } from '../../utils/surveys/surveys.util';
+import { isSurveyFinalizable } from '../../utils/surveys/surveys.util';
 
 type FinalizeSurveyModalProps = {
   survey: Survey;
@@ -28,7 +28,7 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
   const toaster = useToasts();
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [finalizeable, setFinalizeable] = useState<boolean>(false);
+  const [finalizable, setFinalizable] = useState<boolean>(false);
   const [finalizing, setFinalizing] = useState<boolean>(false);
 
   useImperativeHandle<FinalizeSurveyModalRefAttributes, FinalizeSurveyModalRefAttributes>(
@@ -47,14 +47,14 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
   useEffect(() => {
     if (visible) {
       // modal was opened
-      setFinalizeable(isSurveyFinalizeable(props.survey));
+      setFinalizable(isSurveyFinalizable(props.survey));
     }
   }, [visible]);
 
   const onClose = () => {
     if (visible && !finalizing) {
       setVisible(false);
-      setFinalizeable(false);
+      setFinalizable(false);
 
       props.onFinalized(false);
     }
@@ -99,7 +99,7 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
             Nach dem Finalisieren der Umfrage können an dieser keine Änderungen mehr vorgenommen
             werden. Sie kann erst nach der Finalisierung aktiv für Abstimmungen genutzt werden.
           </span>
-          {!finalizeable ? (
+          {!finalizable ? (
             <span className="text-base text-red-500 font-normal">
               Die Umfrage kann nicht finalisiert werden:{' '}
               <span className="font-medium">
@@ -116,7 +116,7 @@ const FinalizeSurveyModal: ForwardRefRenderFunction<
         <div className="w-full flex flex-row items-center justify-end mt-4">
           <button
             className="px-3 py-[8px] rounded-md text-base text-white font-medium bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed"
-            disabled={!finalizeable || finalizing}
+            disabled={!finalizable || finalizing}
             onClick={finalizeSurvey}
             title="Umfrage erstellen">
             Finalisieren

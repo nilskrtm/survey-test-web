@@ -1,4 +1,5 @@
 import { User } from '../../data/types/user.types';
+import { PermissionLevel } from '../enums/permissionlevel.enum';
 
 export const dummyUser: () => User = () => {
   return {
@@ -7,6 +8,6 @@ export const dummyUser: () => User = () => {
     email: '',
     firstname: '',
     lastname: '',
-    permissionLevel: 0
+    permissionLevel: PermissionLevel.USER
   };
 };
